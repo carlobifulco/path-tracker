@@ -9,21 +9,21 @@ DATA=YAML.load File.read DATA_FILE
 
 
 #Total Daily Cases
-class Tdc 
+class Tdc
   include MongoMapper::Document
   safe
   key :pathologists, Array
   many :pathologist, :in => :pathologists #objects are in pathologist; ids in pathologists
-  key :west_blocks, Integer, :default=>0
-  key :east_blocks, Integer, :default=>0
+  key :blocks_west, Integer, :default=>0
+  key :blocks_east, Integer, :default=>0
   key :tot_points, Integer, :default=>0
   key :extra_points_tot, Integer, :default=>0
   key :tot_points_pathologist, Integer, :default=>0
   #Date.today.to_time.utc
   #Tdc.where(:date=>Date.today.to_time.utc).to_a
   key :date, Time, :default=>Date.today.to_time.utc
- 
-  
+
+
   #returns only one Tdc
   def self.today
     d=where(:date=>Date.today.to_time.utc)
@@ -37,78 +37,134 @@ class Tdc
 end
 
 
-class Today
-  attr_accessor :t
-  def initialize
-    @t=Tdc.today
-  end
-
-  def reload
-    @t=Tdc.today
-  end
-  # all paths for the day
-  def get_path_all
-    @t=Tdc.today
-    @t.pathologist
-  end
-
-  def get_setup
-    @t=Tdc.today
-    @t.tot_points=@t.west_blocks+@t.east_blocks+Activity.get_activity_points
-    @t.save
-
-    setup={west_blocks: @t.west_blocks, 
-          east_blocks: @t.east_blocks,
-          tot_points: @t.tot_points,
-          pathologist_all: self.get_path_all,
-          pathologist_working: self.get_path_working,
-          path_count: self.get_path_working.count}
-  end
-
-  def get_path_working
-    @t=Tdc.today
-    @t.pathologist.select {|x| x.working==true}
-  end
-
-  def get_path_by_ini ini
-    @t=Tdc.today
-    p=@t.pathologist.select {|x| x.ini==ini}
-    p[0] if p.count>0
-  end
-
-  def get_points_per_path 
-    @t=Tdc.today
-    tot_points=@t.west_blocks+@t.east_blocks+Activity.get_activity_points
-    n_pathologist=self.get_path_working.count
-    if n_pathologist >0 
-      then return tot_points/n_pathologist 
-    else 
-      return nil 
-    end
-  end
-
+module TodaySet
   def set_path_off ini
-    p=self.get_path ini 
+    p=self.get_path_by_ini ini
     p.working=false
     p.save
   end
 
   def set_blocks_west n
-    @t=Tdc.today
-    @t.west_blocks=n
-    @t.save
+    t=Tdc.today
+    t.blocks_west=n
+    t.save
+    puts "blocks west #{t.blocks_west}"
   end
 
   def set_blocks_east n
-    @t=Tdc.today
-    @t.east_blocks=n
-    @t.save
+    t=Tdc.today
+    t.blocks_east=n
+    t.save
+    puts "blocks eats #{t.blocks_east}"
   end
+end
+
+
+module TodayGet
+
+  def get_path_all
+    t=Tdc.today
+    t.pathologist
+  end
+   #magic souce formula....
+  def get_points_slide_tot
+     t=Tdc.today
+     total_slide_points= 1.2 * (t.blocks_west+t.blocks_east)
+     total_slide_points.to_int
+  end
+  def get_points_tot
+    t=Tdc.today
+    puts "Slides:#{self.get_points_slide_tot()};Activity: #{Activity.get_activity_points } "
+    t.tot_points=(self.get_points_slide_tot() + Activity.get_activity_points)
+    puts t.tot_points
+    return t.tot_points
+  end
+
+  def get_path_working
+    t=Tdc.today
+    t.pathologist.select {|x| x.working==true}
+  end
+
+  def get_path_absent
+    t=Tdc.today
+    t.pathologist.select {|x| x.working==false}.map {|x| x.ini}
+  end
+
+  def get_path_by_ini ini
+    t=Tdc.today
+    p=t.pathologist.select {|x| x.ini==ini}
+    p[0] if p.count>0
+  end
+end
+
+
+class Today
+  include TodaySet
+  include TodayGet
+
+
+  def set_path_on ini
+    p=self.get_path_by_ini ini
+    p.working=true
+    p.save
+  end
+
+  def set_present ini_array
+    ini_array.each {|ini| self.set_path_on ini}
+  end
+
+  def set_absent ini_array
+    ini_array.each {|ini|  self.set_path_off ini}
+  end
+
+
+  # all paths for the day
+
+  def get_setup
+    if self.get_path_working.count==0 then populate end
+    t=Tdc.today
+    tot_points=self.get_points_tot()
+    pathologist_working=self.get_path_working.map { |x| x.ini }
+    path_count= self.get_path_working.count
+    setup={blocks_west: t.blocks_west,
+          blocks_east: t.blocks_east,
+          blocks_tot: t.blocks_west+t.blocks_east,
+          tot_points: tot_points,
+          pathologist_all: self.get_path_all.map { |x| x.ini  },
+          pathologist_working: (pathologist_working).sort,
+          pathologist_absent: (self.get_path_absent).sort,
+          path_count: path_count,
+          date: Date.today.to_s}
+    setup[:points_per_pathologist]=  tot_points/path_count if path_count !=0
+    return setup
+  end
+
+  def set_setup params
+    puts " params is #{params}; and has key #{params.has_key? 'blocks_east'}"
+    self.set_blocks_east params['blocks_east'] #unless (not (params.has_key? 'blocks_east'))
+    self.set_blocks_west params['blocks_west'] #unless (not (params.has_key? 'blocks_west'))
+    self.set_present(params['path_present']) unless (not (params.has_key? 'path_present'))
+    self.set_absent(params['path_absent']) unless (not (params.has_key? 'path_absent'))
+    return true
+  end
+
+
+  def get_points_per_path
+    t=Tdc.today
+    tot_points=t.blocks_west+t.blocks_east+Activity.get_activity_points
+    n_pathologist=self.get_path_working.count
+    if n_pathologist >0
+      then return tot_points/n_pathologist
+    else
+      return nil
+    end
+  end
+
 
 end
 
 
-class Pathologist 
+class Pathologist
   include MongoMapper::Document
   safe
   belongs_to :tdc
@@ -128,7 +184,7 @@ class Pathologist
 end
 
 
-class Activity 
+class Activity
   include MongoMapper::Document
   safe
   key :name, String
@@ -139,7 +195,7 @@ class Activity
   belongs_to :pathologist
   before_save :update_tot_points
   before_update :update_tot_points
-  
+
   def self.today
     d=where(:date=>Date.today.to_time.utc)
     d.to_a if d
@@ -158,7 +214,7 @@ class Activity
   end
 end
 
-def all_paths 
+def all_paths
   DATA["sv_initials"]+DATA["ppmc_initials"]
 end
 
