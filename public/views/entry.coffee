@@ -1,4 +1,4 @@
-render=(r)->
+render=(r="")->
   window.r=r
   console.log r
   template=($("#template")[0]).innerHTML
@@ -16,4 +16,4 @@ $(document).ready =>
   window.t=$("#template")
   window.p=$("#placeholder")
   window.render=render
-  render()
+  $.get("/get_entry",(e)->render(e))

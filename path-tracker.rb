@@ -15,7 +15,7 @@ require "sinatra"
 require "erb"
 require 'sinatra/mustache'
 require "pp"
-require "haml"
+
 
 
 set :username,'Bond'
@@ -27,8 +27,8 @@ set :password,'007'
 
 ####SINATRA SETUPS
 set :root, File.dirname(__FILE__)
-set :haml, {:format => :html5 }
-# Keeping coffee, compiled JS and haml files in the same directory
+
+# Keeping coffee, compiled JS and html5 in the same directory
 set :views, Proc.new { File.join(root, "public/views") }
 enable :sessions
 
@@ -78,6 +78,23 @@ get ("/login") {erb :login}
 get ("/entry") do
   protected!
   erb :entry
+end
+
+get "/get_entry" do
+  t=Today.new
+  t.get_entry.to_json
+end
+
+get "/working?" do
+  (Today.new).get_path_working.map{ |x| x.ini}.to_json
+end
+
+get "/points_total/*" do
+
+end
+
+get "/points_activity/*" do
+
 end
 
 #login post

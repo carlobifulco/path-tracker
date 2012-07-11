@@ -148,6 +148,14 @@ class Today
     return true
   end
 
+  def get_entry
+    if self.get_path_working.count==0 then populate end
+    entry={pathologist_working: self.get_path_working.map { |x| x.ini},
+      paths_acts_points: Pathologist.all_activities_points,
+      paths_tot_points: Pathologist.path_all_points
+     }
+  end
+
 
   def get_points_per_path
     t=Tdc.today
@@ -181,6 +189,33 @@ class Pathologist
     d=self.today.select{|x| x.ini==ini}
     d[0] if d.count >0
   end
+  def self.get_path_working
+    d=where(:working=>true)
+    d.to_a if d
+  end
+  def self.path_all_points
+    path_all_points={}
+    self.get_path_working.each do |x|
+      path_all_points[x.ini]=x.total_points
+    end
+    path_all_points
+  end
+  def self.all_paths
+    DATA["initials"]
+  end
+  def self.all_activities_points
+    r={}
+    self.get_path_working.each {|x| r[x.ini]=x.activities_points}
+    return r
+  end
+  def activities_points
+    activities_points={}
+    self.activities.each {|x| activities_points[x['name']]={tot_points: x['tot_points'],n: x[:n]}}
+    activities_points
+  end
+  def total_points
+    self.activities.map{|x| x.tot_points}.reduce(:+) or 0 
+  end
 end
 
 
@@ -201,6 +236,10 @@ class Activity
     d.to_a if d
   end
 
+  def self.all_activities
+    DATA["regular_activities"].merge DATA["cardinal_activities"]
+  end
+
   def self.get_activity_points
     x=0
     self.today.each do |a|
@@ -215,7 +254,7 @@ class Activity
 end
 
 def all_paths
-  DATA["sv_initials"]+DATA["ppmc_initials"]
+  DATA["initials"]
 end
 
 def populate
@@ -241,7 +280,7 @@ def simulate
   t=Today.new
   t.set_blocks_east [444,200,100].sample
   t.set_blocks_west [344,400,233].sample
-  all_activities=DATA["sv_regular_activities"].merge DATA["sv_cardinal_activities"]
+  all_activities=DATA["regular_activities"].merge DATA["cardinal_activities"]
   all_activities.each do |act,points|
     random_assign_activity act, points
   end
