@@ -1,0 +1,156 @@
+<!-- tab pane styling -->
+
+<script style=" display: none;" id="template_sparkline" type="text/x-handlebars-template">
+
+
+<br>
+<br>
+<br>
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span2" >
+
+      <ul class="nav nav-tabs nav-stacked" id="myTab1">
+
+        <table class="table table-condensed style="float: left; text-align: left"">
+          {{#each paths_tot_points}}
+          <li>
+            <tr>
+              <td>
+                <a href="#tab{{this.ini}} data-toggle='tab'">{{this.ini}}</a>
+              </td>
+              <td>
+                <span class="inlinesparkli`ne">{{this.range}},{{this.tot}}</span>
+              </td>
+            </tr>
+          </li>
+          {{/each}}
+        </div>
+
+        <br></ul>
+    </table>
+
+  </div>
+
+
+  <div class="span2">
+
+    <ul class="nav nav-tabs nav-stacked" id="myTab">
+      <li>
+        <a href="#tabCBB" data-toggle="tab">Home</a>
+      </li>
+      <li>
+        <a href="#profile" data-toggle="tab">Profile</a>
+      </li>
+      <li>
+        <a href="#messages" data-toggle="tab">Messages</a>
+      </li>
+      <li>
+        <a href="#settings"  data-toggle="tab">Settings</a>
+      </li>
+    </ul>
+  </div>
+
+    <div class="tab-content" class="span2">
+      <div class="tab-pane" id="tabCBB">CBB IS AWESOME</div>
+      <div class="tab-pane" id="profile">jhjkhkjkjhkjhkhkjhk</div>
+      <div class="tab-pane" id="messages">..jghhjgjhgjhgjhgjhgjhg.</div>
+      <div class="tab-pane" id="settings">..kkkkk.</div>
+    </div>
+
+</div>
+
+
+</script>
+
+<script id="template_form" type="text/x-handlebars-template">
+
+
+<ul class="tabs">
+  % for sv_initial in sv_initials:
+  <li >
+    <a class="s" href="#">${sv_initial}</a>
+  </li>
+  % endfor
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+  % for sv_initial in sv_initials:
+  <div>
+    <table id="ppmc_table" class="tablesorter" >
+      <tr>
+        <td>Goal: ${tot_cases_pathologist}</td>
+        <td>
+          Current points: ${path_all_todays_activities[sv_initial]["tot"]}
+        </td>
+      </tr>
+    </table>
+
+    <form action="SvHandlerRequest" method="get" accept-charset="utf-8">
+      <input type="hidden" name="initials" value=${sv_initial}>
+
+      <span>
+        <table style="float:left;" border="0" cellspacing="5" cellpadding="5">
+          <tr>
+            <td>
+              <span>
+                <input style="float:clear" type="submit" value="Update &rarr;"></span>
+            </td>
+            <td></td>
+          </tr>
+          % for activity in cardinal_activities:
+          <tr>
+            <td>${activity}:</td>
+            <td>
+              <input type="checkbox" name="${activity}"
+
+
+                              % if path_all_todays_activities[sv_initial][activity]:
+                                  checked
+                              % endif
+
+                                   />
+            </td>
+          </tr>
+          % endfor
+        </table>
+
+        <table style="float:left;" border="0" cellspacing="5" cellpadding="5">
+          % for (activity_a,activity_b) in regular_activities:
+          <tr>
+            <td>${activity_a}:</td>
+            <td>
+              <input type="text" name="${activity_a}" value="${path_all_todays_activities[sv_initial][activity_a]}" id="" size=3></td>
+            ## if deals with the "" key....
+                    % if activity_b:
+            <td>${activity_b}:</td>
+            <td>
+              <input type="text" name="${activity_b}" value="${path_all_todays_activities[sv_initial][activity_b]}" id="" size=3></td>
+            %endif
+          </tr>
+          % endfor
+        </table>
+        <br>
+        <table  style="float:clear;" border="0" cellspacing="5" cellpadding="5"></table>
+      </span>
+
+      <br></form>
+  </div>
+  % endfor
+</div>
+
+
+
+
+
+
+
+
+
+</script>
+
+<span id="placeholder"></span>
+
+<script src="views/entry.js" type="text/javascript" charset="utf-8"></script>
