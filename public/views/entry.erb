@@ -1,22 +1,15 @@
 <!-- tab pane styling -->
 
-<script style=" display: none;" id="template_sparkline" type="text/x-handlebars-template">
-
-
-
+<script style=" display: none;" id="sparkline_template" type="text/x-handlebars-template">
 <div class="container-fluid">
   <div class="row-fluid">
-
-    <div class="span2" >
-
       <ul class="nav nav-tabs nav-stacked" id="myTab1">
-
         <table class="table table-condensed" style="float: left; text-align: left">
           {{#each paths_tot_points}}
           <li>
             <tr>
               <td>
-                <a href="#tab{{this.ini}}" data-toggle="tab">{{this.ini}}</a>
+                <a href="#tab{{this.ini}}" class="show_entry" id="{{this.ini}}" data-toggle="tab">{{this.ini}}</a>
               </td>
               <td>
                 <span class="inlinesparkline">{{this.range}},{{this.tot}}</span>
@@ -25,40 +18,74 @@
           </li>
           {{/each}}
         </div>
-
         <br></ul>
     </table>
-
+     <button type="submit" id="serialize" class="btn" style="display: none;">Submit</button>
   </div>
-
-
-
-
-    <div class="tab-content" class="span2">
-    <br>
-      {{#each paths_tot_points}}
-        <div class="tab-pane" id="tab{{this.ini}}">{{this.ini}}
-
-
-
-
-        IS AWESOME</div>
-      {{/each}}
-    </div>
-
 </div>
-
-
 </script>
 
-<script id="template_form" type="text/x-handlebars-template">
 
 
-
-
-
+<script id="id_template"  type="text/x-handlebars-template">
+  <input type="hidden" id="path_name" name="path_name" value="{{id}}">
 </script>
 
-<span id="placeholder"></span>
+
+<script id="cardinal_template"  type="text/x-handlebars-template">
+     <table class="table table-striped">
+      <div>
+      {{#each cardinal}}
+      <tr>
+        <td>{{this}}</td>
+        <td>
+         <input type="checkbox" id="{{this}}" name="{{this}}"></td>
+      </tr>
+        {{/each}}
+      </div>
+    </table>
+ 
+</script>
+
+
+<script id="regular_template"  type="text/x-handlebars-template">
+
+    <table class="table table-striped">
+      {{#each regular}}
+      <tr>
+        <td>{{this}}</td>
+        <td><input type="text"  id="{{this}}" class="input-min span1" name="{{this}}" value="" id="" ></td>
+      </tr>
+      {{/each}}
+    </table>
+</script>
+
+
+
+
+
+
+
+<form action="entry" method="post"  id="entry" accept-charset="utf-8" >
+
+  <span id="id_html" ></span>
+
+  <span id="cardinal_html" class="span2"></span>
+
+  <span id="regular_html" class="span3 offset1"></span>
+
+</form>
+
+
+
+<span id="sparkline_html" class="span2">
+
+</span>
+
+
+
+
+
+
 
 <script src="views/entry.js" type="text/javascript" charset="utf-8"></script>

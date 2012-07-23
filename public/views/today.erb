@@ -1,0 +1,45 @@
+<script style=" display: none;" id="sparkline_template" type="text/x-handlebars-template">
+<div class="container-fluid">
+  <div class="row-fluid">
+        <table class="table" style="float: left; text-align: left">
+          {{#each paths_tot_points}}
+            <tr>
+              <td>
+                <a href="#tab{{this.ini}}" class="show_entry" id="{{this.ini}}" data-toggle="tab">{{this.ini}}</a>
+              </td>
+              <td>
+                <span class="inlinesparkline">{{this.range}},{{this.tot}}</span>
+              </td>
+            </tr>
+          {{/each}}
+        </div>
+        <br>
+    </table>
+  </div>
+</div>
+</script>
+
+
+
+
+<script style=" display: none;" id="absent_template" type="text/x-handlebars-template">
+        <ul id="absent" >
+        {{#each pathologist_absent}}
+          <li> {{this}}</li>
+        {{/pathologist_absent}}
+        </ul>
+</script>
+
+
+<script style=" display: none;" id="points_template" type="text/x-handlebars-template">
+  Date: {{date}}
+  Tot blocks: {{total_blocks}}
+</script>
+
+
+<span id="sparkline_html" class="span2"></span>
+<span id="absent_html" class="span2"></span>
+<span id="points_html" class="span2"></span>
+
+
+<script src="views/today.js" type="text/javascript" charset="utf-8"></script>

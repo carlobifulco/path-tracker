@@ -1,0 +1,105 @@
+
+<script id="template" type="text/x-handlebars-template">
+
+<br>
+<br>
+<br>
+<br>
+
+<div class="alert">
+
+	<form action="setup" id="setup" method="post" accept-charset="utf-8">
+
+		<table border="0" cellspacing="5" cellpadding="5">
+
+			<tr><td>Blocks Total:    </td><td>  	{{blocks_tot}}  </td></tr>
+			<tr><td>Slide Points:    </td><td>  {{slide_points}}  </td></tr>
+			<tr><td>Activity Points:    </td><td>  {{activity_points}}  </td></tr>
+			<tr><td>Total Points:    </td><td>  {{tot_points}}  </td></tr>
+
+
+			<tr><td>Present pathologists number:    </td><td>  {{path_count}}  </td></tr>
+			<tr><td>Total points pathologist per pathologist:    </td><td>  {{points_per_pathologist}}  </td></tr>
+			</table>
+			</div>
+
+			<div class="alert alert-error"> 
+			<table>
+			<tr><td> 	<label for="tot_cases">West Side Blocks:</label>   </td><td>  <input type="text" name="blocks_west" id="blocks_west" value="{{blocks_west}}">  </td></tr>
+			<tr><td> 	<label for="tot_cases">East Side Blocks:</label>   </td><td> <input type="text" name="blocks_east" id="blocks_east" value="{{blocks_east}}">   </td></tr>
+
+				</table>
+				<br>
+		
+
+			
+		
+				<div id="working"  >
+				<small><strong>	Working:</strong></small>
+				{{#pathologist_working}}
+				<small>{{this}}</small> <input type="checkbox" name="{{this}}" checked/>
+				{{/pathologist_working}}
+				</div>
+
+			<br>
+				<div id="absent" >
+				<small><strong>Absent: </strong></small>
+				{{#pathologist_absent}}
+				<small>{{this}}</small> <input type="checkbox" name="{{this}}" checked/>
+				{{/pathologist_absent}}
+				</div>
+				</div>
+
+
+
+					<table style="float:clear;" border="0" cellspacing="5" cellpadding="5">
+
+					<tr>
+					</tr>
+					</table>
+
+
+
+
+	<br>
+
+
+
+	</form>
+
+
+
+</script>
+
+
+
+<span id="placeholder"> </span>
+
+<p><button class= "btn btn-large" value="Update" id="ajax_button" style="display: none">SUBMIT</button></p>
+
+<script src="views/setup.js" type="text/javascript" charset="utf-8"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

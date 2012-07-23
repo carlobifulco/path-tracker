@@ -1,0 +1,74 @@
+# No keys with spaces inside --not recognized by jQuery
+
+initials:
+  - "MM"
+  - "MKL"
+  - "EVH"
+  - "ARS"
+  - "MCF"
+  - "MSG"
+  - "SW"
+  - "SZ"
+  - "JDH"
+  - "SXH"
+  - "JCH"
+  - "YW"
+  - "CAI"
+  - "CBB"
+  - "BH"
+  - "JBD"
+  - "JLB"
+  - "XH"
+  - "YZ"
+  - "SEK"
+  - "JS"
+  - "JAO"
+
+
+regular_activities:
+  Slides-large-cases: 1
+  Slides-small-cases: 1
+  Non-gyns: 1
+  Paps: 2
+  Bone-marrow: 20
+  Pb-with-report: 4
+  Pb-without-report: 2
+  Flow: 5
+  Fish: 10
+  Spep: 15
+  External-Consults: 1
+  Meeting: 20
+  Carry-over-points-from-previous-day: 1
+
+
+cardinal_activities:
+  Autopsy: 20
+  Autopsy-Slides: 20
+  Qc: 20
+  Cp: 40
+  Administration: 20
+  East-side-travel: 20
+  West-side-travel: 20
+  80-percent: 40
+  Frozens: 60
+  Hemepath: 1
+  Lung: 1
+  Dermapath: 1
+  BreastGyn: 1
+  GI: 1
+  Conf-prep-bad: 40
+  Conf-prep-easy: 20
+
+colors:
+  Lung: "blue"
+  Derm: "green"
+  GI: "brown"
+  Hemepath: "red"
+  BreastGyn: "yellow"
+
+slide_activities:
+  - Slides-large-cases
+  - Slides-small-cases
+
+
+

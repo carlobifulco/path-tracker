@@ -34,9 +34,11 @@ post_data=()->
     blocks_west: blocks_west
   $.post("/setup", data,(e)->
     if JSON.parse(e)
+      $.get("/get_setup",(e)->render JSON.parse(e))
       alert "Data Updated"
-      window.location.href="/setup"
+      #window.location.href="/setup"
       console.log(e))
+
 
 
 $(document).ready =>

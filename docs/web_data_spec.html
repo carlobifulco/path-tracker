@@ -1,0 +1,87 @@
+<!DOCTYPE html>  <html> <head>   <title>web_data_spec.rb</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="path-tracker.html">                 path-tracker.rb               </a>                                           <a class="source" href="test_auth.html">                 test_auth.rb               </a>                                           <a class="source" href="web_data.html">                 web_data.rb               </a>                                           <a class="source" href="web_data_spec.html">                 web_data_spec.rb               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               web_data_spec.rb             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="n">my_directory</span><span class="o">=</span><span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>$LOAD<em>PATH &lt;&lt; File.join(my</em>directory,'/lib')</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="vg">$LOAD_PATH</span> <span class="o">&lt;&lt;</span> <span class="n">my_directory</span>
+
+<span class="nb">require</span> <span class="s1">&#39;web_data&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>override default configuration</p>
+
+<h2>Configuration</h2>             </td>             <td class="code">               <div class="highlight"><pre><span class="no">DATA_BASENAME</span><span class="o">=</span><span class="s1">&#39;mongomapperrespec&#39;</span>
+<span class="no">DATA_FILE</span><span class="o">=</span><span class="s2">&quot;./base_line_data.yml&quot;</span>
+<span class="no">MongoMapper</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="no">DATA_BASENAME</span>
+
+
+
+<span class="n">describe</span> <span class="no">Tdc</span> <span class="k">do</span>
+  <span class="n">it</span> <span class="s2">&quot;saves&quot;</span> <span class="k">do</span>
+    <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">new</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">blocks_east</span><span class="o">=</span><span class="mi">33</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">blocks_west</span><span class="o">=</span><span class="mi">2</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">tot_points</span><span class="o">=</span><span class="n">t</span><span class="o">.</span><span class="n">blocks_east</span><span class="o">+</span><span class="n">t</span><span class="o">.</span><span class="n">blocks_west</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">save</span>
+  <span class="k">end</span>
+  <span class="n">it</span> <span class="s2">&quot;finds&quot;</span> <span class="k">do</span>
+      <span class="no">Tdc</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">count</span><span class="o">.</span><span class="n">should</span><span class="o">==</span><span class="mi">1</span>
+      <span class="no">Tdc</span><span class="o">.</span><span class="n">find_one</span><span class="o">.</span><span class="n">blocks_east</span><span class="o">.</span><span class="n">should</span><span class="o">==</span><span class="mi">33</span>
+      <span class="no">Tdc</span><span class="o">.</span><span class="n">today</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">should</span><span class="o">==</span><span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">.</span><span class="n">to_time</span><span class="o">.</span><span class="n">utc</span>
+  <span class="k">end</span>
+  <span class="n">it</span> <span class="s2">&quot;persists&quot;</span> <span class="k">do</span>
+    <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">new</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">blocks_east</span><span class="o">=</span><span class="mi">33</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">blocks_west</span><span class="o">=</span><span class="mi">2</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">tot_points</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">save</span>
+    <span class="no">Tdc</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">count</span><span class="o">.</span><span class="n">should</span><span class="o">==</span><span class="mi">2</span>
+  <span class="k">end</span>
+  <span class="n">it</span> <span class="s2">&quot;has many pathologist&quot;</span> <span class="k">do</span>
+    <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">new</span>
+    <span class="n">p0</span><span class="o">=</span><span class="no">Pathologist</span><span class="o">.</span><span class="n">new</span>
+    <span class="n">p0</span><span class="o">.</span><span class="n">ini</span><span class="o">=</span><span class="s2">&quot;CBB&quot;</span>
+    <span class="n">p1</span><span class="o">=</span><span class="no">Pathologist</span><span class="o">.</span><span class="n">new</span>
+    <span class="n">p1</span><span class="o">.</span><span class="n">ini</span><span class="o">=</span><span class="s2">&quot;MM&quot;</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">pathologist</span><span class="o">&lt;&lt;</span><span class="n">p0</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">pathologist</span><span class="o">&lt;&lt;</span><span class="n">p1</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">pathologists</span><span class="o">.</span><span class="n">count</span><span class="o">.</span><span class="n">should</span><span class="o">==</span><span class="mi">2</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">describe</span> <span class="no">Activity</span> <span class="k">do</span>
+  <span class="n">x</span><span class="o">=</span><span class="no">YAML</span><span class="o">.</span><span class="n">load</span> <span class="no">File</span><span class="o">.</span><span class="n">read</span> <span class="s2">&quot;base_line_data.yml&quot;</span>
+  <span class="n">it</span> <span class="s2">&quot;can be many&quot;</span> <span class="k">do</span>
+    <span class="n">x</span><span class="o">[</span><span class="s2">&quot;sv_regular_activities&quot;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="o">|</span>
+      <span class="n">a</span><span class="o">=</span><span class="no">Activity</span><span class="o">.</span><span class="n">new</span>
+      <span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="o">=</span><span class="n">key</span>
+      <span class="n">a</span><span class="o">.</span><span class="n">points</span><span class="o">=</span><span class="n">value</span>
+      <span class="n">a</span><span class="o">.</span><span class="n">save</span>
+    <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>puts "HELLO #{Activity.all}"</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">end</span>
+  <span class="n">it</span> <span class="s2">&quot;can do a today&quot;</span> <span class="k">do</span>
+    <span class="no">Activity</span><span class="o">.</span><span class="n">today</span><span class="o">.</span><span class="n">length</span><span class="o">.</span><span class="n">should</span><span class="o">==</span><span class="no">Activity</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">length</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">describe</span> <span class="no">Pathologist</span> <span class="k">do</span>
+  <span class="n">initials</span><span class="o">=</span><span class="p">(</span><span class="no">YAML</span><span class="o">.</span><span class="n">load</span> <span class="no">File</span><span class="o">.</span><span class="n">read</span> <span class="s2">&quot;base_line_data.yml&quot;</span><span class="p">)</span><span class="o">[</span><span class="s2">&quot;ppmc_initials&quot;</span><span class="o">]</span>
+  <span class="n">it</span> <span class="s2">&quot;can be many&quot;</span> <span class="k">do</span>
+    <span class="n">initials</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">ini</span><span class="o">|</span>
+      <span class="nb">p</span><span class="o">=</span><span class="no">Pathologist</span><span class="o">.</span><span class="n">new</span>
+      <span class="nb">p</span><span class="o">.</span><span class="n">ini</span><span class="o">=</span><span class="n">ini</span>
+      <span class="nb">p</span><span class="o">.</span><span class="n">save</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">it</span> <span class="s2">&quot;can do a today&quot;</span> <span class="k">do</span>
+    <span class="no">Pathologist</span><span class="o">.</span><span class="n">today</span><span class="o">.</span><span class="n">length</span><span class="o">.</span><span class="n">should</span><span class="o">==</span><span class="no">Pathologist</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">length</span>
+  <span class="k">end</span>
+  <span class="n">it</span> <span class="s2">&quot;can have many activities&quot;</span> <span class="k">do</span>
+    <span class="nb">p</span><span class="o">=</span><span class="no">Pathologist</span><span class="o">.</span><span class="n">new</span>
+    <span class="nb">p</span><span class="o">.</span><span class="n">ini</span><span class="o">=</span><span class="s2">&quot;CBB&quot;</span>
+    <span class="n">a</span><span class="o">=</span><span class="no">Activity</span><span class="o">.</span><span class="n">new</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">pathologist</span><span class="o">=</span><span class="nb">p</span>
+    <span class="nb">p</span><span class="o">.</span><span class="n">activities</span><span class="o">&lt;&lt;</span><span class="n">a</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">save</span>
+    <span class="nb">p</span><span class="o">.</span><span class="n">save</span>
+    <span class="n">a1</span><span class="o">=</span><span class="no">Activity</span><span class="o">.</span><span class="n">new</span>
+    <span class="n">a1</span><span class="o">.</span><span class="n">pathologist</span><span class="o">=</span><span class="nb">p</span>
+    <span class="nb">p</span><span class="o">.</span><span class="n">activities</span><span class="o">&lt;&lt;</span><span class="n">a1</span>
+    <span class="n">a1</span><span class="o">.</span><span class="n">save</span>
+    <span class="nb">p</span><span class="o">.</span><span class="n">save</span>
+    <span class="n">pp</span> <span class="nb">p</span><span class="o">.</span><span class="n">activities</span>
+  <span class="k">end</span>
+<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>blank slate database</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">clean</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
