@@ -49,7 +49,7 @@ end
 describe Activity do
   x=YAML.load File.read "base_line_data.yml"
   it "can be many" do
-    x["sv_regular_activities"].each do |key,value|
+    x["regular_activities"].each do |key,value|
       a=Activity.new
       a.name=key
       a.points=value
@@ -63,7 +63,7 @@ describe Activity do
 end
 
 describe Pathologist do
-  initials=(YAML.load File.read "base_line_data.yml")["ppmc_initials"]
+  initials=(YAML.load File.read "base_line_data.yml")["initials"]
   it "can be many" do
     initials.each do |ini|
       p=Pathologist.new

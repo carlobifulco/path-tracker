@@ -1,4 +1,5 @@
 require "mongo_mapper"
+require "pp"
 
 #Configuration
 #-------------
@@ -57,6 +58,21 @@ module TodaySet
     t.save
     puts "blocks eats #{t.blocks_east}"
   end
+
+  def set_path_on ini
+    p=get_path_by_ini ini
+    p.working=true
+    p.save
+  end
+
+  def set_present ini_array
+    ini_array.each {|ini| set_path_on ini}
+  end
+
+  def set_absent ini_array
+    ini_array.each {|ini|  set_path_off ini}
+  end
+
 end
 
 
@@ -95,6 +111,12 @@ module TodayGet
     p=t.pathologist.select {|x| x.ini==ini}
     p[0] if p.count>0
   end
+
+  def get_path_by_id _id
+    t=Tdc.today
+    p=t.pathologist.select {|x| x._id==_id}
+    p[0] if p.count>0
+  end
 end
 
 
@@ -102,19 +124,8 @@ class Today
   include TodaySet
   include TodayGet
 
-
-  def set_path_on ini
-    p=self.get_path_by_ini ini
-    p.working=true
-    p.save
-  end
-
-  def set_present ini_array
-    ini_array.each {|ini| self.set_path_on ini}
-  end
-
-  def set_absent ini_array
-    ini_array.each {|ini|  self.set_path_off ini}
+  def initialize
+    @all_activities_points= DATA["regular_activities"].merge DATA["cardinal_activities"]
   end
 
 
@@ -123,20 +134,28 @@ class Today
   def get_setup
     if self.get_path_working.count==0 then populate end
     t=Tdc.today
-    tot_points=self.get_points_tot()
+    tot_points=self.get_points_tot();blocks_tot=t.blocks_west+t.blocks_east; slide_points=blocks_tot*1.2; activity_points=tot_points-slide_points
     pathologist_working=self.get_path_working.map { |x| x.ini }
     path_count= self.get_path_working.count
     setup={blocks_west: t.blocks_west,
           blocks_east: t.blocks_east,
           blocks_tot: t.blocks_west+t.blocks_east,
           tot_points: tot_points,
+          slide_points: slide_points,
+          activity_points: activity_points,
           pathologist_all: self.get_path_all.map { |x| x.ini  },
           pathologist_working: (pathologist_working).sort,
           pathologist_absent: (self.get_path_absent).sort,
           path_count: path_count,
           date: Date.today.to_s}
-    setup[:points_per_pathologist]=  tot_points/path_count if path_count !=0
+    setup[:points_per_pathologist]=  self.points_per_path
     return setup
+  end
+
+  def points_per_path
+    tot_points=self.get_points_tot()
+    path_count= self.get_path_working.count
+    tot_points/path_count if path_count !=0
   end
 
   def set_setup params
@@ -150,25 +169,43 @@ class Today
 
   def get_entry
     if self.get_path_working.count==0 then populate end
-    entry={pathologist_working: self.get_path_working.map { |x| x.ini},
+    entry={pathologist_working: self.get_path_working.map { |x| x.ini}.sort(),
       paths_acts_points: Pathologist.all_activities_points,
       paths_tot_points: Pathologist.path_all_points
      }
   end
 
-
-  def get_points_per_path
-    t=Tdc.today
-    tot_points=t.blocks_west+t.blocks_east+Activity.get_activity_points
-    n_pathologist=self.get_path_working.count
-    if n_pathologist >0
-      then return tot_points/n_pathologist
-    else
-      return nil
-    end
+  def set_regular path_ini, activity_name, n
+    p=self.get_path_by_ini path_ini
+    existing_activities=p.activities.map{|x| x.name}
+    if existing_activities.member? activity_name then a=Activity.get_ini_name(path_ini,activity_name) else a=Activity.new  end
+    a.name=activity_name
+    if @all_activities_points.has_key? activity_name then a.points=@all_activities_points[activity_name] else return false end
+    a.n=n
+    p.activities<<a
+    a.save
+    p.save
+    pp "just updated for you #{path_ini}'s #{a.name} to a number of #{a.n} and tot_points of #{a.tot_points} "
   end
 
-
+  def set_cardinal path_ini, on_array
+    p=self.get_path_by_ini path_ini; existing_activities=p.activities.map{|x| x.name}
+    off_array=DATA["cardinal_activities"].keys.select{|x| not (on_array.member? x)}
+    puts "on: #{on_array}; not on #{off_array}"
+    on_array.each do |activity_name|
+      if existing_activities.member? activity_name then a=Activity.get_ini_name(path_ini,activity_name) else a=Activity.new  end
+      if @all_activities_points.has_key? activity_name then a.points=@all_activities_points[activity_name] else return false end
+      a.n=1
+      a.name=activity_name
+      p.activities<<a
+      a.save
+      p.save
+    end
+    off_array.each do |activity_name|
+      a=Activity.get_ini_name(path_ini,activity_name)
+      a.delete if a
+    end
+  end
 end
 
 
@@ -190,15 +227,16 @@ class Pathologist
     d[0] if d.count >0
   end
   def self.get_path_working
-    d=where(:working=>true)
+    d=where(:working=>true, :date=>Date.today.to_time.utc)
     d.to_a if d
   end
   def self.path_all_points
-    path_all_points={}
+    points_per_path=Today.new.points_per_path
+    path_all_points=[]
     self.get_path_working.each do |x|
-      path_all_points[x.ini]=x.total_points
+      path_all_points<<{tot: x.total_points, ini: x.ini, range: points_per_path}
     end
-    path_all_points
+    path_all_points.sort_by {|x| x[:ini]}
   end
   def self.all_paths
     DATA["initials"]
@@ -209,12 +247,14 @@ class Pathologist
     return r
   end
   def activities_points
+
     activities_points={}
-    self.activities.each {|x| activities_points[x['name']]={tot_points: x['tot_points'],n: x[:n]}}
+    self.activities.each {|x| activities_points[x['name']]={tot_points: x['tot_points'],
+                                                            n: x[:n]}}
     activities_points
   end
   def total_points
-    self.activities.map{|x| x.tot_points}.reduce(:+) or 0 
+    self.activities.map{|x| x.tot_points}.reduce(:+) or 0
   end
 end
 
@@ -236,14 +276,25 @@ class Activity
     d.to_a if d
   end
 
+  def self.get_ini_name path_ini,activity_name
+    path_id=Today.new.get_path_by_ini(path_ini)._id
+    puts path_id
+    d=where(:date=>Date.today.to_time.utc, :pathologist_id=>path_id, :name=>activity_name)
+    d=d.to_a if d
+    if d.count >0 then return  d[0] else return false end 
+  end
+
   def self.all_activities
     DATA["regular_activities"].merge DATA["cardinal_activities"]
   end
 
   def self.get_activity_points
+    t=Today.new
     x=0
     self.today.each do |a|
-      x+=a.tot_points
+      #check if activity in sont a slide and that the path is working
+      if ((DATA["slide_activities"].member? a.name) and (t.get_path_by_id a.pathologist_id).working)then next end
+      if (t.get_path_by_id a.pathologist_id).working then x+=a.tot_points else a.destroy end
     end
     return x
   end
@@ -252,6 +303,8 @@ class Activity
       self.tot_points=self.points*self.n
   end
 end
+
+#### Utilities
 
 def all_paths
   DATA["initials"]
@@ -263,11 +316,11 @@ def populate
   t.save
 end
 
-def random_assign_activity act,points
+def random_assign_activity act,points,n
   a=Activity.new
   a.name=act
   a.points=points
-  a.n=[1,2,3,4,5].sample()
+  a.n=n
   p=Pathologist.today.sample
   p.activities<<a
   a.save
@@ -281,11 +334,27 @@ def simulate
   t.set_blocks_east [444,200,100].sample
   t.set_blocks_west [344,400,233].sample
   all_activities=DATA["regular_activities"].merge DATA["cardinal_activities"]
-  all_activities.each do |act,points|
-    random_assign_activity act, points
+  DATA["regular_activities"].each do |act,points|
+    random_assign_activity act, points, [1,2,3,4,5,6,7,8,9,10].sample()
   end
+  DATA["cardinal_activities"].each do |act,points|
+    random_assign_activity act, points, 1
+  end
+  pp Pathologist.all_activities_points
 end
 
+#setting up the entry for only 2 pathologist
+def test_2
+  clean
+  populate
+  Pathologist.today.each do |p|
+    puts "#{p.ini} #{p.ini=='CBB'} " 
+    if (p.ini=="CBB" or p.ini=="SW") then  puts "CBB"; next end
+    p.working=false
+    p.save
+  end
+  Pathologist.today()
+end
 
 def todays_work
   t=Today.new
