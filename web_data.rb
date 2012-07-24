@@ -37,6 +37,9 @@ class Tdc
   end
 end
 
+#index Tdc
+Tdc.ensure_index(:date)
+
 
 module TodaySet
   def set_path_off ini
@@ -132,9 +135,10 @@ class Today
   # all paths for the day
 
   def get_setup
+    #populates if day is empty
     if self.get_path_working.count==0 then populate end
     t=Tdc.today
-    tot_points=self.get_points_tot();blocks_tot=t.blocks_west+t.blocks_east; slide_points=blocks_tot*1.2; activity_points=tot_points-slide_points
+    tot_points=self.get_points_tot();blocks_tot=t.blocks_west+t.blocks_east; slide_points=(blocks_tot*1.2).to_i; activity_points=tot_points-slide_points
     pathologist_working=self.get_path_working.map { |x| x.ini }
     path_count= self.get_path_working.count
     setup={blocks_west: t.blocks_west,
@@ -178,6 +182,7 @@ class Today
   def set_regular path_ini, activity_name, n
     p=self.get_path_by_ini path_ini
     existing_activities=p.activities.map{|x| x.name}
+    #get if existing else new
     if existing_activities.member? activity_name then a=Activity.get_ini_name(path_ini,activity_name) else a=Activity.new  end
     a.name=activity_name
     if @all_activities_points.has_key? activity_name then a.points=@all_activities_points[activity_name] else return false end
@@ -218,10 +223,34 @@ class Pathologist
   key :date, Time, :default=>Date.today.to_time.utc
   key :working, Boolean, :default=>true
   many :activities
+  # important  --remove activity if path is at home...
+  after_update :delete_activities_if_not_working
+  #before create check that is not alreaay there
+  # validate :already_there
+
+  # def already_there
+  #   d=Pathologist.where(:date=>Date.today.to_time.utc, :ini=>self.ini)
+  #   if d.to_a.count>0
+  #     errors.add( :ini, "Already there")
+  #   end
+  # end
+
   def self.today
     d=where(:date=>Date.today.to_time.utc)
     d.to_a if d
   end
+
+  def delete_activities_if_not_working
+    puts "#{self} getting called"
+    if not self.working
+      puts "deleting"
+      (Activity.find_all_by_pathologist_id  self._id).each do |a| 
+        puts "deleting #{a}"
+        a.delete
+      end
+    end
+  end
+
   def self.by_ini ini #only today
     d=self.today.select{|x| x.ini==ini}
     d[0] if d.count >0
@@ -247,7 +276,6 @@ class Pathologist
     return r
   end
   def activities_points
-
     activities_points={}
     self.activities.each {|x| activities_points[x['name']]={tot_points: x['tot_points'],
                                                             n: x[:n]}}
@@ -258,6 +286,8 @@ class Pathologist
   end
 end
 
+#index Pathologist
+Pathologist.ensure_index([[:date, -1], [:working,-1]])
 
 class Activity
   include MongoMapper::Document
@@ -288,21 +318,27 @@ class Activity
     DATA["regular_activities"].merge DATA["cardinal_activities"]
   end
 
+
+  #all activities points unless slide related
   def self.get_activity_points
-    t=Today.new
-    x=0
+    slide_activities=DATA["slide_activities"]; x=0
     self.today.each do |a|
-      #check if activity in sont a slide and that the path is working
-      if ((DATA["slide_activities"].member? a.name) and (t.get_path_by_id a.pathologist_id).working)then next end
-      if (t.get_path_by_id a.pathologist_id).working then x+=a.tot_points else a.destroy end
-    end
-    return x
+       x+=a.tot_points unless slide_activities.member? a.name
+    end  
+    x
   end
+
+
 
   def update_tot_points
       self.tot_points=self.points*self.n
   end
 end
+
+
+#index activities
+Activity.ensure_index([[:date, -1], [:pathologist_id, 1], [:name,1]])
+
 
 #### Utilities
 
@@ -341,6 +377,13 @@ def simulate
     random_assign_activity act, points, 1
   end
   pp Pathologist.all_activities_points
+end
+
+
+def simulate2
+  10.times do |x|
+    simulate
+  end
 end
 
 #setting up the entry for only 2 pathologist
