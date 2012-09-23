@@ -1,0 +1,128 @@
+# No keys with spaces inside --not recognized by jQuery
+
+initials:
+  - "MM"
+  - "MKL"
+  - "EVH"
+  - "ARS"
+  - "MCF"
+  - "MSG"
+  - "SW"
+  - "SZ"
+  - "JDH"
+  - "SXH"
+  - "JCH"
+  - "YW"
+  - "CAI"
+  - "CBB"
+  - "BH"
+  - "JBD"
+  - "JLB"
+  - "HX"
+  - "YZ"
+  - "SEK"
+  - "JS"
+  - "JAO"
+
+
+
+regular_activities:
+  Slides-large-cases: 1
+  Slides-small-cases: 1
+  Non-gyns: 1
+  Paps: 1
+  Bone-marrow: 15
+  Pb-with-report: 4
+  Pb-without-report: 2
+  Flow: 5
+  Fish: 4
+  Spep: 12
+  External-Consults: 1
+  Meeting: 15
+  Carry-over-points-from-previous-day: 1
+  Diagnostic-Kidney: 15
+  Diagnostic-Liver: 8
+
+
+cardinal_activities:
+  Autopsy/slides: 20
+  Qc: 15
+  Cp: 15
+  Administration: 15
+  Travel-east-side: 20
+  Travel-west-side: 20
+  Hood-river: 20
+  80-percent: 30
+  90-percent: 15
+  Frozens-all-day: 60
+  Frozens-half-day: 30
+  Hemepath: 0
+  Lung: 0
+  Dermpath: 0
+  GI: 0
+  Conf-or-prep-15: 15
+  Conf-or-prep-20: 20
+  Conf-or-prep-30: 30
+  Lab-development: 0
+  Medical-director: 0
+
+distribution-location:
+  East-side-travel: "ET"
+  West-side-travel: "WT"
+
+distribution-specialty:
+  Dermpath: "Dp"
+  GI: "Gi"
+  Hemepath: "Hp"
+  Lab-development: "Ld"
+  Medical-director: 0
+
+no-points:
+  Dermpath: 0
+  GI: 0
+  Hemepath: 0
+  Medical-director: 0
+
+slide_activities:
+  - Slides-large-cases
+  - Slides-small-cases
+
+psv:
+  - "MM"
+  - "MKL"
+  - "SZ"
+  - "ARS"
+  - "MSG"
+
+
+ppmc:
+  - "JDH"
+  - "JCH"
+  - "CAI"
+
+core:
+  - "SW"
+  - "SXH"
+  - "YW"
+  - "CBB"
+  - "BH"
+  - "JBD"
+  - "JLB"
+  - "HX"
+  - "YZ"
+  - "SEK"
+  - "JS"
+  - "EVH"
+  - "MCF"
+
+hr:
+  - "JAO"
+
+
+
+
+
+
+
+
+
