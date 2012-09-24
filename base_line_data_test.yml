@@ -35,7 +35,7 @@ regular_activities:
   Pb-with-report: 4
   Pb-without-report: 2
   Flow: 5
-  Fish: 4
+  Fish: 5
   Spep: 12
   External-Consults: 1
   Meeting: 15
@@ -45,49 +45,60 @@ regular_activities:
 
 
 cardinal_activities:
-  Autopsy/slides: 20
+  Autopsy-Slides: 20
   Qc: 15
   Cp: 15
   Administration: 15
   Travel-east-side: 20
   Travel-west-side: 20
-  Hood-river: 20
   80-percent: 30
   90-percent: 15
   Frozens-all-day: 60
   Frozens-half-day: 30
   Hemepath: 0
+  Hemepath-only: 0
   Lung: 0
-  Dermpath: 0
-  GI: 0
+  Breast-Gyn: 0
+  Dermpath-only: 0
+  Gi-only: 0
   Conf-or-prep-15: 15
   Conf-or-prep-20: 20
   Conf-or-prep-30: 30
   Lab-development: 0
   Medical-director: 0
 
+# yellow color
 distribution-location:
-  East-side-travel: "ET"
-  West-side-travel: "WT"
+  Travel-east-side: 20
+  Travel-west-side: 20
 
+# red color
 distribution-specialty:
-  Dermpath: "Dp"
-  GI: "Gi"
-  Hemepath: "Hp"
+  Dermpath-only: "Dp"
+  Gi-only: "Gi-only"
+  Hemepath-only: "Hp"
   Lab-development: "Ld"
-  Medical-director: 0
+  Medical-director: "Md"
 
+# green color
+distribution-preference:
+  Hemepath: "hp"
+  Lung: "l"
+  Breast-Gyn: "bg"
+
+#slides assigned to these will not be counted
+#also, paths doing these will not be counted as actually present
 no-points:
-  Dermpath: 0
-  GI: 0
-  Hemepath: 0
+  Dermpath-only: 0
+  Gi-only: 0
   Medical-director: 0
+  Lab-development: 0
 
 slide_activities:
   - Slides-large-cases
   - Slides-small-cases
 
-psv:
+b_psv:
   - "MM"
   - "MKL"
   - "SZ"
@@ -95,12 +106,12 @@ psv:
   - "MSG"
 
 
-ppmc:
+c_ppmc:
   - "JDH"
   - "JCH"
   - "CAI"
 
-core:
+d_core:
   - "SW"
   - "SXH"
   - "YW"
@@ -115,7 +126,7 @@ core:
   - "EVH"
   - "MCF"
 
-hr:
+a_hr:
   - "JAO"
 
 
