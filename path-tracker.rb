@@ -12,16 +12,18 @@ require "web_data"
 #require "bundler/setup"
 require 'coffee-script'
 require "sinatra"
+#require 'sinatra-websocket'
 require "erb"
 require 'sinatra/mustache'
 require "pp"
 
+set :server, 'thin'
+set :sockets, []
 
 
 set :username,'Bond'
 set :token,'shakenN0tstirr3d'
 set :password,'007'
-
 
 
 
@@ -47,15 +49,38 @@ get '/sass' do
   sass :styles
 end
 
+#get yaml
+get "/get_yaml" do
+  return DATA.to_json
+end
+
+
 #mainpage
 get "/" do
   erb :index
 end
 
 get "/test" do
-   erb :test
+  puts request
+  if !request.websocket?
+    erb :test
+  else
+    request.websocket do |ws|
+      ws.onopen do
+        ws.send("Hello World!")
+        settings.sockets << ws
+      end
+      ws.onmessage do |msg|
+        puts "this is the msg: #{msg}"
+        EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
+      end
+      ws.onclose do
+        warn("wetbsocket closed")
+        settings.sockets.delete(ws)
+      end
+    end
+  end
 end
-
 
 # main data entry
 get "/setup" do
@@ -81,19 +106,10 @@ get ("/entry") do
   erb :entry
 end
 
-get "/get_entry" do
-  t=Today.new
-  t.get_entry.to_json
-end
-
-get "/path/activities/points" do
-  {path: Pathologist.all_activities_points}.to_json
-end
-
 post "/entry" do
   pp params
   on_array=[]; t=Today.new; path_name=params['path_name']
-  params.keys.each do |key| 
+  params.keys.each do |key|
     value=params[key]
     puts value.class
     #regular activities
@@ -104,9 +120,54 @@ post "/entry" do
   end
   #cardinals
   t.set_cardinal path_name, on_array
+  EM.next_tick { settings.sockets.each{|s| s.send("Hello things changed for #{path_name}") } }
   return {:ok=>true}.to_json
-  
 end
+
+get "/get_entry" do
+  t=Today.new
+  t.get_entry.to_json
+end
+
+get "/get_tomorrow" do
+  t=Today.new 1
+  t.get_entry.to_json
+end
+
+get ("/tomorrow") do
+  protected!
+  erb :tomorrow
+end
+
+
+post "/tomorrow" do
+  puts "***************Tomorrow baby***********"
+  pp params
+  on_array=[]; t=Today.new 1; path_name=params['path_name']
+  params.keys.each do |key|
+    value=params[key]
+    puts value.class
+    #regular activities
+    t.set_regular(path_name,key,value) if (key!="path_name" and value!="" and (DATA["regular_activities"].has_key? key))
+    #checkbox cardinal activity
+    if value=="on" then on_array<<key;puts "You have checkboxed #{key} and added it to #{on_array}"; end
+    puts "are all conditions met? for #{key} #{(key!="path_name" and value!="" and (DATA["regular_activities"].has_key? key))}"
+  end
+  #cardinals
+  t.set_cardinal path_name, on_array
+  EM.next_tick { settings.sockets.each{|s| s.send("Hello things changed for #{path_name}") } }
+  return {:ok=>true}.to_json
+end
+
+get "/path/activities/points" do
+  {path: Pathologist.all_activities_points}.to_json
+end
+
+get "/path/activities/points/tomorrow" do
+  {path: Pathologist.all_activities_points(1)}.to_json
+end
+
+
 
 get "/working?" do
   (Today.new).get_path_working.map{ |x| x.ini}.to_json
@@ -149,6 +210,68 @@ post '/login' do
 end
 
 get('/logout'){ response.set_cookie(settings.username, false) ; redirect '/' }
+
+get '/long_term' do
+  '<h3>Work in Progress. <a href="/"> Back to the base. </a> </h3>'
+end
+
+get '/websocket' do
+  if !request.websocket?
+    puts "#{request} #{request.params()} #{!request.websocket?}"
+    erb :websocket
+  else
+    request.websocket do |ws|
+      ws.onopen do
+        ws.send("Hello World!")
+        settings.sockets << ws
+      end
+      ws.onmessage do |msg|
+        EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
+      end
+      ws.onclose do
+        warn("wetbsocket closed")
+        settings.sockets.delete(ws)
+      end
+    end
+  end
+end
+
+__END__
+@@ websocket
+<html>
+  <body>
+     <h1>Simple Echo & Chat Server</h1>
+     <form id="form">
+       <input type="text" id="input" value="send a message"></input>
+     </form>
+     <div id="msgs"></div>
+  </body>
+
+  <script type="text/javascript">
+    window.onload = function(){
+      (function(){
+        var show = function(el){
+          return function(msg){ el.innerHTML = msg + '<br />' + el.innerHTML; }
+        }(document.getElementById('msgs'));
+
+        var ws       = new WebSocket('ws://' + window.location.host + window.location.pathname);
+        ws.onopen    = function()  { show('websocket opened'); };
+        ws.onclose   = function()  { show('websocket closed'); }
+        ws.onmessage = function(m) { show('websocket message: ' +  m.data); };
+
+        var sender = function(f){
+          var input     = document.getElementById('input');
+          input.onclick = function(){ input.value = "" };
+          f.onsubmit    = function(){
+            ws.send(input.value);
+            input.value = "send a message";
+            return false;
+          }
+        }(document.getElementById('form'));
+      })();
+    }
+  </script>
+</html>
 
 
 

@@ -1,3 +1,33 @@
+#pulls yaml data once per page early on
+update_yaml=()->
+    $.get("/get_yaml", (data)=>
+      data= JSON.parse data
+      console.log "getting"
+      console.log data
+      window.yaml=data
+      )
+window.update_yaml=update_yaml
+
+update_yaml() unless window.yaml
+
+#decorate with icons according to the pathologist's site
+icons=()->
+  for i in yaml.b_psv
+    do (i)->
+        $("##{i}").prepend($('<i class="icon-forward"></i>'))
+  for i in yaml.c_ppmc
+    do (i)->
+        $("##{i}").prepend($('<i class="icon-play"></i>'))
+  for i in yaml.d_core
+    do (i)->
+        $("##{i}").prepend($('<i class="icon-home"></i>'))
+  for i in yaml.a_hr
+    do (i)->
+        $("##{i}").prepend($('<i class="icon-picture"></i>'))
+
+
+
+
 #### HB rendering
 render=(data,html)->
   if typeof(data)=="string"
@@ -6,6 +36,66 @@ render=(data,html)->
   results=hb(data)
   return results
 window.render=render
+
+decorate=()->
+  for ini in _.keys(data["paths_acts_points"])
+    do (ini)->
+      a=has_a_specialty(get_activities(ini))
+      if a
+        #console.log "#{ini} has specialty #{a}"
+        $("##{ini}").parent().parent().addClass("error")
+    do (ini)->
+      a=has_a_location(get_activities(ini))
+      if a
+        #console.log "#{ini} has location #{a}"
+        $("##{ini}").parent().parent().addClass("warning")
+    do (ini)->
+      a=has_a_distribution_preference(get_activities(ini))
+      if a
+        #console.log "#{ini} has location #{a}"
+        $("##{ini}").parent().parent().addClass("success")
+
+  icons()
+
+
+
+window.decorate=decorate
+
+#match activities of pathologist with special categories defined in the yaml file
+
+get_activities=(ini)->
+  _.keys(data["paths_acts_points"][ini])
+window.get_activities=get_activities
+
+has_a_specialty=(arr)->
+  specialties=_.keys yaml["distribution-specialty"]
+  match= _.intersection(arr,specialties)
+  if match.length==1
+    return match[0]
+  else
+    return false
+window.has_a_specialty=has_a_specialty
+
+has_a_location=(arr)->
+  locations=_.keys yaml["distribution-location"]
+  match= _.intersection(arr,locations)
+  if match.length==1
+    return match[0]
+  else
+    return false
+window.has_a_location=has_a_location
+
+
+has_a_distribution_preference=(arr)->
+  specialties=_.keys yaml["distribution-preference"]
+  match= _.intersection(arr,specialties)
+  if match.length==1
+    return match[0]
+  else
+    return false
+window.has_a_distribution_preference=has_a_distribution_preference
+
+
 
 
 #wrapper around the rendering; uses the html target convention "id_html"
@@ -27,7 +117,8 @@ show_sparklines=(func=false)->
     #show button
     $("#serialize").show() if func
     $("#serialize").click(()->serialize()) if func
-    ) 
+    decorate()
+    )
 
 window.show_sparklines=show_sparklines
 
@@ -44,7 +135,12 @@ window.show_cardinal=show_cardinal
 show_regular=()->
   $.get("/activities_regular", (data)->
     data=JSON.parse data
-    render_template "regular", data)
+    render_template "regular", data
+    # bind click to data entry
+    entry_click()
+  )
+
+
 window.show_regular=show_regular
 
 #### updated input, both checkbox and numeric
@@ -56,7 +152,7 @@ update=(id,n)->
 window.update=update
 
 
-  
+
 
 
 # updates points for specific id initials
@@ -77,6 +173,7 @@ show=(id)->
   #$(".show_entry").css("color", "")
 
 
+
 #serialize and call post /entry
 serialize=()->
   data=$("#entry").serializeArray()
@@ -90,7 +187,19 @@ serialize=()->
 
 window.serialize=serialize
 
-  
+
+#activate prompt on entry
+entry_click=()->
+  $('[type=text]').click((e)->
+      console.log e
+      console.log "e scrElement: #{e.srcElement.value}"
+      e.srcElement.value=Number(e.srcElement.value)+Number(prompt("Add:"))
+
+      #console.log e
+      #console.log input_base
+      )
+
+window.entry_click=entry_click
 
 
 
@@ -102,4 +211,6 @@ $(document).ready =>
   #show_cardinal()
   #show_regular()
   show_sparklines()
+  KeyboardJS.bind.key("enter",serialize)
+
 

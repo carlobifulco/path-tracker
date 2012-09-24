@@ -1,3 +1,7 @@
+ws_url='ws://localhost:4567/test'
+window.ws_url=ws_url
+
+
 
 #### HB rendering
 render=(data,html)->
@@ -9,103 +13,54 @@ render=(data,html)->
 window.render=render
 
 
-###### Get cardinal activities, will be defereed
-cardinal=()->
-  $.get("/activities_cardinal", (data)->
-    window.cardinal_data=data
-    window.cardinal_html=($("#cardinal_template")[0]).innerHTML
-    )
-window.cardinal=cardinal
-
-###### Finds plceholder and replaces it with data
-show_cardinal=(name)->
-  $("#cardinal_html").html(render(window.cardinal_data,window.cardinal_html))
-window.show_cardinal =show_cardinal
-
-###### as above
-regular=()->
-  $.get("/activities_regular", (data)->
-    window.regular_data=data
-    window.regular_html=($("#regular_template")[0]).innerHTML
-    )
-window.regular=regular
-
-###### as above
-show_regular=()->
-  $("#regular_html").html(render(window.regular_data,window.regular_html))
-window.show_regular =show_regular
-
-
-
-
-#### updated input, both checkbox and numeric
-update=(id,n)->
-  activity=$("##{id}")
-  console.log activity
-  if activity.attr("type")=="checkbox" then activity.attr("checked",true)
-  if activity.attr("type")=="text" then activity.val(n)
-window.update=update
-
-
-
-
-#### gets /path/activities/points
-activities=()=>
-  dfd = $.Deferred()
-  $.get("/path/activities/points",(data)=>
-    data=JSON.parse(data)
-    console.log data
-    window.path_act_points=data
-    dfd.resolve()
-    )
-  return dfd.promise()
-window.activities=activities
-
-
 render_template=(id,data)->
   $("##{id}_html").html(render(data,($("##{id}_template")[0]).innerHTML))
 window.render_template=render_template
 
-show=(id)->
-  window.id=id
-  $("#id_html").html(render({id: id},($("#id_template")[0]).innerHTML))
-  $.when(cardinal()).then(show_cardinal)
-  $.when(regular()).then(show_regular)
-  $.get("/path/activities/points",(data)=>
-    data=JSON.parse(data)
-    activities=data["path"]["#{id}"]
-    update(i,activities[i].n) for i in _.keys(activities))
-window.show=show
+onclose=()->
+  console.log "a new socket is being made dude..."
+  window.s=new WebSocket(ws_url)
+  window.s.onclose=onclose
+  window.s.onmessage=onmessage
+  window.s.onclose=onclose
 
+onmessage=(m)->
+  console.log m.data
+
+onopen=()->
+  console.log "We are open my dear dude"
+
+
+    # window.onload = function(){
+    #   (function(){
+    #     var show = function(el){
+    #       return function(msg){ el.innerHTML = msg + '<br />' + el.innerHTML; }
+    #     }(document.getElementById('msgs'));
+
+    #     var ws       = new WebSocket('ws://' + window.location.host + window.location.pathname);
+    #     ws.onopen    = function()  { show('websocket opened'); };
+    #     ws.onclose   = function()  { show('websocket closed'); }
+    #     ws.onmessage = function(m) { show('websocket message: ' +  m.data); };
+
+    #     var sender = function(f){
+    #       var input     = document.getElementById('input');
+    #       input.onclick = function(){ input.value = "" };
+    #       f.onsubmit    = function(){
+    #         ws.send(input.value);
+    #         input.value = "send a message";
+    #         return false;
+    #       }
+    #     }(document.getElementById('form'));
+    #   })();
+    # }
 
 $(document).ready =>
-  window.path_act_points={}
-  console.log "I am loaded; USE show(id) to update entry"
-  # $.when(cardinal()).then(show_cardinal)
-  # $.when(regular()).then(show_regular)
-
-  # $.when(activities()).done(()=>
-  #   $.when(working()).done(()=>
-  #     show_activities(i) for i in  window.path_working))
-  # console.log "cbb"
-
-  #cardinal()
+    console.log "I am loaded; USE show(id) to update entry"
+    window.s=new WebSocket(ws_url)
+    window.s.onclose=onclose
+    window.s.onmessage=onmessage
+    window.s.onclose=onclose
 
 
-# show_activities=(id)->
-
-#   activities=window.path_act_points["path"]["#{id}"]
-#   update(i,activities[i].n) for i in _.keys(activities)
-# window.show_activities=show_activities
-
-
-# working=()=>
-#   dfd = $.Deferred()
-#   $.get("/path/working",(data)=>
-#     window.path_working=JSON.parse(data)
-#     dfd.resolve()
-#     )
-#   return dfd.promise()
-# window.working=working
 
 

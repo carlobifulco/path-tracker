@@ -1,7 +1,31 @@
-<!DOCTYPE html>  <html> <head>   <title>web_data.rb</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="path-tracker.html">                 path-tracker.rb               </a>                                           <a class="source" href="test_auth.html">                 test_auth.rb               </a>                                           <a class="source" href="web_data.html">                 web_data.rb               </a>                                           <a class="source" href="web_data_spec.html">                 web_data_spec.rb               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               web_data.rb             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="nb">require</span> <span class="s2">&quot;mongo_mapper&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Configuration</h2>             </td>             <td class="code">               <div class="highlight"><pre><span class="no">DATA_BASENAME</span><span class="o">=</span><span class="s1">&#39;mongomapperbonanza&#39;</span>
-<span class="no">DATA_FILE</span><span class="o">=</span><span class="s2">&quot;./base_line_data.yml&quot;</span>
-<span class="no">MongoMapper</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="no">DATA_BASENAME</span>
-<span class="no">DATA</span><span class="o">=</span><span class="no">YAML</span><span class="o">.</span><span class="n">load</span> <span class="no">File</span><span class="o">.</span><span class="n">read</span> <span class="no">DATA_FILE</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Total Daily Cases</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nc">Tdc</span>
+<!DOCTYPE html>  <html> <head>   <title>web_data.rb</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               web_data.rb             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="n">my_directory</span><span class="o">=</span><span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">))</span>
+<span class="vg">$LOAD_PATH</span> <span class="o">&lt;&lt;</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">my_directory</span><span class="p">,</span><span class="s1">&#39;/lib&#39;</span><span class="p">)</span>
+<span class="vg">$LOAD_PATH</span> <span class="o">&lt;&lt;</span> <span class="n">my_directory</span>
+
+
+<span class="nb">require</span> <span class="s2">&quot;mongo_mapper&quot;</span>
+<span class="nb">require</span> <span class="s2">&quot;pp&quot;</span>
+<span class="nb">require</span> <span class="s2">&quot;utilities&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>testing argv data here ["-p", "4000", "test"] --first 2 args are ports</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nb">puts</span> <span class="s2">&quot;argv data here </span><span class="si">#{</span><span class="no">ARGV</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="nb">puts</span> <span class="s2">&quot;enter testing argv data here [-p, 4000, test] --first 2 args are ports&quot;</span>
+<span class="k">if</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">==</span><span class="s2">&quot;test&quot;</span> <span class="k">then</span> <span class="no">TESTING</span><span class="o">=</span><span class="kp">true</span> <span class="k">else</span> <span class="no">TESTING</span><span class="o">=</span><span class="kp">false</span> <span class="k">end</span>
+<span class="nb">puts</span> <span class="s2">&quot;testig is </span><span class="si">#{</span><span class="no">TESTING</span><span class="si">}</span><span class="s2">&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h2>Configuration</h2>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">if</span> <span class="ow">not</span> <span class="no">TESTING</span>
+  <span class="no">DATA_BASENAME</span><span class="o">=</span><span class="s1">&#39;path-tracker&#39;</span>
+  <span class="no">DATA_FILE</span><span class="o">=</span><span class="s2">&quot;./base_line_data.yml&quot;</span>
+<span class="k">else</span>
+  <span class="no">DATA_BASENAME</span><span class="o">=</span><span class="s1">&#39;test&#39;</span>
+  <span class="no">DATA_FILE</span><span class="o">=</span><span class="s2">&quot;./base_line_data_test.yml&quot;</span>
+<span class="k">end</span>
+
+<span class="no">SLIDES_CONVERSION_FACTOR</span><span class="o">=</span><span class="mi">1</span><span class="o">.</span><span class="mi">2</span>
+
+<span class="nb">puts</span> <span class="s2">&quot;********************************************************&quot;</span>
+<span class="nb">puts</span> <span class="s2">&quot;Using database </span><span class="si">#{</span><span class="no">DATA_BASENAME</span><span class="si">}</span><span class="s2"> and setting </span><span class="si">#{</span><span class="no">DATA_FILE</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="nb">puts</span> <span class="s2">&quot;********************************************************&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Remote login into mongohw  --too slow in real life</h3>
+
+<p>mongoHQ command line mongo alex.mongohq.com:10029/path-tracker -u carlobifulco  -p bifulcocarlo
+MongoMapper.connection = Mongo::Connection.new('alex.mongohq.com',10029)
+MongoMapper.database.authenticate('carlobifulco', 'bifulcocarlo')</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h3>Local login</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="no">MongoMapper</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="no">DATA_BASENAME</span>
+<span class="no">DATA</span><span class="o">=</span><span class="no">YAML</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">read</span> <span class="no">DATA_FILE</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h3>Total Daily Cases container</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nc">Tdc</span>
   <span class="kp">include</span> <span class="no">MongoMapper</span><span class="o">::</span><span class="no">Document</span>
   <span class="n">safe</span>
   <span class="n">key</span> <span class="ss">:pathologists</span><span class="p">,</span> <span class="nb">Array</span>
@@ -9,110 +33,271 @@
   <span class="n">key</span> <span class="ss">:blocks_west</span><span class="p">,</span> <span class="nb">Integer</span><span class="p">,</span> <span class="ss">:default</span><span class="o">=&gt;</span><span class="mi">0</span>
   <span class="n">key</span> <span class="ss">:blocks_east</span><span class="p">,</span> <span class="nb">Integer</span><span class="p">,</span> <span class="ss">:default</span><span class="o">=&gt;</span><span class="mi">0</span>
   <span class="n">key</span> <span class="ss">:tot_points</span><span class="p">,</span> <span class="nb">Integer</span><span class="p">,</span> <span class="ss">:default</span><span class="o">=&gt;</span><span class="mi">0</span>
+  <span class="n">key</span> <span class="ss">:blocks_hr</span><span class="p">,</span> <span class="nb">Integer</span><span class="p">,</span> <span class="ss">:default</span><span class="o">=&gt;</span><span class="mi">0</span>
   <span class="n">key</span> <span class="ss">:extra_points_tot</span><span class="p">,</span> <span class="nb">Integer</span><span class="p">,</span> <span class="ss">:default</span><span class="o">=&gt;</span><span class="mi">0</span>
-  <span class="n">key</span> <span class="ss">:tot_points_pathologist</span><span class="p">,</span> <span class="nb">Integer</span><span class="p">,</span> <span class="ss">:default</span><span class="o">=&gt;</span><span class="mi">0</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Date.today.to<em>time.utc
-Tdc.where(:date=>Date.today.to</em>time.utc).to_a</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="n">key</span> <span class="ss">:date</span><span class="p">,</span> <span class="no">Time</span><span class="p">,</span> <span class="ss">:default</span><span class="o">=&gt;</span><span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">.</span><span class="n">to_time</span><span class="o">.</span><span class="n">utc</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>returns only one Tdc</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">today</span>
-    <span class="n">d</span><span class="o">=</span><span class="n">where</span><span class="p">(</span><span class="ss">:date</span><span class="o">=&gt;</span><span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">.</span><span class="n">to_time</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">count</span><span class="o">&gt;</span><span class="mi">0</span> <span class="k">then</span> <span class="n">d</span><span class="o">.</span><span class="n">to_a</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="k">else</span> <span class="no">Tdc</span><span class="o">.</span><span class="n">new</span> <span class="k">end</span>
-  <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>only todays match</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">get_path</span> <span class="n">ini</span>
+  <span class="n">key</span> <span class="ss">:tot_points_pathologist</span><span class="p">,</span> <span class="nb">Integer</span><span class="p">,</span> <span class="ss">:default</span><span class="o">=&gt;</span><span class="mi">0</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Date.today.to<em>time.utc
+Tdc.where(:date=>Date.today.to</em>time.utc).to_a</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="n">key</span> <span class="ss">:date</span><span class="p">,</span> <span class="no">Time</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>returns only one Tdc</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">today</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">date</span><span class="o">=</span><span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">+</span><span class="n">n</span>
+    <span class="n">d</span><span class="o">=</span><span class="n">where</span><span class="p">(</span><span class="ss">:date</span><span class="o">=&gt;</span><span class="n">date</span><span class="o">.</span><span class="n">to_time</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">to_a</span><span class="o">.</span><span class="n">count</span><span class="o">&gt;</span><span class="mi">0</span>
+      <span class="k">return</span> <span class="n">d</span><span class="o">.</span><span class="n">to_a</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+    <span class="k">else</span>
+      <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">new</span>
+      <span class="n">t</span><span class="o">.</span><span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="o">.</span><span class="n">to_time</span><span class="o">.</span><span class="n">utc</span>
+      <span class="n">t</span><span class="o">.</span><span class="n">save</span>
+      <span class="k">return</span> <span class="n">t</span>
+    <span class="k">end</span>
+  <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>only todays match</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">get_path</span> <span class="n">ini</span>
     <span class="nb">self</span><span class="o">.</span><span class="n">today</span><span class="o">.</span><span class="n">pathologist</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">ini</span><span class="o">==</span><span class="n">ini</span><span class="p">}</span>
   <span class="k">end</span>
-<span class="k">end</span>
+<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>index Tdc</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="no">Tdc</span><span class="o">.</span><span class="n">ensure_index</span><span class="p">(</span><span class="ss">:date</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">Today</span>
-  <span class="kp">attr_accessor</span> <span class="ss">:t</span>
-  <span class="k">def</span> <span class="nf">initialize</span>
-    <span class="vi">@t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span>
-  <span class="k">end</span>
-
-  <span class="k">def</span> <span class="nf">reload</span>
-    <span class="vi">@t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span>
-  <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>all paths for the day</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">get_path_all</span>
-    <span class="vi">@t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span>
-    <span class="vi">@t</span><span class="o">.</span><span class="n">pathologist</span>
-  <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>magic souce formula....</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">get_points_slide_tot</span>
-     <span class="n">total_slide_points</span><span class="o">=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="vi">@t</span><span class="o">.</span><span class="n">blocks_west</span><span class="o">+</span><span class="vi">@t</span><span class="o">.</span><span class="n">blocks_east</span><span class="p">)</span>
-     <span class="n">total_slide_points</span><span class="o">.</span><span class="n">to_int</span>
-  <span class="k">end</span>
-
-  <span class="k">def</span> <span class="nf">get_points_tot</span>
-    <span class="vi">@t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span>
-    <span class="vi">@t</span><span class="o">.</span><span class="n">tot_points</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">get_points_slide_tot</span><span class="p">()</span> <span class="o">+</span> <span class="no">Activity</span><span class="o">.</span><span class="n">get_activity_points</span>
-    <span class="vi">@t</span><span class="o">.</span><span class="n">save</span>
-    <span class="vi">@t</span><span class="o">.</span><span class="n">tot_points</span>
-  <span class="k">end</span>
-
-  <span class="k">def</span> <span class="nf">get_setup</span>
-    <span class="k">if</span> <span class="nb">self</span><span class="o">.</span><span class="n">get_path_working</span><span class="o">.</span><span class="n">count</span><span class="o">==</span><span class="mi">0</span> <span class="k">then</span> <span class="n">populate</span> <span class="k">end</span>
-    <span class="n">tot_points</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">get_points_tot</span><span class="p">()</span>
-    <span class="n">pathologist_working</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">get_path_working</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">ini</span> <span class="p">}</span>
-    <span class="n">path_count</span><span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">get_path_working</span><span class="o">.</span><span class="n">count</span>
-    <span class="n">setup</span><span class="o">=</span><span class="p">{</span><span class="n">blocks_west</span><span class="p">:</span> <span class="vi">@t</span><span class="o">.</span><span class="n">blocks_west</span><span class="p">,</span>
-          <span class="n">blocks_east</span><span class="p">:</span> <span class="vi">@t</span><span class="o">.</span><span class="n">blocks_east</span><span class="p">,</span>
-          <span class="n">blocks_tot</span><span class="p">:</span> <span class="vi">@t</span><span class="o">.</span><span class="n">blocks_west</span><span class="o">+</span><span class="vi">@t</span><span class="o">.</span><span class="n">blocks_east</span><span class="p">,</span>
-          <span class="n">tot_points</span><span class="p">:</span> <span class="n">tot_points</span><span class="p">,</span>
-          <span class="n">pathologist_all</span><span class="p">:</span> <span class="nb">self</span><span class="o">.</span><span class="n">get_path_all</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">ini</span>  <span class="p">},</span>
-          <span class="n">pathologist_working</span><span class="p">:</span> <span class="n">pathologist_working</span><span class="p">,</span>
-          <span class="n">pathologist_absent</span><span class="p">:</span> <span class="nb">self</span><span class="o">.</span><span class="n">get_path_absent</span><span class="p">,</span>
-          <span class="n">path_count</span><span class="p">:</span> <span class="n">path_count</span><span class="p">,</span>
-          <span class="n">date</span><span class="p">:</span> <span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">.</span><span class="n">to_s</span><span class="p">}</span>
-    <span class="n">setup</span><span class="o">[</span><span class="ss">:points_per_pathologist</span><span class="o">]=</span>  <span class="n">tot_points</span><span class="o">/</span><span class="n">path_count</span> <span class="k">if</span> <span class="n">path_count</span> <span class="o">!=</span><span class="mi">0</span>
-    <span class="k">return</span> <span class="n">setup</span>
-  <span class="k">end</span>
-
-  <span class="k">def</span> <span class="nf">get_path_working</span>
-    <span class="vi">@t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span>
-    <span class="vi">@t</span><span class="o">.</span><span class="n">pathologist</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">working</span><span class="o">==</span><span class="kp">true</span><span class="p">}</span>
-  <span class="k">end</span>
-
-  <span class="k">def</span> <span class="nf">get_path_absent</span>
-    <span class="vi">@t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span>
-    <span class="vi">@t</span><span class="o">.</span><span class="n">pathologist</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">working</span><span class="o">==</span><span class="kp">false</span><span class="p">}</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">ini</span><span class="p">}</span>
-  <span class="k">end</span>
-
-  <span class="k">def</span> <span class="nf">get_path_by_ini</span> <span class="n">ini</span>
-    <span class="vi">@t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span>
-    <span class="nb">p</span><span class="o">=</span><span class="vi">@t</span><span class="o">.</span><span class="n">pathologist</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">ini</span><span class="o">==</span><span class="n">ini</span><span class="p">}</span>
-    <span class="nb">p</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="k">if</span> <span class="nb">p</span><span class="o">.</span><span class="n">count</span><span class="o">&gt;</span><span class="mi">0</span>
-  <span class="k">end</span>
-
-  <span class="k">def</span> <span class="nf">get_points_per_path</span>
-    <span class="vi">@t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span>
-    <span class="n">tot_points</span><span class="o">=</span><span class="vi">@t</span><span class="o">.</span><span class="n">blocks_west</span><span class="o">+</span><span class="vi">@t</span><span class="o">.</span><span class="n">blocks_east</span><span class="o">+</span><span class="no">Activity</span><span class="o">.</span><span class="n">get_activity_points</span>
-    <span class="n">n_pathologist</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">get_path_working</span><span class="o">.</span><span class="n">count</span>
-    <span class="k">if</span> <span class="n">n_pathologist</span> <span class="o">&gt;</span><span class="mi">0</span>
-      <span class="k">then</span> <span class="k">return</span> <span class="n">tot_points</span><span class="o">/</span><span class="n">n_pathologist</span>
-    <span class="k">else</span>
-      <span class="k">return</span> <span class="kp">nil</span>
-    <span class="k">end</span>
-  <span class="k">end</span>
-
+<span class="k">module</span> <span class="nn">TodaySet</span>
   <span class="k">def</span> <span class="nf">set_path_off</span> <span class="n">ini</span>
     <span class="nb">p</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">get_path_by_ini</span> <span class="n">ini</span>
     <span class="nb">p</span><span class="o">.</span><span class="n">working</span><span class="o">=</span><span class="kp">false</span>
     <span class="nb">p</span><span class="o">.</span><span class="n">save</span>
   <span class="k">end</span>
 
+  <span class="k">def</span> <span class="nf">set_blocks_west</span> <span class="n">n</span>
+    <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span> <span class="vi">@n</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">blocks_west</span><span class="o">=</span><span class="n">n</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">save</span>
+    <span class="nb">puts</span> <span class="s2">&quot;blocks west </span><span class="si">#{</span><span class="n">t</span><span class="o">.</span><span class="n">blocks_west</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">set_blocks_east</span> <span class="n">n</span>
+    <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span> <span class="vi">@n</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">blocks_east</span><span class="o">=</span><span class="n">n</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">save</span>
+    <span class="nb">puts</span> <span class="s2">&quot;blocks eats </span><span class="si">#{</span><span class="n">t</span><span class="o">.</span><span class="n">blocks_east</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">set_blocks_hr</span> <span class="n">n</span>
+    <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span> <span class="vi">@n</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">blocks_hr</span><span class="o">=</span><span class="n">n</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">save</span>
+  <span class="k">end</span>
+
   <span class="k">def</span> <span class="nf">set_path_on</span> <span class="n">ini</span>
-    <span class="nb">p</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">get_path_by_ini</span> <span class="n">ini</span>
+    <span class="nb">p</span><span class="o">=</span><span class="n">get_path_by_ini</span> <span class="n">ini</span>
     <span class="nb">p</span><span class="o">.</span><span class="n">working</span><span class="o">=</span><span class="kp">true</span>
     <span class="nb">p</span><span class="o">.</span><span class="n">save</span>
   <span class="k">end</span>
 
-  <span class="k">def</span> <span class="nf">set_blocks_west</span> <span class="n">n</span>
-    <span class="vi">@t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span>
-    <span class="vi">@t</span><span class="o">.</span><span class="n">blocks_west</span><span class="o">=</span><span class="n">n</span>
-    <span class="vi">@t</span><span class="o">.</span><span class="n">save</span>
+  <span class="k">def</span> <span class="nf">set_present</span> <span class="n">ini_array</span>
+    <span class="n">ini_array</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span><span class="o">|</span><span class="n">ini</span><span class="o">|</span> <span class="n">set_path_on</span> <span class="n">ini</span><span class="p">}</span>
   <span class="k">end</span>
 
-  <span class="k">def</span> <span class="nf">set_blocks_east</span> <span class="n">n</span>
-    <span class="vi">@t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span>
-    <span class="vi">@t</span><span class="o">.</span><span class="n">blocks_east</span><span class="o">=</span><span class="n">n</span>
-    <span class="vi">@t</span><span class="o">.</span><span class="n">save</span>
+  <span class="k">def</span> <span class="nf">set_absent</span> <span class="n">ini_array</span>
+    <span class="n">ini_array</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span><span class="o">|</span><span class="n">ini</span><span class="o">|</span>  <span class="n">set_path_off</span> <span class="n">ini</span><span class="p">}</span>
   <span class="k">end</span>
 
 <span class="k">end</span>
+
+
+<span class="k">module</span> <span class="nn">TodayGet</span>
+
+  <span class="k">def</span> <span class="nf">get_path_all</span>
+    <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span> <span class="vi">@n</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">pathologist</span>
+  <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>magic souce formula....</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">get_points_slide_tot</span>
+     <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span> <span class="vi">@n</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>conversion blocks slides</p>             </td>             <td class="code">               <div class="highlight"><pre>     <span class="n">total_slide_points</span><span class="o">=</span> <span class="no">SLIDES_CONVERSION_FACTOR</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">blocks_west</span><span class="o">+</span><span class="n">t</span><span class="o">.</span><span class="n">blocks_east</span><span class="o">+</span><span class="n">t</span><span class="o">.</span><span class="n">blocks_hr</span><span class="p">)</span>
+     <span class="n">total_slide_points</span><span class="o">.</span><span class="n">to_int</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">get_points_tot</span>
+    <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span> <span class="vi">@n</span>
+    <span class="nb">puts</span> <span class="s2">&quot;Slides:</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">get_points_slide_tot</span><span class="p">()</span><span class="si">}</span><span class="s2">;Activity: </span><span class="si">#{</span><span class="no">Activity</span><span class="o">.</span><span class="n">get_activity_points</span><span class="p">(</span><span class="vi">@n</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">tot_points</span><span class="o">=</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">get_points_slide_tot</span><span class="p">()</span> <span class="o">+</span> <span class="no">Activity</span><span class="o">.</span><span class="n">get_activity_points</span><span class="p">(</span><span class="vi">@n</span><span class="p">))</span>
+    <span class="nb">puts</span> <span class="n">t</span><span class="o">.</span><span class="n">tot_points</span>
+    <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">tot_points</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">get_path_working</span>
+    <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span> <span class="vi">@n</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">pathologist</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">working</span><span class="o">==</span><span class="kp">true</span><span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">get_path_specialty</span>
+    <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span> <span class="vi">@n</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>only if working....</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="n">t</span><span class="o">.</span><span class="n">pathologist</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">specialty_only</span><span class="o">==</span><span class="kp">true</span><span class="p">}</span> <span class="o">&amp;</span>  <span class="n">t</span><span class="o">.</span><span class="n">pathologist</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">working</span><span class="o">==</span><span class="kp">true</span><span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">get_path_absent</span>
+    <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span> <span class="vi">@n</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">pathologist</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">working</span><span class="o">==</span><span class="kp">false</span><span class="p">}</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">ini</span><span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">get_slides_distributed</span>
+    <span class="no">Activity</span><span class="o">.</span><span class="n">get_slides_distributed</span> <span class="vi">@n</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">get_slides_to_be_distributed</span>
+    <span class="p">(</span><span class="n">get_points_slide_tot</span><span class="o">/</span><span class="no">SLIDES_CONVERSION_FACTOR</span><span class="p">)</span><span class="o">-</span><span class="n">get_slides_distributed</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">get_path_by_ini</span> <span class="n">ini</span>
+    <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span> <span class="vi">@n</span>
+    <span class="nb">p</span><span class="o">=</span><span class="n">t</span><span class="o">.</span><span class="n">pathologist</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">ini</span><span class="o">==</span><span class="n">ini</span><span class="p">}</span>
+    <span class="nb">p</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="k">if</span> <span class="nb">p</span><span class="o">.</span><span class="n">count</span><span class="o">&gt;</span><span class="mi">0</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+
+<span class="k">class</span> <span class="nc">Today</span>
+  <span class="kp">include</span> <span class="no">TodaySet</span>
+  <span class="kp">include</span> <span class="no">TodayGet</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span>
+    <span class="vi">@all_activities_points</span><span class="o">=</span> <span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;regular_activities&quot;</span><span class="o">].</span><span class="n">merge</span> <span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;cardinal_activities&quot;</span><span class="o">]</span>
+    <span class="vi">@n</span><span class="o">=</span><span class="n">n</span>
+    <span class="vi">@time</span><span class="o">=</span><span class="p">(</span><span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">+</span><span class="vi">@n</span><span class="p">)</span><span class="o">.</span><span class="n">to_time</span><span class="o">.</span><span class="n">utc</span>
+    <span class="k">if</span> <span class="p">(</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span> <span class="vi">@n</span><span class="p">)</span><span class="o">.</span><span class="n">pathologists</span><span class="o">.</span><span class="n">count</span><span class="o">==</span><span class="mi">0</span> <span class="k">then</span> <span class="n">populate</span> <span class="vi">@n</span> <span class="k">end</span>
+  <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>all paths for the day</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">get_setup</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>populates if day is empty</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span> <span class="vi">@n</span>
+    <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">pathologists</span><span class="o">.</span><span class="n">count</span><span class="o">==</span><span class="mi">0</span> <span class="k">then</span> <span class="n">populate</span> <span class="k">end</span>
+    <span class="n">tot_points</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">get_points_tot</span><span class="p">()</span>
+    <span class="n">blocks_tot</span><span class="o">=</span><span class="n">t</span><span class="o">.</span><span class="n">blocks_west</span><span class="o">+</span><span class="n">t</span><span class="o">.</span><span class="n">blocks_east</span><span class="o">+</span><span class="n">t</span><span class="o">.</span><span class="n">blocks_hr</span><span class="p">;</span> <span class="n">slide_points</span><span class="o">=</span><span class="p">(</span><span class="n">blocks_tot</span><span class="o">*</span><span class="no">SLIDES_CONVERSION_FACTOR</span><span class="p">)</span><span class="o">.</span><span class="n">to_i</span>
+    <span class="n">slides_distributed</span><span class="o">=</span><span class="no">Activity</span><span class="o">.</span><span class="n">get_slides_distributed</span><span class="p">(</span><span class="vi">@n</span><span class="p">);</span> <span class="p">;</span> <span class="n">activity_points</span><span class="o">=</span><span class="n">tot_points</span><span class="o">-</span><span class="n">slide_points</span>
+    <span class="k">if</span> <span class="n">slides_distributed</span> <span class="k">then</span> <span class="n">slides_remaining</span><span class="o">=</span><span class="p">(</span><span class="n">slide_points</span><span class="o">/</span><span class="no">SLIDES_CONVERSION_FACTOR</span><span class="p">)</span> <span class="o">-</span> <span class="n">slides_distributed</span> <span class="k">else</span> <span class="n">slides_remaining</span><span class="o">=</span><span class="n">slide_points</span><span class="o">/</span><span class="no">SLIDES_CONVERSION_FACTOR</span> <span class="k">end</span>
+    <span class="n">pathologist_working</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">get_path_working</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">ini</span> <span class="p">}</span>
+    <span class="n">path_count</span><span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">get_path_working</span><span class="o">.</span><span class="n">count</span>
+    <span class="n">setup</span><span class="o">=</span><span class="p">{</span><span class="n">blocks_west</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">blocks_west</span><span class="p">,</span>
+          <span class="n">blocks_east</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">blocks_east</span><span class="p">,</span>
+          <span class="n">blocks_hr</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">blocks_hr</span><span class="p">,</span>
+          <span class="n">blocks_tot</span><span class="p">:</span> <span class="n">blocks_tot</span><span class="p">,</span>
+          <span class="n">tot_points</span><span class="p">:</span> <span class="n">tot_points</span><span class="p">,</span>
+          <span class="n">slide_points</span><span class="p">:</span> <span class="n">slide_points</span><span class="p">,</span>
+          <span class="n">activity_points</span><span class="p">:</span> <span class="n">activity_points</span><span class="p">,</span>
+          <span class="n">pathologist_all</span><span class="p">:</span> <span class="nb">self</span><span class="o">.</span><span class="n">get_path_all</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">ini</span>  <span class="p">},</span>
+          <span class="n">pathologist_working</span><span class="p">:</span> <span class="p">(</span><span class="n">pathologist_working</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">,</span>
+          <span class="n">pathologist_absent</span><span class="p">:</span> <span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">get_path_absent</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">,</span>
+          <span class="n">path_count</span><span class="p">:</span> <span class="n">path_count</span><span class="p">,</span>
+          <span class="n">date</span><span class="p">:</span> <span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">.</span><span class="n">to_s</span><span class="p">,</span>
+          <span class="n">slides_distributed</span><span class="p">:</span> <span class="n">slides_distributed</span><span class="p">,</span>
+          <span class="n">slides_remaining</span><span class="p">:</span> <span class="n">slides_remaining</span>
+          <span class="p">}</span>
+    <span class="n">setup</span><span class="o">[</span><span class="ss">:points_per_pathologist</span><span class="o">]=</span>  <span class="nb">self</span><span class="o">.</span><span class="n">points_per_path</span>
+    <span class="k">return</span> <span class="n">setup</span>
+  <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>equation for asserting total points per head</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">points_per_path</span>
+    <span class="n">tot_points</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">get_points_tot</span>
+    <span class="n">path_count</span><span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">get_path_working</span><span class="o">.</span><span class="n">count</span><span class="o">-</span><span class="nb">self</span><span class="o">.</span><span class="n">get_path_specialty</span><span class="o">.</span><span class="n">count</span>
+    <span class="k">if</span> <span class="n">path_count</span> <span class="o">!=</span><span class="mi">0</span>
+      <span class="n">tot_points</span><span class="o">/</span><span class="n">path_count</span>
+    <span class="k">else</span>
+      <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+
+  <span class="k">def</span> <span class="nf">set_setup</span> <span class="n">params</span>
+    <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span> <span class="vi">@n</span>
+    <span class="nb">puts</span> <span class="n">params</span>
+    <span class="nb">puts</span> <span class="s2">&quot; params is </span><span class="si">#{</span><span class="n">params</span><span class="si">}</span><span class="s2">; and has key </span><span class="si">#{</span><span class="n">params</span><span class="o">.</span><span class="n">has_key?</span> <span class="s1">&#39;blocks_east&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">set_blocks_east</span> <span class="n">params</span><span class="o">[</span><span class="s1">&#39;blocks_east&#39;</span><span class="o">]</span> <span class="c1">#unless (not (params.has_key? &#39;blocks_east&#39;))</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">set_blocks_west</span> <span class="n">params</span><span class="o">[</span><span class="s1">&#39;blocks_west&#39;</span><span class="o">]</span> <span class="c1">#unless (not (params.has_key? &#39;blocks_west&#39;))</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">set_blocks_hr</span> <span class="n">params</span><span class="o">[</span><span class="s1">&#39;blocks_hr&#39;</span><span class="o">]</span>
+    <span class="nb">puts</span> <span class="s2">&quot;where are you </span><span class="si">#{</span><span class="n">params</span><span class="o">[</span><span class="s1">&#39;blocks_hr&#39;</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">set_present</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="s1">&#39;path_present&#39;</span><span class="o">]</span><span class="p">)</span> <span class="k">unless</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">has_key?</span> <span class="s1">&#39;path_present&#39;</span><span class="p">))</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">set_absent</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="s1">&#39;path_absent&#39;</span><span class="o">]</span><span class="p">)</span> <span class="k">unless</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">has_key?</span> <span class="s1">&#39;path_absent&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="kp">true</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">get_entry</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>populates if day is empty</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span> <span class="vi">@n</span>
+    <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">pathologists</span><span class="o">.</span><span class="n">count</span><span class="o">==</span><span class="mi">0</span> <span class="k">then</span> <span class="n">populate</span> <span class="vi">@n</span> <span class="k">end</span>
+    <span class="n">entry</span><span class="o">=</span><span class="p">{</span><span class="n">pathologist_working</span><span class="p">:</span> <span class="nb">self</span><span class="o">.</span><span class="n">get_path_working</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">ini</span><span class="p">}</span><span class="o">.</span><span class="n">sort</span><span class="p">(),</span>
+      <span class="n">paths_acts_points</span><span class="p">:</span> <span class="no">Pathologist</span><span class="o">.</span><span class="n">all_activities_points</span><span class="p">(</span><span class="vi">@n</span><span class="p">),</span>
+      <span class="n">paths_tot_points</span><span class="p">:</span> <span class="no">Pathologist</span><span class="o">.</span><span class="n">path_all_points</span><span class="p">(</span><span class="vi">@n</span><span class="p">)</span>
+     <span class="p">}</span>
+  <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>activities entry point for regular</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">set_regular</span> <span class="n">path_ini</span><span class="p">,</span> <span class="n">activity_name</span><span class="p">,</span> <span class="n">n</span>
+    <span class="nb">p</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">get_path_by_ini</span> <span class="n">path_ini</span>
+    <span class="n">a</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">get_activity</span> <span class="n">path_ini</span><span class="p">,</span> <span class="n">activity_name</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">n</span><span class="o">=</span><span class="n">n</span>
+    <span class="nb">p</span><span class="o">.</span><span class="n">activities</span><span class="o">&lt;&lt;</span><span class="n">a</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">save</span>
+    <span class="nb">p</span><span class="o">.</span><span class="n">save</span>
+    <span class="n">pp</span> <span class="s2">&quot;just updated for you </span><span class="si">#{</span><span class="n">path_ini</span><span class="si">}</span><span class="s2">&#39;s </span><span class="si">#{</span><span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> to a number of </span><span class="si">#{</span><span class="n">a</span><span class="o">.</span><span class="n">n</span><span class="si">}</span><span class="s2"> and tot_points of </span><span class="si">#{</span><span class="n">a</span><span class="o">.</span><span class="n">tot_points</span><span class="si">}</span><span class="s2"> &quot;</span>
+  <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>activities entry point for cardinal</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">set_cardinal</span> <span class="n">path_ini</span><span class="p">,</span> <span class="n">on_array</span>
+    <span class="n">no_work_activities</span><span class="o">=</span><span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;no-points&quot;</span><span class="o">].</span><span class="n">keys</span>
+    <span class="nb">p</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">get_path_by_ini</span> <span class="n">path_ini</span>
+    <span class="n">off_array</span><span class="o">=</span><span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;cardinal_activities&quot;</span><span class="o">].</span><span class="n">keys</span><span class="o">.</span><span class="n">select</span><span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="ow">not</span> <span class="p">(</span><span class="n">on_array</span><span class="o">.</span><span class="n">member?</span> <span class="n">x</span><span class="p">)}</span>
+    <span class="nb">puts</span> <span class="s2">&quot;on: </span><span class="si">#{</span><span class="n">on_array</span><span class="si">}</span><span class="s2">; not on </span><span class="si">#{</span><span class="n">off_array</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">on_array</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">activity_name</span><span class="o">|</span>
+      <span class="n">a</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">get_activity</span> <span class="n">path_ini</span><span class="p">,</span> <span class="n">activity_name</span>
+      <span class="n">a</span><span class="o">.</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span>
+      <span class="nb">p</span><span class="o">.</span><span class="n">activities</span><span class="o">&lt;&lt;</span><span class="n">a</span>
+      <span class="n">a</span><span class="o">.</span><span class="n">save</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>if activity is one of the no-work-acts them set pathologist as specialty only</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nb">puts</span> <span class="s2">&quot;Specialty? :</span><span class="si">#{</span><span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;no-points&quot;</span><span class="o">].</span><span class="n">keys</span><span class="o">.</span><span class="n">include?</span> <span class="n">activity_name</span><span class="si">}</span><span class="s2">&quot;</span> 
+      <span class="k">if</span> <span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;no-points&quot;</span><span class="o">].</span><span class="n">keys</span><span class="o">.</span><span class="n">include?</span> <span class="n">activity_name</span>
+        <span class="nb">p</span><span class="o">.</span><span class="n">specialty_only</span><span class="o">=</span><span class="kp">true</span>
+      <span class="k">end</span>
+      <span class="nb">p</span><span class="o">.</span><span class="n">save</span>
+    <span class="k">end</span>
+    <span class="n">off_array</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">activity_name</span><span class="o">|</span>
+      <span class="n">a</span><span class="o">=</span><span class="no">Activity</span><span class="o">.</span><span class="n">get_ini_name</span><span class="p">(</span><span class="vi">@n</span><span class="p">,</span><span class="n">path_ini</span><span class="p">,</span><span class="n">activity_name</span><span class="p">)</span>
+      <span class="n">a</span><span class="o">.</span><span class="n">delete</span> <span class="k">if</span> <span class="n">a</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">get_activity</span> <span class="n">path_ini</span><span class="p">,</span> <span class="n">activity_name</span>
+    <span class="nb">p</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">get_path_by_ini</span> <span class="n">path_ini</span>
+    <span class="n">path_existing_activities</span><span class="o">=</span><span class="nb">p</span><span class="o">.</span><span class="n">activities</span><span class="o">.</span><span class="n">map</span><span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">path_existing_activities</span><span class="o">.</span><span class="n">member?</span> <span class="n">activity_name</span>
+       <span class="n">a</span><span class="o">=</span><span class="no">Activity</span><span class="o">.</span><span class="n">get_ini_name</span><span class="p">(</span><span class="vi">@n</span><span class="p">,</span> <span class="n">path_ini</span><span class="p">,</span><span class="n">activity_name</span><span class="p">)</span>
+    <span class="k">else</span>
+      <span class="nb">puts</span> <span class="s2">&quot;new activity&quot;</span>
+      <span class="n">a</span><span class="o">=</span><span class="no">Activity</span><span class="o">.</span><span class="n">new</span>
+      <span class="n">a</span><span class="o">.</span><span class="n">date</span><span class="o">=</span><span class="vi">@time</span>
+      <span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="o">=</span><span class="n">activity_name</span>
+      <span class="n">a</span><span class="o">.</span><span class="n">ini</span><span class="o">=</span><span class="n">path_ini</span>
+      <span class="k">if</span> <span class="vi">@all_activities_points</span><span class="o">.</span><span class="n">has_key?</span> <span class="n">activity_name</span> <span class="k">then</span> <span class="n">a</span><span class="o">.</span><span class="n">points</span><span class="o">=</span><span class="vi">@all_activities_points</span><span class="o">[</span><span class="n">activity_name</span><span class="o">]</span> <span class="k">else</span> <span class="k">return</span> <span class="kp">false</span> <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">a</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">save_activity</span> <span class="n">path_ini</span><span class="p">,</span> <span class="n">activity_name</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="kp">false</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">AnotherDay</span>
+
+  <span class="k">def</span> <span class="nf">get_entry</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>populates if day is empty</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="n">day</span><span class="o">=</span><span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">+</span><span class="n">n</span>
+    <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span> <span class="n">day</span>
+    <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">pathologists</span><span class="o">.</span><span class="n">count</span><span class="o">==</span><span class="mi">0</span> <span class="k">then</span> <span class="n">populate</span> <span class="k">end</span>
+    <span class="n">pathologist_working</span><span class="o">=</span><span class="no">Pathologist</span><span class="o">.</span><span class="n">get_path_working</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">ini</span><span class="p">}</span><span class="o">.</span><span class="n">sort</span>
+    <span class="n">entry</span><span class="o">=</span><span class="p">{</span><span class="n">pathologist_working</span><span class="p">:</span> <span class="n">pathologist_working</span><span class="p">,</span>
+      <span class="n">paths_acts_points</span><span class="p">:</span> <span class="no">Pathologist</span><span class="o">.</span><span class="n">all_activities_points</span><span class="p">(</span><span class="n">n</span><span class="p">),</span>
+      <span class="n">paths_tot_points</span><span class="p">:</span> <span class="no">Pathologist</span><span class="o">.</span><span class="n">path_all_points</span>
+     <span class="p">}</span>
+  <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>activities entry point for regular</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">set_regular</span> <span class="n">path_ini</span><span class="p">,</span> <span class="n">activity_name</span><span class="p">,</span> <span class="n">n</span>
+    <span class="nb">p</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">get_path_by_ini</span> <span class="n">path_ini</span>
+    <span class="n">existing_activities</span><span class="o">=</span><span class="nb">p</span><span class="o">.</span><span class="n">activities</span><span class="o">.</span><span class="n">map</span><span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>get if existing else new</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="n">existing_activities</span><span class="o">.</span><span class="n">member?</span> <span class="n">activity_name</span> <span class="k">then</span> <span class="n">a</span><span class="o">=</span><span class="no">Activity</span><span class="o">.</span><span class="n">get_ini_name</span><span class="p">(</span><span class="n">path_ini</span><span class="p">,</span><span class="n">activity_name</span><span class="p">)</span> <span class="k">else</span> <span class="n">a</span><span class="o">=</span><span class="no">Activity</span><span class="o">.</span><span class="n">new</span>  <span class="k">end</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="o">=</span><span class="n">activity_name</span>
+    <span class="k">if</span> <span class="vi">@all_activities_points</span><span class="o">.</span><span class="n">has_key?</span> <span class="n">activity_name</span> <span class="k">then</span> <span class="n">a</span><span class="o">.</span><span class="n">points</span><span class="o">=</span><span class="vi">@all_activities_points</span><span class="o">[</span><span class="n">activity_name</span><span class="o">]</span> <span class="k">else</span> <span class="k">return</span> <span class="kp">false</span> <span class="k">end</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">n</span><span class="o">=</span><span class="n">n</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">ini</span><span class="o">=</span><span class="n">path_ini</span>
+    <span class="nb">p</span><span class="o">.</span><span class="n">activities</span><span class="o">&lt;&lt;</span><span class="n">a</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">save</span>
+    <span class="nb">p</span><span class="o">.</span><span class="n">save</span>
+    <span class="n">pp</span> <span class="s2">&quot;just updated for you </span><span class="si">#{</span><span class="n">path_ini</span><span class="si">}</span><span class="s2">&#39;s </span><span class="si">#{</span><span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> to a number of </span><span class="si">#{</span><span class="n">a</span><span class="o">.</span><span class="n">n</span><span class="si">}</span><span class="s2"> and tot_points of </span><span class="si">#{</span><span class="n">a</span><span class="o">.</span><span class="n">tot_points</span><span class="si">}</span><span class="s2"> &quot;</span>
+  <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>activities entry point for cardinal</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">set_cardinal</span> <span class="n">path_ini</span><span class="p">,</span> <span class="n">on_array</span>
+    <span class="nb">p</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">get_path_by_ini</span> <span class="n">path_ini</span><span class="p">;</span> <span class="n">existing_activities</span><span class="o">=</span><span class="nb">p</span><span class="o">.</span><span class="n">activities</span><span class="o">.</span><span class="n">map</span><span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">}</span>
+    <span class="n">off_array</span><span class="o">=</span><span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;cardinal_activities&quot;</span><span class="o">].</span><span class="n">keys</span><span class="o">.</span><span class="n">select</span><span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="ow">not</span> <span class="p">(</span><span class="n">on_array</span><span class="o">.</span><span class="n">member?</span> <span class="n">x</span><span class="p">)}</span>
+    <span class="nb">puts</span> <span class="s2">&quot;on: </span><span class="si">#{</span><span class="n">on_array</span><span class="si">}</span><span class="s2">; not on </span><span class="si">#{</span><span class="n">off_array</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">on_array</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">activity_name</span><span class="o">|</span>
+      <span class="k">if</span> <span class="n">existing_activities</span><span class="o">.</span><span class="n">member?</span> <span class="n">activity_name</span> <span class="k">then</span> <span class="n">a</span><span class="o">=</span><span class="no">Activity</span><span class="o">.</span><span class="n">get_ini_name</span><span class="p">(</span><span class="n">path_ini</span><span class="p">,</span><span class="n">activity_name</span><span class="p">)</span> <span class="k">else</span> <span class="n">a</span><span class="o">=</span><span class="no">Activity</span><span class="o">.</span><span class="n">new</span>  <span class="k">end</span>
+      <span class="k">if</span> <span class="vi">@all_activities_points</span><span class="o">.</span><span class="n">has_key?</span> <span class="n">activity_name</span> <span class="k">then</span> <span class="n">a</span><span class="o">.</span><span class="n">points</span><span class="o">=</span><span class="vi">@all_activities_points</span><span class="o">[</span><span class="n">activity_name</span><span class="o">]</span> <span class="k">else</span> <span class="k">return</span> <span class="kp">false</span> <span class="k">end</span>
+      <span class="n">a</span><span class="o">.</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span>
+      <span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="o">=</span><span class="n">activity_name</span>
+      <span class="nb">p</span><span class="o">.</span><span class="n">activities</span><span class="o">&lt;&lt;</span><span class="n">a</span>
+      <span class="n">a</span><span class="o">.</span><span class="n">save</span>
+      <span class="nb">p</span><span class="o">.</span><span class="n">save</span>
+    <span class="k">end</span>
+    <span class="n">off_array</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">activity_name</span><span class="o">|</span>
+      <span class="n">a</span><span class="o">=</span><span class="no">Activity</span><span class="o">.</span><span class="n">get_ini_name</span><span class="p">(</span><span class="n">path_ini</span><span class="p">,</span><span class="n">activity_name</span><span class="p">)</span>
+      <span class="n">a</span><span class="o">.</span><span class="n">delete</span> <span class="k">if</span> <span class="n">a</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
 
 
 <span class="k">class</span> <span class="nc">Pathologist</span>
@@ -121,19 +306,69 @@ Tdc.where(:date=>Date.today.to</em>time.utc).to_a</p>             </td>         
   <span class="n">belongs_to</span> <span class="ss">:tdc</span>
   <span class="n">key</span> <span class="ss">:ini</span><span class="p">,</span> <span class="nb">String</span> <span class="c1">#intials</span>
   <span class="n">key</span> <span class="ss">:site</span><span class="p">,</span> <span class="nb">String</span>
-  <span class="n">key</span> <span class="ss">:date</span><span class="p">,</span> <span class="no">Time</span><span class="p">,</span> <span class="ss">:default</span><span class="o">=&gt;</span><span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">.</span><span class="n">to_time</span><span class="o">.</span><span class="n">utc</span>
+  <span class="n">key</span> <span class="ss">:date</span><span class="p">,</span> <span class="no">Time</span>
   <span class="n">key</span> <span class="ss">:working</span><span class="p">,</span> <span class="no">Boolean</span><span class="p">,</span> <span class="ss">:default</span><span class="o">=&gt;</span><span class="kp">true</span>
-  <span class="n">many</span> <span class="ss">:activities</span>
-  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">today</span>
-    <span class="n">d</span><span class="o">=</span><span class="n">where</span><span class="p">(</span><span class="ss">:date</span><span class="o">=&gt;</span><span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">.</span><span class="n">to_time</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+  <span class="n">key</span> <span class="ss">:specialty_only</span><span class="p">,</span> <span class="no">Boolean</span><span class="p">,</span> <span class="ss">:default</span><span class="o">=&gt;</span><span class="kp">false</span>
+  <span class="n">many</span> <span class="ss">:activities</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>important  --remove activity if path is at home...</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="n">after_update</span> <span class="ss">:delete_activities_if_not_working</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>before create check that is not alreaay there
+validate :already_there</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>def already<em>there
+  d=Pathologist.where(:date=>Date.today.to</em>time.utc, :ini=>self.ini)
+  if d.to_a.count>0
+    errors.add( :ini, "Already there")
+  end
+end</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">today</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">d</span><span class="o">=</span><span class="n">where</span><span class="p">(</span><span class="ss">:date</span><span class="o">=&gt;</span><span class="p">(</span><span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">+</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">to_time</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
     <span class="n">d</span><span class="o">.</span><span class="n">to_a</span> <span class="k">if</span> <span class="n">d</span>
   <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">gi_derm</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">d</span><span class="o">=</span><span class="n">where</span><span class="p">(</span><span class="ss">:date</span><span class="o">=&gt;</span><span class="p">(</span><span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">+</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">to_time</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+  <span class="k">end</span>
+
+
+  <span class="k">def</span> <span class="nf">delete_activities_if_not_working</span>
+    <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="nb">self</span><span class="si">}</span><span class="s2"> getting called&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">self</span><span class="o">.</span><span class="n">working</span>
+      <span class="nb">puts</span> <span class="s2">&quot;deleting&quot;</span>
+      <span class="p">(</span><span class="no">Activity</span><span class="o">.</span><span class="n">find_all_by_pathologist_id</span>  <span class="nb">self</span><span class="o">.</span><span class="n">_id</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">a</span><span class="o">|</span>
+        <span class="nb">puts</span> <span class="s2">&quot;deleting </span><span class="si">#{</span><span class="n">a</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">delete</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">by_ini</span> <span class="n">ini</span> <span class="c1">#only today</span>
     <span class="n">d</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">today</span><span class="o">.</span><span class="n">select</span><span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">ini</span><span class="o">==</span><span class="n">ini</span><span class="p">}</span>
     <span class="n">d</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;</span><span class="mi">0</span>
   <span class="k">end</span>
-<span class="k">end</span>
-
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">get_path_working</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">d</span><span class="o">=</span><span class="n">where</span><span class="p">(</span><span class="ss">:working</span><span class="o">=&gt;</span><span class="kp">true</span><span class="p">,</span> <span class="ss">:date</span><span class="o">=&gt;</span><span class="p">(</span><span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">+</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">to_time</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+    <span class="n">d</span><span class="o">.</span><span class="n">to_a</span> <span class="k">if</span> <span class="n">d</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">path_all_points</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">points_per_path</span><span class="o">=</span><span class="no">Today</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">points_per_path</span>
+    <span class="n">path_all_points</span><span class="o">=[]</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">get_path_working</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span>
+      <span class="n">path_all_points</span><span class="o">&lt;&lt;</span><span class="p">{</span><span class="n">tot</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">total_points</span><span class="p">,</span> <span class="n">ini</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">ini</span><span class="p">,</span> <span class="n">range</span><span class="p">:</span> <span class="n">points_per_path</span><span class="p">}</span>
+    <span class="k">end</span>
+    <span class="n">path_all_points</span><span class="o">.</span><span class="n">sort_by</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">[</span><span class="ss">:ini</span><span class="o">]</span><span class="p">}</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">all_paths</span>
+    <span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;initials&quot;</span><span class="o">]</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">all_activities_points</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">r</span><span class="o">=</span><span class="p">{}</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">get_path_working</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">r</span><span class="o">[</span><span class="n">x</span><span class="o">.</span><span class="n">ini</span><span class="o">]=</span><span class="n">x</span><span class="o">.</span><span class="n">activities_points</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">r</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">activities_points</span>
+    <span class="n">activities_points</span><span class="o">=</span><span class="p">{}</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">activities</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">activities_points</span><span class="o">[</span><span class="n">x</span><span class="o">[</span><span class="s1">&#39;name&#39;</span><span class="o">]]=</span><span class="p">{</span><span class="n">tot_points</span><span class="p">:</span> <span class="n">x</span><span class="o">[</span><span class="s1">&#39;tot_points&#39;</span><span class="o">]</span><span class="p">,</span>
+                                                            <span class="n">n</span><span class="p">:</span> <span class="n">x</span><span class="o">[</span><span class="ss">:n</span><span class="o">]</span><span class="p">}}</span>
+    <span class="n">activities_points</span>
+  <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>checks all activities and sums their points</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">def</span> <span class="nf">total_points</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">activities</span><span class="o">.</span><span class="n">map</span><span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">tot_points</span><span class="p">}</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span>
+  <span class="k">end</span>
+<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <p>index Pathologist</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="no">Pathologist</span><span class="o">.</span><span class="n">ensure_index</span><span class="p">(</span><span class="o">[[</span><span class="ss">:date</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="ss">:working</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">]]</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">Activity</span>
   <span class="kp">include</span> <span class="no">MongoMapper</span><span class="o">::</span><span class="no">Document</span>
@@ -142,83 +377,43 @@ Tdc.where(:date=>Date.today.to</em>time.utc).to_a</p>             </td>         
   <span class="n">key</span> <span class="ss">:n</span><span class="p">,</span><span class="nb">Integer</span><span class="p">,</span> <span class="ss">:default</span><span class="o">=&gt;</span><span class="mi">0</span>
   <span class="n">key</span> <span class="ss">:points</span><span class="p">,</span> <span class="nb">Integer</span><span class="p">,</span> <span class="ss">:default</span><span class="o">=&gt;</span><span class="mi">0</span>
   <span class="n">key</span> <span class="ss">:date</span><span class="p">,</span> <span class="no">Time</span><span class="p">,</span> <span class="ss">:default</span><span class="o">=&gt;</span><span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">.</span><span class="n">to_time</span><span class="o">.</span><span class="n">utc</span>
-  <span class="n">key</span> <span class="ss">:tot_points</span><span class="p">,</span> <span class="nb">Integer</span>
+  <span class="n">key</span> <span class="ss">:tot_points</span><span class="p">,</span> <span class="nb">Integer</span></pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <p>pathologist initials</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="n">key</span> <span class="ss">:ini</span><span class="p">,</span> <span class="nb">String</span>
   <span class="n">belongs_to</span> <span class="ss">:pathologist</span>
   <span class="n">before_save</span> <span class="ss">:update_tot_points</span>
   <span class="n">before_update</span> <span class="ss">:update_tot_points</span>
 
-  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">today</span>
-    <span class="n">d</span><span class="o">=</span><span class="n">where</span><span class="p">(</span><span class="ss">:date</span><span class="o">=&gt;</span><span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">.</span><span class="n">to_time</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">today</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">d</span><span class="o">=</span><span class="n">where</span><span class="p">(</span><span class="ss">:date</span><span class="o">=&gt;</span><span class="p">(</span><span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">+</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">to_time</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
     <span class="n">d</span><span class="o">.</span><span class="n">to_a</span> <span class="k">if</span> <span class="n">d</span>
   <span class="k">end</span>
 
-  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">get_activity_points</span>
-    <span class="n">x</span><span class="o">=</span><span class="mi">0</span>
-    <span class="nb">self</span><span class="o">.</span><span class="n">today</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">a</span><span class="o">|</span>
-      <span class="n">x</span><span class="o">+=</span><span class="n">a</span><span class="o">.</span><span class="n">tot_points</span>
-    <span class="k">end</span>
-    <span class="k">return</span> <span class="n">x</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">get_ini_name</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">path_ini</span><span class="p">,</span><span class="n">activity_name</span>
+    <span class="n">path_id</span><span class="o">=</span><span class="no">Today</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">get_path_by_ini</span><span class="p">(</span><span class="n">path_ini</span><span class="p">)</span><span class="o">.</span><span class="n">_id</span>
+    <span class="nb">puts</span> <span class="s2">&quot;PATH-ID=</span><span class="si">#{</span><span class="n">path_id</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">d</span><span class="o">=</span><span class="n">where</span><span class="p">(</span><span class="ss">:date</span><span class="o">=&gt;</span><span class="p">(</span><span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">+</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">to_time</span><span class="o">.</span><span class="n">utc</span><span class="p">,</span> <span class="ss">:pathologist_id</span><span class="o">=&gt;</span><span class="n">path_id</span><span class="p">,</span> <span class="ss">:name</span><span class="o">=&gt;</span><span class="n">activity_name</span><span class="p">)</span>
+    <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">to_a</span> <span class="k">if</span> <span class="n">d</span>
+    <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;</span><span class="mi">0</span> <span class="k">then</span> <span class="k">return</span>  <span class="n">d</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="k">else</span> <span class="k">return</span> <span class="kp">false</span> <span class="k">end</span>
   <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">all_activities</span>
+    <span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;regular_activities&quot;</span><span class="o">].</span><span class="n">merge</span> <span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;cardinal_activities&quot;</span><span class="o">]</span>
+  <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <p>all activities points unless slide related</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">get_activity_points</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">slide_activities</span><span class="o">=</span><span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;slide_activities&quot;</span><span class="o">]</span><span class="p">;</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">today</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">a</span><span class="o">|</span>
+       <span class="n">x</span><span class="o">+=</span><span class="n">a</span><span class="o">.</span><span class="n">tot_points</span> <span class="k">unless</span> <span class="n">slide_activities</span><span class="o">.</span><span class="n">member?</span> <span class="n">a</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">end</span>
+    <span class="n">x</span>
+  <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <p>XXX
+map to YAML data file
+eliminate no points activities (i.e Dermath and GI from distribution)</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">get_slides_distributed</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span></pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <p>n time</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="n">date</span><span class="o">=</span><span class="p">(</span><span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">+</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">to_time</span><span class="o">.</span><span class="n">utc</span></pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <p>find pathologists ids on derm and GI</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nb">p</span><span class="o">=</span><span class="n">where</span><span class="p">(</span><span class="ss">:date</span><span class="o">=&gt;</span><span class="n">date</span><span class="p">,</span> <span class="ss">:name</span><span class="o">=&gt;</span> <span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;no-points&quot;</span><span class="o">].</span><span class="n">keys</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">ini</span><span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <p>find all cases with slides</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="n">m</span><span class="o">=</span><span class="n">where</span><span class="p">(</span><span class="ss">:date</span><span class="o">=&gt;</span><span class="n">date</span><span class="p">,</span> <span class="ss">:name</span><span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;Slides-large-cases&quot;</span><span class="p">,</span> <span class="s2">&quot;Slides-small-cases&quot;</span><span class="o">]</span><span class="p">,</span>  <span class="ss">:ini</span><span class="o">=&gt;</span> <span class="p">{:</span><span class="vg">$nin</span><span class="o">=&gt;</span><span class="nb">p</span><span class="p">})</span><span class="o">.</span><span class="n">all</span>
+
+    <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">n</span><span class="p">}</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <p>.map{|x| x.n}.reduce(:+)</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">end</span>
+
+
 
   <span class="k">def</span> <span class="nf">update_tot_points</span>
       <span class="nb">self</span><span class="o">.</span><span class="n">tot_points</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">points</span><span class="o">*</span><span class="nb">self</span><span class="o">.</span><span class="n">n</span>
   <span class="k">end</span>
-<span class="k">end</span>
-
-<span class="k">def</span> <span class="nf">all_paths</span>
-  <span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;sv_initials&quot;</span><span class="o">]+</span><span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;ppmc_initials&quot;</span><span class="o">]</span>
-<span class="k">end</span>
-
-<span class="k">def</span> <span class="nf">populate</span>
-  <span class="n">t</span><span class="o">=</span><span class="no">Tdc</span><span class="o">.</span><span class="n">today</span>
-  <span class="n">all_paths</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span><span class="o">|</span><span class="n">ini</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">pathologist</span><span class="o">&lt;&lt;</span><span class="no">Pathologist</span><span class="o">.</span><span class="n">new</span><span class="p">({</span><span class="ss">:ini</span><span class="o">=&gt;</span><span class="n">ini</span><span class="p">})}</span>
-  <span class="n">t</span><span class="o">.</span><span class="n">save</span>
-<span class="k">end</span>
-
-<span class="k">def</span> <span class="nf">random_assign_activity</span> <span class="n">act</span><span class="p">,</span><span class="n">points</span>
-  <span class="n">a</span><span class="o">=</span><span class="no">Activity</span><span class="o">.</span><span class="n">new</span>
-  <span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="o">=</span><span class="n">act</span>
-  <span class="n">a</span><span class="o">.</span><span class="n">points</span><span class="o">=</span><span class="n">points</span>
-  <span class="n">a</span><span class="o">.</span><span class="n">n</span><span class="o">=[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">sample</span><span class="p">()</span>
-  <span class="nb">p</span><span class="o">=</span><span class="no">Pathologist</span><span class="o">.</span><span class="n">today</span><span class="o">.</span><span class="n">sample</span>
-  <span class="nb">p</span><span class="o">.</span><span class="n">activities</span><span class="o">&lt;&lt;</span><span class="n">a</span>
-  <span class="n">a</span><span class="o">.</span><span class="n">save</span>
-  <span class="nb">p</span><span class="o">.</span><span class="n">save</span>
-  <span class="n">pp</span> <span class="nb">p</span> <span class="o">.</span><span class="n">activities</span>
-<span class="k">end</span>
-
-<span class="k">def</span> <span class="nf">simulate</span>
-  <span class="n">populate</span>
-  <span class="n">t</span><span class="o">=</span><span class="no">Today</span><span class="o">.</span><span class="n">new</span>
-  <span class="n">t</span><span class="o">.</span><span class="n">set_blocks_east</span> <span class="o">[</span><span class="mi">444</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">100</span><span class="o">].</span><span class="n">sample</span>
-  <span class="n">t</span><span class="o">.</span><span class="n">set_blocks_west</span> <span class="o">[</span><span class="mi">344</span><span class="p">,</span><span class="mi">400</span><span class="p">,</span><span class="mi">233</span><span class="o">].</span><span class="n">sample</span>
-  <span class="n">all_activities</span><span class="o">=</span><span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;sv_regular_activities&quot;</span><span class="o">].</span><span class="n">merge</span> <span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;sv_cardinal_activities&quot;</span><span class="o">]</span>
-  <span class="n">all_activities</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">act</span><span class="p">,</span><span class="n">points</span><span class="o">|</span>
-    <span class="n">random_assign_activity</span> <span class="n">act</span><span class="p">,</span> <span class="n">points</span>
-  <span class="k">end</span>
-<span class="k">end</span>
-
-
-<span class="k">def</span> <span class="nf">todays_work</span>
-  <span class="n">t</span><span class="o">=</span><span class="no">Today</span><span class="o">.</span><span class="n">new</span>
-  <span class="n">t</span><span class="o">.</span><span class="n">set_blocks_east</span> <span class="o">[</span><span class="mi">232</span><span class="p">,</span><span class="mi">333</span><span class="p">,</span><span class="mi">555</span><span class="o">].</span><span class="n">sample</span>
-  <span class="n">t</span><span class="o">.</span><span class="n">set_blocks_west</span> <span class="o">[</span><span class="mi">444</span><span class="p">,</span><span class="mi">555</span><span class="p">,</span><span class="mi">666</span><span class="o">].</span><span class="n">sample</span>
-  <span class="n">pathologist_work</span><span class="o">=</span><span class="p">{}</span>
-  <span class="no">Pathologist</span><span class="o">.</span><span class="n">today</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">p</span><span class="o">|</span>
-    <span class="n">pathologist_work</span><span class="o">[</span><span class="nb">p</span><span class="o">.</span><span class="n">ini</span><span class="o">]=[]</span>
-    <span class="nb">p</span><span class="o">.</span><span class="n">activities</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">a</span><span class="o">|</span>
-      <span class="n">pathologist_work</span><span class="o">[</span><span class="nb">p</span><span class="o">.</span><span class="n">ini</span><span class="o">]&lt;&lt;</span><span class="p">{</span><span class="nb">name</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="n">points</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">points</span><span class="p">,</span> <span class="n">tot_points</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">tot_points</span><span class="p">,</span> <span class="n">fac</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">n</span><span class="p">}</span>
-   <span class="k">end</span>
-
-  <span class="k">end</span>
-
-  <span class="k">return</span> <span class="n">pathologist_work</span> <span class="c1">#.to_json</span>
-<span class="k">end</span>
-
-<span class="k">def</span> <span class="nf">clean</span>
-  <span class="no">Tdc</span><span class="o">.</span><span class="n">delete_all</span>
-  <span class="no">Activity</span><span class="o">.</span><span class="n">delete_all</span>
-  <span class="no">Pathologist</span><span class="o">.</span><span class="n">delete_all</span>
-<span class="k">end</span>
+<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-37">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-37">&#182;</a>               </div>               <p>index activities</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="no">Activity</span><span class="o">.</span><span class="n">ensure_index</span><span class="p">(</span><span class="o">[[</span><span class="ss">:date</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="ss">:pathologist_id</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="ss">:name</span><span class="p">,</span><span class="mi">1</span><span class="o">]]</span><span class="p">)</span>
 
 </pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

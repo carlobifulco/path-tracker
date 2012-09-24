@@ -27,18 +27,20 @@ window.get_unchecked=get_unchecked
 post_data=()->
   blocks_east=$("#blocks_east")[0].value
   blocks_west=$("#blocks_west")[0].value
+  blocks_hr=$("#blocks_hr")[0].value
   data=
     path_present: _.union(get_checked("working"),get_unchecked("absent"))
     path_absent: _.union(get_checked("absent"),get_unchecked("working"))
     blocks_east: blocks_east
     blocks_west: blocks_west
+    blocks_hr: blocks_hr
+  window.data=data
   $.post("/setup", data,(e)->
     if JSON.parse(e)
       $.get("/get_setup",(e)->render JSON.parse(e))
       alert "Data Updated"
       #window.location.href="/setup"
       console.log(e))
-
 
 
 $(document).ready =>

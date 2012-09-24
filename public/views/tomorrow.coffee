@@ -12,18 +12,19 @@ update_yaml() unless window.yaml
 
 #decorate with icons according to the pathologist's site
 icons=()->
-  for i in yaml.psv
+  for i in yaml.b_psv
     do (i)->
         $("##{i}").prepend($('<i class="icon-forward"></i>'))
-  for i in yaml.ppmc
+  for i in yaml.c_ppmc
     do (i)->
         $("##{i}").prepend($('<i class="icon-play"></i>'))
-  for i in yaml.core
+  for i in yaml.d_core
     do (i)->
         $("##{i}").prepend($('<i class="icon-home"></i>'))
-  for i in yaml.hr
+  for i in yaml.a_hr
     do (i)->
         $("##{i}").prepend($('<i class="icon-picture"></i>'))
+
 
 
 
@@ -49,8 +50,13 @@ decorate=()->
       if a
         #console.log "#{ini} has location #{a}"
         $("##{ini}").parent().parent().addClass("warning")
-  icons()
+    do (ini)->
+      a=has_a_distribution_preference(get_activities(ini))
+      if a
+        #console.log "#{ini} has location #{a}"
+        $("##{ini}").parent().parent().addClass("success")
 
+  icons()
 
 
 
@@ -79,6 +85,17 @@ has_a_location=(arr)->
   else
     return false
 window.has_a_location=has_a_location
+
+
+has_a_distribution_preference=(arr)->
+  specialties=_.keys yaml["distribution-preference"]
+  match= _.intersection(arr,specialties)
+  if match.length==1
+    return match[0]
+  else
+    return false
+window.has_a_distribution_preference=has_a_distribution_preference
+
 
 
 

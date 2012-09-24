@@ -18,57 +18,122 @@ initials:
   - "BH"
   - "JBD"
   - "JLB"
-  - "XH"
+  - "HX"
   - "YZ"
   - "SEK"
   - "JS"
   - "JAO"
 
 
+
 regular_activities:
   Slides-large-cases: 1
   Slides-small-cases: 1
   Non-gyns: 1
-  Paps: 2
-  Bone-marrow: 20
+  Paps: 1
+  Bone-marrow: 15
   Pb-with-report: 4
   Pb-without-report: 2
   Flow: 5
-  Fish: 10
-  Spep: 15
+  Fish: 5
+  Spep: 12
   External-Consults: 1
-  Meeting: 20
+  Meeting: 15
   Carry-over-points-from-previous-day: 1
+  Diagnostic-Kidney: 15
+  Diagnostic-Liver: 8
 
 
 cardinal_activities:
-  Autopsy: 20
   Autopsy-Slides: 20
-  Qc: 20
-  Cp: 40
-  Administration: 20
-  East-side-travel: 20
-  West-side-travel: 20
-  80-percent: 40
-  Frozens: 60
-  Hemepath: 1
-  Lung: 1
-  Dermapath: 1
-  BreastGyn: 1
-  GI: 1
-  Conf-prep-bad: 40
-  Conf-prep-easy: 20
+  Qc: 15
+  Cp: 15
+  Administration: 15
+  Travel-east-side: 20
+  Travel-west-side: 20
+  80-percent: 30
+  90-percent: 15
+  Frozens-all-day: 60
+  Frozens-half-day: 30
+  Hemepath: 0
+  Hemepath-only: 0
+  Lung: 0
+  Breast-Gyn: 0
+  Dermpath-only: 0
+  Gi-only: 0
+  Conf-or-prep-15: 15
+  Conf-or-prep-20: 20
+  Conf-or-prep-30: 30
+  Lab-development: 0
+  Medical-director: 0
 
-colors:
-  Lung: "blue"
-  Derm: "green"
-  GI: "brown"
-  Hemepath: "red"
-  BreastGyn: "yellow"
+# yellow color
+distribution-location:
+  Travel-east-side: 20
+  Travel-west-side: 20
+
+# red color
+distribution-specialty:
+  Dermpath-only: "Dp"
+  Gi-only: "Gi-only"
+  Hemepath-only: "Hp"
+  Lab-development: "Ld"
+  Medical-director: "Md"
+
+# green color
+distribution-preference:
+  Hemepath: "hp"
+  Lung: "l"
+  Breast-Gyn: "bg"
+
+#slides assigned to these will not be counted
+#also, paths doing these will not be counted as actually present
+no-points:
+  Dermpath-only: 0
+  Gi-only: 0
+  Medical-director: 0
+  Lab-development: 0
 
 slide_activities:
   - Slides-large-cases
   - Slides-small-cases
+
+b_psv:
+  - "MM"
+  - "MKL"
+  - "SZ"
+  - "ARS"
+  - "MSG"
+
+
+c_ppmc:
+  - "JDH"
+  - "JCH"
+  - "CAI"
+
+d_core:
+  - "SW"
+  - "SXH"
+  - "YW"
+  - "CBB"
+  - "BH"
+  - "JBD"
+  - "JLB"
+  - "HX"
+  - "YZ"
+  - "SEK"
+  - "JS"
+  - "EVH"
+  - "MCF"
+
+a_hr:
+  - "JAO"
+
+
+
+
+
+
 
 
 

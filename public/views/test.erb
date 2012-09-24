@@ -4,47 +4,10 @@
 </script>
 
 
-<script id="cardinal_template"  type="text/x-handlebars-template">
-  <div class="span2">
-     <table class="table table-striped">
-      <div>
-      {{#each cardinal}}
-      <tr>
-        <td>{{this}}</td>
-        <td>
-         <input type="checkbox" id="{{this}}" name="{{this}}"></td>
-      </tr>
-        {{/each}}
-      </div>
-    </table>
-  <button type="submit" class="btn">Submit</button>
-  </div>
-</script>
 
 
-<script id="regular_template"  type="text/x-handlebars-template">
-  <div class="span3 offset1">
-    <table class="table table-striped">
-      {{#each regular}}
-      <tr>
-        <td>{{this}}</td>
-        <td><input type="text"  id="{{this}}" class="input-min span1" name="{{this}}" value="" id="" ></td>
-      </tr>
-      {{/each}}
-    </table>
-  </div>
-</script>
+<h1> Hello Testing webscokest</h1>
 
 
-
-<form action="entry" method="post"  id="entry" accept-charset="utf-8" >
-
-  <span id="id_html"></span>
-
-  <span id="cardinal_html"></span>
-
-  <span id="regular_html"></span>
-
-</form>
 
 <script src="views/test.js" type="text/javascript" charset="utf-8"></script>
