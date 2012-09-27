@@ -150,18 +150,28 @@ module TodayGet
      total_slide_points= SLIDES_CONVERSION_FACTOR * (t.blocks_west+t.blocks_east+t.blocks_hr)
      total_slide_points.to_int
   end
+  #these are theroetical based on the number of blocks/slides to be distributed
   def get_points_tot
     t=Tdc.today @n
-    puts "Slides:#{self.get_points_slide_tot()};Activity: #{Activity.get_activity_points(@n)} "
+    #puts "Slides:#{self.get_points_slide_tot()};Activity: #{Activity.get_activity_points(@n)} "
     t.tot_points=(self.get_points_slide_tot() + Activity.get_activity_points(@n))
-    puts t.tot_points
+    #puts t.tot_points
     t.save
     return t.tot_points
+  end
+
+  #this includes pnly actual slides distributed
+  def get_real_points_distributed
+    self.get_slides_distributed+Activity.get_activity_points(@n)
   end
 
   def get_path_working
     t=Tdc.today @n
     t.pathologist.select {|x| x.working==true}
+  end
+
+  def get_number_path_working
+    self.get_path_working().count
   end
 
   def get_path_specialty
@@ -191,16 +201,22 @@ module TodayGet
 end
 
 module TodayReport
-
   def report_day n=0
     day=Date.today+working_n(n)
-    puts "Day #{day} predicted slides to be distributed: #{self.get_points_slide_tot}"
-    puts "Day #{day} total slides distributed: #{Activity.get_slides_distributed n}"
-    puts "Diff slides predicted vs distributed: #{self.get_points_slide_tot - (Activity.get_slides_distributed n)}"
-    puts "Day #{day} total activities points assigned: #{Activity.get_activity_points n}"
-
+    average_workload=self.get_real_points_distributed/self.get_number_path_working
+    puts "Day #{day}"
+    puts "**************"
+    puts "\t- Predicted slides to be distributed: #{self.get_points_slide_tot}"
+    puts "\t- Total slides distributed: #{Activity.get_slides_distributed n}"
+    puts "\t- Diff slides predicted vs distributed: #{self.get_points_slide_tot - (Activity.get_slides_distributed n)}"
+    puts "\t- Total non-slide points assigned: #{Activity.get_activity_points n}"
+    puts "\t- Total workload points: #{self.get_points_tot}"
+    puts "\t- Average (mean) effective workload per Pathologist: #{average_workload}"
+    puts "\t- Average (mean) theoretical workload per Pathologist: #{self.get_points_tot/self.get_number_path_working}"
+    Pathologist.path_all_points.each do |x|
+      puts "\t Deviation from mean for #{x[:ini]}: #{-(average_workload-x[:tot])}"
+    end
   end
-
 end
 
 
@@ -344,56 +360,6 @@ class Today
   end
 end
 
-class AnotherDay
-
-  def get_entry n=1
-     #populates if day is empty
-    day=Date.today+n
-    t=Tdc.today day
-    if t.pathologists.count==0 then populate end
-    pathologist_working=Pathologist.get_path_working(n).map{|x| x.ini}.sort
-    entry={pathologist_working: pathologist_working,
-      paths_acts_points: Pathologist.all_activities_points(n),
-      paths_tot_points: Pathologist.path_all_points
-     }
-  end
-
-  #activities entry point for regular
-  def set_regular path_ini, activity_name, n
-    p=self.get_path_by_ini path_ini
-    existing_activities=p.activities.map{|x| x.name}
-    #get if existing else new
-    if existing_activities.member? activity_name then a=Activity.get_ini_name(path_ini,activity_name) else a=Activity.new  end
-    a.name=activity_name
-    if @all_activities_points.has_key? activity_name then a.points=@all_activities_points[activity_name] else return false end
-    a.n=n
-    a.ini=path_ini
-    p.activities<<a
-    a.save
-    p.save
-    pp "just updated for you #{path_ini}'s #{a.name} to a number of #{a.n} and tot_points of #{a.tot_points} "
-  end
-
-  #activities entry point for cardinal
-  def set_cardinal path_ini, on_array
-    p=self.get_path_by_ini path_ini; existing_activities=p.activities.map{|x| x.name}
-    off_array=DATA["cardinal_activities"].keys.select{|x| not (on_array.member? x)}
-    puts "on: #{on_array}; not on #{off_array}"
-    on_array.each do |activity_name|
-      if existing_activities.member? activity_name then a=Activity.get_ini_name(path_ini,activity_name) else a=Activity.new  end
-      if @all_activities_points.has_key? activity_name then a.points=@all_activities_points[activity_name] else return false end
-      a.n=1
-      a.name=activity_name
-      p.activities<<a
-      a.save
-      p.save
-    end
-    off_array.each do |activity_name|
-      a=Activity.get_ini_name(path_ini,activity_name)
-      a.delete if a
-    end
-  end
-end
 
 
 
@@ -471,7 +437,7 @@ class Pathologist
     points_per_path=Today.new(n).points_per_path
     path_all_points=[]
     self.get_path_working(n).each do |x|
-      path_all_points<<{tot: x.total_points, ini: x.ini, range: points_per_path, location: x.location}
+      path_all_points<<{ini: x.ini, tot: x.total_points, range: points_per_path, location: x.location}
     end
     path_all_points.sort_by do |a|
       [a[:location],a[:ini]]
