@@ -53,6 +53,7 @@ DATA=YAML.load(File.read DATA_FILE)
 
 
 ####Total Daily Cases container
+#
 class Tdc
   include MongoMapper::Document
   safe
@@ -87,6 +88,18 @@ class Tdc
   def self.get_path ini
     self.today.pathologist.select {|x| x.ini==ini}
   end
+
+  #for debugging purposes
+  def activities
+    self.pathologist.each do |p|
+      puts p.ini
+      p.activities.each do |a|
+        puts a.name
+      end
+    end
+    return nil
+  end
+
 end
 
 #index Tdc
@@ -226,6 +239,7 @@ class Today
   include TodayReport
 
   attr_accessor :tdc
+  attr_accessor :n, :all_activities_points, :time
 
 
 
@@ -233,7 +247,8 @@ class Today
     @all_activities_points= DATA["regular_activities"].merge DATA["cardinal_activities"]
     # @ n is the number of days after today; needs to tak into accound weekends/holidays
     @n= (((1*n).business_day.after Date.today).to_date - Date.today).to_int
-    @time=(Date.today+@n).to_time.utc
+    @date=Date.today+@n
+    @time=(@date).to_time.utc
     @tdc=Tdc.today @n
     if @tdc.pathologists.count==0 then populate @n end
   end
@@ -262,7 +277,7 @@ class Today
           pathologist_working: (pathologist_working).sort,
           pathologist_absent: (self.get_path_absent).sort,
           path_count: path_count,
-          date: Date.today.to_s,
+          date: @date.to_s,
           slides_distributed: slides_distributed,
           slides_remaining: slides_remaining
           }
@@ -305,6 +320,10 @@ class Today
      }
   end
 
+  def get_path_activities_points
+    return Pathologist.all_activities_points @n
+  end
+
   #activities entry point for regular
   def set_regular path_ini, activity_name, n
     p=self.get_path_by_ini path_ini
@@ -341,10 +360,14 @@ class Today
   end
 
   def get_activity path_ini, activity_name
-    p=self.get_path_by_ini path_ini
-    path_existing_activities=p.activities.map{|x| x.name}
-    if path_existing_activities.member? activity_name
-       a=Activity.get_ini_name(@n, path_ini,activity_name)
+    r=Activity.where(:ini=>path_ini,:date=>@time,:name=>activity_name)
+    if r.count==1
+      puts "existing activity"
+      return r.all[0]
+    # p=self.get_path_by_ini path_ini
+    # path_existing_activities=p.activities.map{|x| x.name}
+    # if path_existing_activities.member? activity_name
+    #    a=Activity.get_ini_name(@n, path_ini,activity_name)
     else
       puts "new activity"
       a=Activity.new
@@ -362,7 +385,7 @@ end
 
 
 
-
+#:Numebr of days is here absolute and not business days (n)
 class Pathologist
   include MongoMapper::Document
   safe
@@ -387,14 +410,8 @@ class Pathologist
   #   end
   # end
 
-  def self.today n=0
-    n=working_n n
-    d=where(:date=>(Date.today+n).to_time.utc)
-    d.to_a if d
-  end
 
   def self.gi_derm n=0
-    n=working_n n
     d=where(:date=>(Date.today+n).to_time.utc)
   end
 
@@ -421,19 +438,14 @@ class Pathologist
     end
   end
 
-  def self.by_ini ini #only today
-    d=self.today.select{|x| x.ini==ini}
-    d[0] if d.count >0
-  end
 
   def self.get_path_working n=0
-    n=working_n n
     d=where(:working=>true, :date=>(Date.today+n).to_time.utc)
     d.to_a if d
   end
 
   def self.path_all_points n=0
-    n=working_n n
+    #n=working_n n
     points_per_path=Today.new(n).points_per_path
     path_all_points=[]
     self.get_path_working(n).each do |x|
@@ -449,7 +461,6 @@ class Pathologist
   end
 
   def self.all_activities_points n=0
-    n=working_n n
     r={}
     self.get_path_working(n).each {|x| r[x.ini]=x.activities_points}
     return r

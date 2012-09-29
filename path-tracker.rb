@@ -160,11 +160,13 @@ post "/tomorrow" do
 end
 
 get "/path/activities/points" do
-  {path: Pathologist.all_activities_points}.to_json
+  t=Today.new
+  {path: t.get_path_activities_points}.to_json
 end
 
 get "/path/activities/points/tomorrow" do
-  {path: Pathologist.all_activities_points(1)}.to_json
+  t=Today.new 1
+  {path: t.get_path_activities_points}.to_json
 end
 
 
