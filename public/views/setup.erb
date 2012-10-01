@@ -11,30 +11,34 @@
 	<form action="setup" id="setup" method="post" accept-charset="utf-8">
 
 		<table border="0" cellspacing="5" cellpadding="5">
-
+		<tr><td>Date:    </td><td>  	{{date}}  </td></tr>
 			<tr><td>Blocks Total:    </td><td>  	{{blocks_tot}}  </td></tr>
-			<tr><td>Slide Points:    </td><td>  {{slide_points}}  </td></tr>
+			<tr><td>Predicted number of slides:    </td><td>  {{slide_points}}  </td></tr>
 			<tr><td>Activity Points:    </td><td>  {{activity_points}}  </td></tr>
 			<tr><td>Total Points:    </td><td>  {{tot_points}}  </td></tr>
 
 
 			<tr><td>Present pathologists number:    </td><td>  {{path_count}}  </td></tr>
-			<tr><td>Total points per pathologist:    </td><td>  {{points_per_pathologist}}  </td></tr>
+			<tr><td>Generalist number:    </td><td>  {{generalist_count}}  </td></tr>
+			<tr><td>Total points per generalist:    </td><td>  {{points_per_pathologist}}  </td></tr>
+			<tr><td>General slides distributed:    </td><td>  {{slides_distributed}}  </td></tr>
+			<tr><td>General slides remaining:    </td><td>  {{slides_remaining}}  </td></tr>
+
 			</table>
 			</div>
 
-			<div class="alert alert-error"> 
+			<div class="alert alert-error">
 			<table>
 			<tr><td> 	<label for="tot_cases">West Side Blocks:</label>   </td><td>  <input type="text" name="blocks_west" id="blocks_west" value="{{blocks_west}}">  </td></tr>
 			<tr><td> 	<label for="tot_cases">East Side Blocks:</label>   </td><td> <input type="text" name="blocks_east" id="blocks_east" value="{{blocks_east}}">   </td></tr>
-				<tr><td> 	<label for="tot_cases">HR Blocks:</label>   </td><td> <input type="text" name="blocks_hr" id="blocks_hr" value="{{blocks_hr}}">   </td></tr>
+				<tr><td> HR Blocks:</label>   </td><td> <input type="text" name="blocks_hr" id="blocks_hr" value="{{blocks_hr}}">   </td></tr>
 
 				</table>
 				<br>
-		
 
-			
-		
+
+
+
 				<div id="working"  >
 				<small><strong>	Working:</strong></small>
 				{{#pathologist_working}}

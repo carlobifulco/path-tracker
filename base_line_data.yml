@@ -77,8 +77,6 @@ distribution-specialty:
   Dermpath-only: "Dp"
   Gi-only: "Gi-only"
   Hemepath-only: "Hp"
-  Lab-development: "Ld"
-  Medical-director: "Md"
 
 # green color
 distribution-preference:

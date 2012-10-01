@@ -60,12 +60,17 @@ def simulate n=0
   t.set_blocks_west [344,400,233].sample
   all_activities=DATA["regular_activities"].merge DATA["cardinal_activities"]
   DATA["regular_activities"].each do |act,points|
-    p=(Pathologist.today n).sample
+    p=(t.tdc.pathologist).sample
     create_activity n,act, points, [1,2,3,4,5,6,7,8,9,10].sample(),p
   end
   DATA["cardinal_activities"].each do |act,points|
-    p=(Pathologist.today n).sample
+    p=(t.tdc.pathologist).sample
     create_activity n,act, points, 1,p
+  end
+  DATA["slide_activities"].each do |a|
+    (t.tdc.pathologist).each do |p|
+      create_activity n,a,1,[20,40,30,23,60,79].sample,p
+    end
   end
   pp Pathologist.all_activities_points n
 end
@@ -116,7 +121,7 @@ end
 
 
 def clean
-  if prompt("Are you sure you want to clean all??? yes/no: ") =="yes"
+  if prompt("Are you sure you want to clean all of #{ MongoMapper.database.name } database??? yes/no: ") =="yes"
     Tdc.delete_all
     Activity.delete_all
     Pathologist.delete_all
