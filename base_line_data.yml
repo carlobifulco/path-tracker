@@ -91,6 +91,7 @@ no-points:
   Gi-only: 0
   Medical-director: 0
   Lab-development: 0
+  Hemepath-only: 0
 
 slide_activities:
   - Slides-large-cases
