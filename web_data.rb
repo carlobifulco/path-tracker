@@ -10,7 +10,7 @@ require "whenever"
 require 'business_time'
 require "holidays"
 require "statsample"
-require "logic"
+require "interface"
 require "configuration"
 
 
@@ -21,7 +21,7 @@ require "configuration"
 #
 # Returns a date/time in UTC format of the nth day after today
 def get_business_utc n=0
-  # if n==0 
+  # if n==0
   #   if Date.today.sunday? then n=1 end
   #   if Date.today.saturday? then n=2 end
   # end
@@ -67,15 +67,15 @@ class Tdc
     if d.to_a.count>0
       t=d.to_a[0]
       t.date=get_business_utc(n)
-      if t.pathologists.count==0 
-        t.populate 
+      if t.pathologist.count==0
+        t.populate
         t.save
       end
       return t
     else
       t=Tdc.new
       t.date=business_utc
-      if t.pathologists.count==0 then t.populate; t.save  end
+      if t.pathologist.count==0 then t.populate; t.save  end
       #t.show_date
       return t
     end
@@ -85,17 +85,20 @@ class Tdc
   def populate
     puts "populating???"
     DATA["initials"].each do |ini|
+      #create if not existing
       if not Pathologist.where({:ini=>ini,:date=>self.date}).any?
         p=Pathologist.new({:ini=>ini,:date=>self.date})
         puts "#{p} #{p.ini} #{p.date}"
         if p.save
-           puts "saved #{p.ini}" 
+           puts "saved #{p.ini}"
         else
           puts "Error(s): ", p.errors.map {|k,v| "#{k}: #{v}"}
         end
         self.pathologist<<p
         puts "#{ini} created with date #{self.date}"
+      #append if existing and not loaded
       else
+        self.pathologist<<Pathologist.where({:ini=>ini,:date=>self.date}).first
         puts "#{ini} already existing with date #{self.date}"
       end
     end
@@ -132,7 +135,7 @@ Tdc.ensure_index(:date)
 def tot_points path_list
   activities=[]
   path_list.each{|p| activities+=p.activities}
-  activities.map{|a|a.tot_points}.reduce(:+) 
+  activities.map{|a|a.tot_points}.reduce(:+)
 end
 
 
@@ -295,14 +298,33 @@ class Activity
     x
   end
 
+  def self.get_specialist_slides_distributed n=0
+    date=get_business_utc n
+    #find pathologists ids on derm and GI
+    p_inis=where(:date=>date, :name=> DATA["no-points"].keys).all().map {|x| x.ini}
+    #find slide activities with non specialist
+    m=where(:date=>date, :name=> DATA["slide_activities"], :ini=>p_inis).all
+    return ((m.map{|x| x.tot_points}.reduce(:+)) or 0)
+  end
+
+  def self.get_specialist_non_slide_points n=0
+    date=get_business_utc n
+    #find pathologists ids on derm and GI
+    p_inis=where(:date=>date, :name=> DATA["no-points"].keys).all().map {|x| x.ini}
+    #find slide activities with non specialist
+    m=where(:date=>date, :name=> {:$nin=>DATA["slide_activities"]}, :ini=>p_inis).all
+    return ((m.map{|x| x.tot_points}.reduce(:+)) or 0)
+  end
+
+
  #all activities points only for generalists unless slide related
-  def self.get_generalist_non_slide_points n=0
+  def self.get_general_non_slide_points n=0
     date=get_business_utc n
     #find pathologists ids on derm and GI
     p_inis=where(:date=>date, :name=> DATA["no-points"].keys).all().map {|x| x.ini}
     #m=where(:date=>date, :name=> {:$nin=>DATA["slide_activities"]},  :ini=> {:$nin=>p}).all
     m=where(:date=>date, :name=> {:$nin=>DATA["slide_activities"]}, :ini=> {:$nin=>p_inis}).all
-    return m.map {|x| x.tot_points}.reduce(:+)
+    return ((m.map{|x| x.tot_points}.reduce(:+)) or 0)
   end
 
 
@@ -318,7 +340,7 @@ class Activity
     #find all cases with slides
     m=where(:date=>date, :name=> DATA["slide_activities"],:ini=> {:$nin=>p}).all
 
-    return m.map {|x| x.n}.reduce(:+)
+    return ((m.map {|x| x.n}.reduce(:+)) or 0)
     #.map{|x| x.n}.reduce(:+)
 
   end

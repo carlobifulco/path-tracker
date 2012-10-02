@@ -125,18 +125,24 @@ post "/entry" do
 end
 
 get "/get_entry" do
-  t=Today.new
-  t.get_entry.to_json
+  Today.new.get_entry.to_json
 end
 
 get "/get_tomorrow" do
-  t=Today.new 1
-  t.get_entry.to_json
+  Today.new(1).get_entry.to_json
 end
 
 get ("/tomorrow") do
   protected!
   erb :tomorrow
+end
+
+get "/live" do
+  erb :live
+end
+
+get "/get_live" do
+  Today.new.get_live.to_json
 end
 
 

@@ -63,7 +63,7 @@ module TodayGet
   def get_points_tot
     t=Tdc.today @n
     #puts "Slides:#{self.get_points_slide_tot()};Activity: #{Activity.get_activity_points(@n)} "
-    t.tot_points=(self.get_points_slide_tot() + Activity.get_activity_points(@n))
+    t.tot_points=(self.get_points_slide_tot() + Activity.get_general_non_slide_points(@n))
     #puts t.tot_points
     t.save
     return t.tot_points
@@ -71,7 +71,7 @@ module TodayGet
 
   #this includes pnly actual slides distributed
   def get_real_points_distributed
-    self.get_general_slides_distributed+Activity.get_activity_points(@n)
+    self.get_general_slides_distributed+Activity.get_general_non_slide_points(@n)
   end
 
   def get_path_working
@@ -112,22 +112,32 @@ end
 
 module TodayReport
   def report_day
-    average_generalist_effective_workload=self.get_real_points_distributed/Pathologist.get_number_generalist
+    points= {:specialty_non_slide_points => Activity.get_specialist_non_slide_points(@n),
+              :specialty_slide_points => Activity.get_specialist_slides_distributed(@n),
+              :general_non_slide_points => Activity.get_general_non_slide_points(@n),
+              :general_slides_distributed => Activity.get_general_slides_distributed(@n)}
+    tot_points=points.values.reduce(:+)
+    tot_general_points=points[:general_non_slide_points]+points[:general_slides_distributed]
+    average_generalist_points=tot_general_points/Pathologist.get_number_generalist
+
     puts "Day #{Date.today+working_n(@n)}"
     puts "**************"
-    puts "\t- Total non-slide points assigned: #{Activity.get_activity_points @n}"
+    puts "\t- Total System non-slide points assigned: #{points[:specialty_non_slide_points]+points[:general_non_slide_points]}"
+    puts "\t- Total Generalist non-slide points assigned #{points[:general_non_slide_points]}"
+    puts "\t- Total Specialist non-slide points assigned #{points[:specialty_non_slide_points]}"
     puts "\t- Predicted slides to be distributed: #{self.get_points_slide_tot}"
-    puts "\t- Total slides distributed: #{Activity.get_general_slides_distributed @n}"
-    puts "\t- Ratio slides distributed/blocks =#{Activity.get_general_slides_distributed(@n)/self.get_tot_blocks.to_f}"
-    puts "\t- Diff slides predicted vs distributed: #{self.get_points_slide_tot - (Activity.get_general_slides_distributed @n)}"
-    puts "\t- Average (mean) theoretical workload per generalist Pathologist: #{self.get_points_tot/Pathologist.get_number_generalist}"
-    puts "\t- Average (mean) effective workload per generalist Pathologist: #{average_generalist_effective_workload}"
+    puts "\t- Total Generalist slides distributed: #{points[:general_slides_distributed]}"
+    puts "\t- Ratio generalist slides distributed/blocks =#{points[:general_slides_distributed]/self.get_tot_blocks.to_f}"
+    puts "\t- Diff slides predicted vs distributed: #{self.get_points_slide_tot - points[:general_slides_distributed]}"
+    # puts "\t- Average (mean) theoretical workload per generalist Pathologist: #{Activity.get_general_non_slide_points+Activity.get_general_slides_distributed/Pathologist.get_number_generalist}"
+    puts "\t- Average (mean) effective workload per generalist Pathologist: #{average_generalist_points}"
     puts "*************"
-    puts "Generalist Distribution:"
+    puts "Generalist Slide Distribution:"
     puts "*************"
     Pathologist.get_generalist.each do |p|
-      puts "\tDeviation from mean for #{p.ini}: #{-(average_generalist_effective_workload-p.total_points)}"
+      puts "\tDeviation from mean for #{p.ini}: #{-(average_generalist_points-p.total_points)}"
     end
+    return nil
   end
 end
 
@@ -185,6 +195,7 @@ class Today
     return setup
   end
 
+
   # equation for asserting total points per head
   def points_per_path
     tot_points=self.get_points_tot
@@ -217,6 +228,11 @@ class Today
       paths_tot_points: Pathologist.path_all_points(@n)
      }
   end
+
+  def get_live
+    return {:ok=>true}
+  end
+
 
   def get_path_activities_points
     return Pathologist.all_activities_points @n
