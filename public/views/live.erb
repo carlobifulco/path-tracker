@@ -1,0 +1,101 @@
+<!-- Here is were the templates are; by convention for the rendering name_template  -->
+
+<script style=" display: none;" id="sparkline_template" type="text/x-handlebars-template">
+<div class="container-fluid">
+  <div class="row-fluid">
+      <ul class="nav nav-tabs nav-stacked" id="myTab1">
+        <table class="table table-condensed" style="float: left; text-align: left">
+          {{#each paths_tot_points}}
+          <li>
+            <tr>
+              <td>
+                <a href="#tab{{this.ini}}" class="show_entry" id="{{this.ini}}" data-toggle="tab">{{this.ini}}</a>
+              </td>
+              <td>
+                <span class="inlinesparkline">{{this.range}},{{this.tot}}</span>
+              </td>
+            </tr>
+          </li>
+          {{/each}}
+        </div>
+        <br></ul>
+    </table>
+  </div>
+</div>
+</script>
+
+
+<script id="status_template"  type="text/x-handlebars-template">
+  <div class="alert">
+    <table border="0" cellspacing="5" cellpadding="5">
+      <tr><td>Slides Distributed:    </td><td>    {{slides_distributed}}  </td></tr>
+      <tr><td>Slides Remaining:    </td><td>    {{slides_remaining}}  </td></tr>
+      <tr><td>Slides Pending per Pathologist:    </td><td>    {{slides_remaining_per_pathologist}}  </td></tr>
+    </table>  
+  </div>
+</script>
+
+
+<script id="id_template"  type="text/x-handlebars-template">
+  <input type="hidden" id="path_name" name="path_name" value="{{id}}">
+</script>
+
+
+<script id="cardinal_template"  type="text/x-handlebars-template">
+     <table class="table table-striped">
+      <div>
+      {{#each cardinal}}
+      <tr>
+        <td>{{this}}</td>
+        <td>
+         <input type="checkbox" id="{{this}}" name="{{this}}"></td>
+      </tr>
+        {{/each}}
+      </div>
+    </table>
+
+</script>
+
+
+<script id="regular_template"  type="text/x-handlebars-template">
+
+    <table class="table table-striped">
+      {{#each regular}}
+      <tr>
+        <td>{{this}}</td>
+        <td><input type="text"  id="{{this}}" class="input-min span1" name="{{this}}" value="" id="" ></td>
+      </tr>
+      {{/each}}
+    </table>
+</script>
+
+
+
+
+
+<!-- Here is were the templates will be rendered; by convention for the renderig name_html -->
+
+<form action="entry" method="post"  id="entry" accept-charset="utf-8" >
+
+  <span id="id_html" ></span>
+
+  <span id="cardinal_html" class="span2"></span>
+
+  <span id="regular_html" class="span3 offset1"></span>
+
+</form>
+
+
+
+<span id="sparkline_html" class="span2"></span>
+
+<span id="status_html" class="span5 offset1"></span>
+
+
+
+
+
+
+
+<!-- calls the coffee generated script -->
+<script src="views/live.js" type="text/javascript" charset="utf-8"></script>

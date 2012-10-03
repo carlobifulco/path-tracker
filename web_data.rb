@@ -30,8 +30,9 @@ def get_business_utc n=0
 end
 
 ####Total Daily Cases container
-# This is the container of the Pathologist of the day.
-# They then have activities...
+# This is the days container 
+# It has Pathologists of the day.
+# And they then have activities...
 # The status of this is nt actoamtilly updated in regards of teh many it has (Pathologist and Activities)
 # To get the freshest state of the system I do have to pull out again the same Tdc via the today function
 # Days are stored as time.utc
@@ -45,14 +46,26 @@ class Tdc
   key :blocks_east, Integer, :default=>0
   key :tot_points, Integer, :default=>0
   key :blocks_hr, Integer, :default=>0
+  key :blocks_tot,Integer, :default=>0
+  key :expected_generalist_distribution_slides, Integer, :default=>0
   key :extra_points_tot, Integer, :default=>0
   key :tot_points_pathologist, Integer, :default=>0
   #Date.today.to_time.utc
   #Tdc.where(:date=>Date.today.to_time.utc).to_a
   key :date, Time
+  key :n, Integer
+  before_save :update_blocks_tot
 
   def show_date
+   # 
     puts self.date
+  end
+
+  # Updates total number of slides
+  # Also updates theoretical generalist only slides distribution number
+  def update_blocks_tot
+    self.blocks_tot=(self.blocks_hr+self.blocks_west+self.blocks_east).to_i
+    self.expected_generalist_distribution_slides=(blocks_tot*SLIDES_CONVERSION_FACTOR).to_i
   end
 
 
@@ -64,19 +77,20 @@ class Tdc
   def self.today n=0
     business_utc=get_business_utc(n)
     d=where(:date=>business_utc)
+    # existing instance
     if d.to_a.count>0
       t=d.to_a[0]
-      t.date=get_business_utc(n)
       if t.pathologist.count==0
         t.populate
         t.save
       end
       return t
+    # new instance
     else
       t=Tdc.new
+      t.n=n
       t.date=business_utc
       if t.pathologist.count==0 then t.populate; t.save  end
-      #t.show_date
       return t
     end
   end
@@ -125,6 +139,31 @@ class Tdc
       end
     end
     return nil
+  end
+
+  #magic souce formula....
+  # total of all expected slide points
+  #blocks enetered are generalist blocks only
+  def get_predicted_points_slide_tot 
+     #conversion blocks slides
+     total_slide_points= SLIDES_CONVERSION_FACTOR * (self.blocks_west+self.blocks_east+self.blocks_hr)
+     total_slide_points.to_int
+  end
+
+  #tot of all expected points
+  #again generalist blocks and activities only
+  def get_predicted_points_all
+    self.tot_points=(self.get_predicted_points_slide_tot + Activity.get_general_non_slide_points(self.n))
+  end
+
+  #again based on generalist blocks and activities only
+  def get_predicted_points_per_non_specialist
+    non_specialist_count=Pathologist.get_number_generalist(self.n)
+    if non_specialist_count !=0
+      self.get_predicted_points_all/non_specialist_count
+    else
+      return 1
+    end
   end
 end
 
@@ -217,17 +256,29 @@ class Pathologist
     self.get_path_working(n).select{|i| i.specialty_only==true}
   end
 
-
-  def self.path_all_points n=0
+  # Main data structure for rendering
+  #
+  # Returns dict with initials, points range, location and pathologist initial
+  def self.path_all_points n=0, pathologist=self.get_path_working(n)
     #n=working_n n
-    points_per_path=Today.new(n).points_per_path
+    t=Tdc.today
+    points_per_path=t.get_predicted_points_per_non_specialist
     path_all_points=[]
-    self.get_path_working(n).each do |x|
+    pathologist.each do |x|
       path_all_points<<{ini: x.ini, tot: x.total_points, range: points_per_path, location: x.location}
     end
+    # Sort by location
     path_all_points.sort_by do |a|
       [a[:location],a[:ini]]
     end
+  end
+
+  def self.path_all_points_generalist n=0
+    self.path_all_points(n,self.get_generalist(n))
+  end
+
+  def self.path_all_points_specialist n=0
+    self.path_all_points(n,self.get_specialist(n))
   end
 
   def self.all_paths

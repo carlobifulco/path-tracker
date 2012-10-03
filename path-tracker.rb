@@ -165,6 +165,7 @@ post "/tomorrow" do
   return {:ok=>true}.to_json
 end
 
+# updates view for selected pathologist
 get "/path/activities/points" do
   t=Today.new
   {path: t.get_path_activities_points}.to_json

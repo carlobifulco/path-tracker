@@ -62,8 +62,7 @@ module TodayGet
   #these are theroetical based on the number of blocks/slides to be distributed
   def get_points_tot
     t=Tdc.today @n
-    #puts "Slides:#{self.get_points_slide_tot()};Activity: #{Activity.get_activity_points(@n)} "
-    t.tot_points=(self.get_points_slide_tot() + Activity.get_general_non_slide_points(@n))
+    t.tot_points=(t.get_predicted_points_slide_tot + Activity.get_general_non_slide_points(@n))
     #puts t.tot_points
     t.save
     return t.tot_points
@@ -99,7 +98,8 @@ module TodayGet
   end
 
   def get_slides_to_be_distributed
-    (get_points_slide_tot/SLIDES_CONVERSION_FACTOR)-get_general_slides_distributed
+    t=Tdc.today @n
+    (t.get_predicted_points_slide_tot/SLIDES_CONVERSION_FACTOR)-get_general_slides_distributed
   end
 
   def get_path_by_ini ini
@@ -112,6 +112,7 @@ end
 
 module TodayReport
   def report_day
+    t=Tdc.today @n
     points= {:specialty_non_slide_points => Activity.get_specialist_non_slide_points(@n),
               :specialty_slide_points => Activity.get_specialist_slides_distributed(@n),
               :general_non_slide_points => Activity.get_general_non_slide_points(@n),
@@ -125,10 +126,10 @@ module TodayReport
     puts "\t- Total System non-slide points assigned: #{points[:specialty_non_slide_points]+points[:general_non_slide_points]}"
     puts "\t- Total Generalist non-slide points assigned #{points[:general_non_slide_points]}"
     puts "\t- Total Specialist non-slide points assigned #{points[:specialty_non_slide_points]}"
-    puts "\t- Predicted slides to be distributed: #{self.get_points_slide_tot}"
+    puts "\t- Predicted slides to be distributed: #{t.get_predicted_points_slide_tot}"
     puts "\t- Total Generalist slides distributed: #{points[:general_slides_distributed]}"
     puts "\t- Ratio generalist slides distributed/blocks =#{points[:general_slides_distributed]/self.get_tot_blocks.to_f}"
-    puts "\t- Diff slides predicted vs distributed: #{self.get_points_slide_tot - points[:general_slides_distributed]}"
+    puts "\t- Diff slides predicted vs distributed: #{t.get_predicted_points_slide_tot- points[:general_slides_distributed]}"
     # puts "\t- Average (mean) theoretical workload per generalist Pathologist: #{Activity.get_general_non_slide_points+Activity.get_general_slides_distributed/Pathologist.get_number_generalist}"
     puts "\t- Average (mean) effective workload per generalist Pathologist: #{average_generalist_points}"
     puts "*************"
@@ -169,7 +170,7 @@ class Today
   def get_setup
     #Tdcs need to be genrated fresh for each call
     t=Tdc.today @n
-    tot_points=self.get_points_tot()
+    tot_points=t.get_predicted_points_all
     blocks_tot=t.blocks_west+t.blocks_east+t.blocks_hr; slide_points=(blocks_tot*SLIDES_CONVERSION_FACTOR).to_i
     slides_distributed=Activity.get_general_slides_distributed(@n); ; activity_points=tot_points-slide_points
     if slides_distributed then slides_remaining=slide_points - slides_distributed else slides_remaining=slide_points/SLIDES_CONVERSION_FACTOR end
@@ -191,12 +192,13 @@ class Today
           slides_remaining: slides_remaining,
           generalist_count:Pathologist.get_number_generalist
           }
-    setup[:points_per_pathologist]=  self.points_per_path
+    setup[:points_per_pathologist]= t.get_predicted_points_per_non_specialist
     return setup
   end
 
 
   # equation for asserting total points per head
+  #only for generalists
   def points_per_path
     tot_points=self.get_points_tot
     path_count= self.get_path_working.count-self.get_path_specialty.count
@@ -223,14 +225,26 @@ class Today
 
   def get_entry
     t=Tdc.today @n
-    entry={pathologist_working: Pathologist.get_path_working(@n).map{ |x| x.ini}.sort(),
+    entry={
+      pathologist_working: Pathologist.get_path_working(@n).map{ |x| x.ini}.sort(),
       paths_acts_points: Pathologist.all_activities_points(@n),
       paths_tot_points: Pathologist.path_all_points(@n)
      }
   end
 
+  # as get entry but restricted to generalists
   def get_live
-    return {:ok=>true}
+    t=Tdc.today @n
+    slides_distributed=Activity.get_general_slides_distributed(@n)
+    slides_remaining=t.expected_generalist_distribution_slides- slides_distributed 
+    entry={
+      pathologist_working: Pathologist.get_generalist(@n).map{ |x| x.ini}.sort(),
+      paths_acts_points: Pathologist.all_activities_points(@n),
+      paths_tot_points: Pathologist.path_all_points_generalist(@n),
+      slides_distributed: slides_distributed,
+      slides_remaining: slides_remaining,
+      slides_remaining_per_pathologist: slides_remaining/Pathologist.get_number_generalist(@n)
+    }
   end
 
 
