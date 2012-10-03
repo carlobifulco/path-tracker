@@ -48,7 +48,6 @@ class Tdc
   key :blocks_hr, Integer, :default=>0
   key :blocks_tot,Integer, :default=>0
   key :expected_generalist_distribution_slides, Integer, :default=>0
-  key :extra_points_tot, Integer, :default=>0
   key :tot_points_pathologist, Integer, :default=>0
   #Date.today.to_time.utc
   #Tdc.where(:date=>Date.today.to_time.utc).to_a
@@ -153,7 +152,6 @@ class Tdc
   #tot of all expected points
   #again generalist blocks and activities only
   def get_predicted_points_all
-    if self.n==nil then self.n=0 end
     self.tot_points=(self.get_predicted_points_slide_tot + Activity.get_general_non_slide_points(self.n))
   end
 
