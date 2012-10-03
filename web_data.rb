@@ -153,6 +153,7 @@ class Tdc
   #tot of all expected points
   #again generalist blocks and activities only
   def get_predicted_points_all
+    if self.n==nil then self.n=0 end
     self.tot_points=(self.get_predicted_points_slide_tot + Activity.get_general_non_slide_points(self.n))
   end
 
