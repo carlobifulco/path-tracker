@@ -139,7 +139,7 @@ class Tdc
   #
   #for debugging purposes
   def get_activities
-    Tdc.all.each do |t|
+    Tdc.all.sort_by{|x| x.date}.each do |t|
       puts "Date: #{t.date}, Working days: #{t.n}"
       t.get_working.each do |p|
         puts "\t#{p.ini}: specialty-only=#{p.specialty_only}"

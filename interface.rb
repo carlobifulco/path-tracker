@@ -121,11 +121,12 @@ class Today
   def initialize n=0
     @all_activities_points= DATA["regular_activities"].merge DATA["cardinal_activities"]
     # @ n is the number of days after today; needs to tak into accound weekends/holidays
-    @n=n
-    @time=get_business_utc n
-    @date=@time.to_date
+    
     #actuallu used only for debugging
     @tdc=Tdc.today n
+    @n=@tdc.n
+    @time=@tdc.date
+    @date=@time.to_date
   end
 
   def get_tot_blocks
@@ -140,7 +141,7 @@ class Today
     t=Tdc.today @n
     tot_points=t.get_predicted_points_all
     blocks_tot=t.blocks_west+t.blocks_east+t.blocks_hr; slide_points=(blocks_tot*SLIDES_CONVERSION_FACTOR).to_i
-    slides_distributed=Activity.get_general_slides_distributed(@n); ; activity_points=tot_points-slide_points
+    slides_distributed=Activity.get_general_slides_distributed(t.n); ; activity_points=tot_points-slide_points
     if slides_distributed then slides_remaining=slide_points - slides_distributed else slides_remaining=slide_points/SLIDES_CONVERSION_FACTOR end
     pathologist_working=self.get_path_working.map { |x| x.ini }
     path_count= self.get_path_working.count
@@ -155,7 +156,7 @@ class Today
           pathologist_working: (pathologist_working).sort,
           pathologist_absent: (self.get_path_absent).sort,
           path_count: path_count,
-          date: @date.to_s,
+          date: t.date.to_s,
           slides_distributed: slides_distributed,
           slides_remaining: slides_remaining,
           generalist_count:Pathologist.get_number_generalist
@@ -193,30 +194,30 @@ class Today
 
   def get_entry
     t=Tdc.today @n
-    slides_distributed=Activity.get_general_slides_distributed(@n)
+    slides_distributed=Activity.get_general_slides_distributed(t.n)
     slides_remaining=t.expected_generalist_distribution_slides- slides_distributed 
     entry={
-      pathologist_working: Pathologist.get_path_working(@n).map{ |x| x.ini}.sort(),
-      paths_acts_points: Pathologist.all_activities_points(@n),
-      paths_tot_points: Pathologist.path_all_points(@n),
+      pathologist_working: Pathologist.get_path_working(t.n).map{ |x| x.ini}.sort(),
+      paths_acts_points: Pathologist.all_activities_points(t.n),
+      paths_tot_points: Pathologist.path_all_points(t.n),
       slides_distributed: slides_distributed,
       slides_remaining: slides_remaining,
-      slides_remaining_per_pathologist: slides_remaining/Pathologist.get_number_generalist(@n)
+      slides_remaining_per_pathologist: slides_remaining/Pathologist.get_number_generalist(t.n)
      }
   end
 
   # as get entry but restricted to generalists
   def get_live
     t=Tdc.today @n
-    slides_distributed=Activity.get_general_slides_distributed(@n)
+    slides_distributed=Activity.get_general_slides_distributed(t.n)
     slides_remaining=t.expected_generalist_distribution_slides- slides_distributed 
     entry={
-      pathologist_working: Pathologist.get_generalist(@n).map{ |x| x.ini}.sort(),
-      paths_acts_points: Pathologist.all_activities_points(@n),
-      paths_tot_points: Pathologist.path_all_points_generalist(@n),
+      pathologist_working: Pathologist.get_generalist(t.n).map{ |x| x.ini}.sort(),
+      paths_acts_points: Pathologist.all_activities_points(t.n),
+      paths_tot_points: Pathologist.path_all_points_generalist(t.n),
       slides_distributed: slides_distributed,
       slides_remaining: slides_remaining,
-      slides_remaining_per_pathologist: slides_remaining/Pathologist.get_number_generalist(@n)
+      slides_remaining_per_pathologist: slides_remaining/Pathologist.get_number_generalist(t.n)
     }
   end
 
@@ -238,6 +239,7 @@ class Today
 
   #activities entry point for cardinal
   def set_cardinal path_ini, on_array
+    t=Tdc.today @n
     no_work_activities=DATA["no-points"].keys
     p=self.get_path_by_ini path_ini
     off_array=DATA["cardinal_activities"].keys.select{|x| not (on_array.member? x)}
@@ -254,7 +256,7 @@ class Today
       end
     end
     off_array.each do |activity_name|
-      a=Activity.get_ini_name(@n,path_ini,activity_name)
+      a=Activity.get_ini_name(t.n,path_ini,activity_name)
       a.delete if a
     end
     p.save
