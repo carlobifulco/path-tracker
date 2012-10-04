@@ -9,7 +9,6 @@ require "utilities"
 require "whenever"
 require 'business_time'
 require "holidays"
-require "statsample"
 require "interface"
 require "configuration"
 
@@ -21,12 +20,15 @@ require "configuration"
 #
 # Returns a date/time in UTC format of the nth day after today
 def get_business_utc n=0
-  # if n==0
-  #   if Date.today.sunday? then n=1 end
-  #   if Date.today.saturday? then n=2 end
-  # end
-  business_days=(((1*n).business_day.after Date.today).to_date - Date.today).to_int
-  (Date.today+business_days).to_time.utc
+  #if future
+  if n>=0
+    business_days=(((1*n).business_day.after Date.today).to_date - Date.today).to_int
+    return (Date.today+business_days).to_time.utc
+  else
+  # if past
+    business_days=(Date.today - ((- n).business_day.before Date.today).to_date).to_int
+    return (Date.today-business_days).to_time.utc
+  end
 end
 
 ####Total Daily Cases container
@@ -49,9 +51,10 @@ class Tdc
   key :blocks_tot,Integer, :default=>0
   key :expected_generalist_distribution_slides, Integer, :default=>0
   key :tot_points_pathologist, Integer, :default=>0
-  #Date.today.to_time.utc
-  #Tdc.where(:date=>Date.today.to_time.utc).to_a
+  # date stores the Tdc instance day in a utc representation of the date
+  # this is the dataset used to pull out Tdc instances if they are already existing
   key :date, Time
+  #n is the number of **working** days ahead of today
   key :n, Integer
   before_save :update_blocks_tot
 
@@ -68,7 +71,7 @@ class Tdc
   end
 
 
-  ######Returns only one Tdc and always the same for a certain disease
+  ######Returns only one Tdc and always the same for a certain day
   #
   #n is the number of days from today
   #
@@ -76,13 +79,16 @@ class Tdc
   def self.today n=0
     business_utc=get_business_utc(n)
     d=where(:date=>business_utc)
-    # existing instance
+    # existing instance n working days ahead of today
     if d.to_a.count>0
       t=d.to_a[0]
+      # update the t.n (t.n was setup on the day of creation but now it could have to be changed)
+      t.n=(Date.today.business_days_until t.date.to_date) if (Date.today <= t.date.to_date)
+      t.n= - (t.date.to_date.business_days_until Date.today) if (Date.today > t.date.to_date)
       if t.pathologist.count==0
         t.populate
-        t.save
       end
+      t.save
       return t
     # new instance
     else
@@ -129,12 +135,17 @@ class Tdc
 
   #Shows who is doing what
   #
+  # for all dates
+  #
   #for debugging purposes
   def get_activities
-    self.get_working.each do |p|
-      puts "#{p.ini}: specialty-only=#{p.specialty_only}"
-      p.activities.each do |a|
-        puts "\t#{a.name}: #{a.tot_points}; "
+    Tdc.all.each do |t|
+      puts "Date: #{t.date}, Working days: #{t.n}"
+      t.get_working.each do |p|
+        puts "\t#{p.ini}: specialty-only=#{p.specialty_only}"
+        p.activities.each do |a|
+          puts "\t\t#{a.name}: #{a.tot_points}; "
+        end
       end
     end
     return nil
@@ -188,6 +199,7 @@ class Pathologist
   key :date, Time
   key :working, Boolean, :default=>true
   key :specialty_only, Boolean, :default=>false
+  #array where instances of Activity get packed and assigned via <<
   many :activities
   key :location, String
   before_save :update_site, :update_specialty_status

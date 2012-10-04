@@ -168,7 +168,8 @@
           return serialize();
         });
       }
-      return decorate();
+      decorate();
+      return render_template("status", data);
     });
   };
 
@@ -205,6 +206,7 @@
 
   show = function(id) {
     var _this = this;
+    $("#status_html").hide();
     window.id = id;
     render_template("id", {
       id: id

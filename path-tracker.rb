@@ -17,6 +17,9 @@ require "erb"
 require 'sinatra/mustache'
 require "pp"
 
+#gzips content
+use Rack::Deflater
+
 set :server, 'thin'
 set :sockets, []
 

@@ -57,7 +57,7 @@ end
 
 def switch_to_production
   MongoMapper.database = DATA_BASENAME
-  puts "SWITTCHED TO TEST DATABASE"
+  puts "SWITTCHED TO PRODUCTION DATABASE!!!"
 end
 
 switch_to_testing

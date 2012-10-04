@@ -110,43 +110,11 @@ module TodayGet
 end
 
 
-module TodayReport
-  def report_day
-    t=Tdc.today @n
-    points= {:specialty_non_slide_points => Activity.get_specialist_non_slide_points(@n),
-              :specialty_slide_points => Activity.get_specialist_slides_distributed(@n),
-              :general_non_slide_points => Activity.get_general_non_slide_points(@n),
-              :general_slides_distributed => Activity.get_general_slides_distributed(@n)}
-    tot_points=points.values.reduce(:+)
-    tot_general_points=points[:general_non_slide_points]+points[:general_slides_distributed]
-    average_generalist_points=tot_general_points/Pathologist.get_number_generalist
-
-    puts "Day #{Date.today+working_n(@n)}"
-    puts "**************"
-    puts "\t- Total System non-slide points assigned: #{points[:specialty_non_slide_points]+points[:general_non_slide_points]}"
-    puts "\t- Total Generalist non-slide points assigned #{points[:general_non_slide_points]}"
-    puts "\t- Total Specialist non-slide points assigned #{points[:specialty_non_slide_points]}"
-    puts "\t- Predicted slides to be distributed: #{t.get_predicted_points_slide_tot}"
-    puts "\t- Total Generalist slides distributed: #{points[:general_slides_distributed]}"
-    puts "\t- Ratio generalist slides distributed/blocks =#{points[:general_slides_distributed]/self.get_tot_blocks.to_f}"
-    puts "\t- Diff slides predicted vs distributed: #{t.get_predicted_points_slide_tot- points[:general_slides_distributed]}"
-    # puts "\t- Average (mean) theoretical workload per generalist Pathologist: #{Activity.get_general_non_slide_points+Activity.get_general_slides_distributed/Pathologist.get_number_generalist}"
-    puts "\t- Average (mean) effective workload per generalist Pathologist: #{average_generalist_points}"
-    puts "*************"
-    puts "Generalist Slide Distribution:"
-    puts "*************"
-    Pathologist.get_generalist.each do |p|
-      puts "\tDeviation from mean for #{p.ini}: #{-(average_generalist_points-p.total_points)}"
-    end
-    return nil
-  end
-end
 
 #### Main interface to sinatra calls
 class Today
   include TodaySet
   include TodayGet
-  include TodayReport
 
   attr_accessor :tdc, :n, :all_activities_points, :time, :date
 
@@ -225,10 +193,15 @@ class Today
 
   def get_entry
     t=Tdc.today @n
+    slides_distributed=Activity.get_general_slides_distributed(@n)
+    slides_remaining=t.expected_generalist_distribution_slides- slides_distributed 
     entry={
       pathologist_working: Pathologist.get_path_working(@n).map{ |x| x.ini}.sort(),
       paths_acts_points: Pathologist.all_activities_points(@n),
-      paths_tot_points: Pathologist.path_all_points(@n)
+      paths_tot_points: Pathologist.path_all_points(@n),
+      slides_distributed: slides_distributed,
+      slides_remaining: slides_remaining,
+      slides_remaining_per_pathologist: slides_remaining/Pathologist.get_number_generalist(@n)
      }
   end
 
