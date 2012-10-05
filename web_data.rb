@@ -246,12 +246,12 @@ class Pathologist
   end
 
   def self.get_all_path n=0
-    d=where(:date=>(Date.today+n).to_time.utc)
+    d=where(:date=>(get_business_utc(n)))
     d.to_a if d
   end
 
   def self.get_path_working n=0
-    d=where(:working=>true, :date=>(Date.today+n).to_time.utc)
+    d=where(:working=>true, :date=>(get_business_utc(n)))
     d.to_a if d
   end
 

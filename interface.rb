@@ -194,6 +194,7 @@ class Today
 
   def get_entry
     t=Tdc.today @n
+    puts "#{t.date } with an #{t.n}; Today n is #{@n}"
     slides_distributed=Activity.get_general_slides_distributed(t.n)
     slides_remaining=t.expected_generalist_distribution_slides- slides_distributed 
     entry={
@@ -202,7 +203,8 @@ class Today
       paths_tot_points: Pathologist.path_all_points(t.n),
       slides_distributed: slides_distributed,
       slides_remaining: slides_remaining,
-      slides_remaining_per_pathologist: slides_remaining/Pathologist.get_number_generalist(t.n)
+       # avoid 0 division crashes
+      slides_remaining_per_pathologist: slides_remaining/(Pathologist.get_number_generalist(t.n) or 1)
      }
   end
 
@@ -217,7 +219,8 @@ class Today
       paths_tot_points: Pathologist.path_all_points_generalist(t.n),
       slides_distributed: slides_distributed,
       slides_remaining: slides_remaining,
-      slides_remaining_per_pathologist: slides_remaining/Pathologist.get_number_generalist(t.n)
+      # avoid 0 division crashes
+      slides_remaining_per_pathologist: slides_remaining/(Pathologist.get_number_generalist(t.n) or 1)
     }
   end
 
