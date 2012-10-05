@@ -138,7 +138,7 @@ class Tdc
   # for all dates
   #
   #for debugging purposes
-  def get_activities
+  def debug
     Tdc.all.sort_by{|x| x.date}.each do |t|
       puts "Date: #{t.date}, Working days: #{t.n}"
       t.get_working.each do |p|
