@@ -1,3 +1,7 @@
+my_directory=File.dirname(File.expand_path(__FILE__))
+$LOAD_PATH << File.join(my_directory,'/lib')
+$LOAD_PATH << my_directory
+
 require "web_data"
 
 # Main interface to the web application
@@ -9,25 +13,6 @@ module TodaySet
     p.save
   end
 
-  def set_blocks_west n
-    t=Tdc.today @n
-    t.blocks_west=n
-    t.save
-    puts "blocks west #{t.blocks_west}"
-  end
-
-  def set_blocks_east n
-    t=Tdc.today @n
-    t.blocks_east=n
-    t.save
-    puts "blocks eats #{t.blocks_east}"
-  end
-
-  def set_blocks_hr n
-    t=Tdc.today @n
-    t.blocks_hr=n
-    t.save
-  end
 
   def set_path_on ini
     p=get_path_by_ini ini
@@ -110,6 +95,38 @@ module TodayGet
 end
 
 
+####Points calculator
+class PointsCalculator
+  attr_accessor :t,:predicted_general_slides_tot,:general_slides_distributed,:predicted_general_slides_pending
+  attr_accessor :total_general_predicted_points,:general_activity_points
+  def initialize n=0, slides_conversion_factor=1
+    @t=Tdc.today n
+    @predicted_general_slides_tot=((@t.blocks_tot-@t.total_GI-@t.total_SO-@t.total_ESD).*slides_conversion_factor).to_i+@t.total_cytology
+    @general_slides_distributed=Activity.get_general_slides_distributed(@t.n)
+    @predicted_general_slides_pending=@predicted_general_slides_tot- @general_slides_distributed
+    @total_general_predicted_points=@predicted_general_slides_tot+Activity.get_general_non_slide_points(@t.n)
+    @general_activity_points=Activity.get_general_non_slide_points(@t.n)
+    @non_specialist_count=Pathologist.get_number_generalist(@t.n)
+  end
+    #again based on generalist blocks and activities only
+  def predicted_slides_per_non_specialist
+    
+    if @non_specialist_count !=0
+      @predicted_general_slides_pending/@non_specialist_count
+    else
+      return 1
+    end
+  end
+  
+  def predicted_points_per_non_specialist
+    if @non_specialist_count !=0
+      @total_general_predicted_points/@non_specialist_count
+    else
+      return 1
+    end
+  end
+end
+
 
 #### Main interface to sinatra calls
 class Today
@@ -121,7 +138,7 @@ class Today
   def initialize n=0
     @all_activities_points= DATA["regular_activities"].merge DATA["cardinal_activities"]
     # @ n is the number of days after today; needs to tak into accound weekends/holidays
-    
+
     #actuallu used only for debugging
     @tdc=Tdc.today n
     @n=@tdc.n
@@ -136,22 +153,26 @@ class Today
 
 
   # all paths for the day
+  # XXX
   def get_setup
     #Tdcs need to be genrated fresh for each call
     t=Tdc.today @n
-    tot_points=t.get_predicted_points_all
-    blocks_tot=t.blocks_west+t.blocks_east+t.blocks_hr; slide_points=(blocks_tot*SLIDES_CONVERSION_FACTOR).to_i
+    pc=PointsCalculator.new @n
+    tot_points=pc.total_general_predicted_points
+    general_slides_tot=pc.predicted_general_slides_tot
+    slide_points=pc.predicted_general_slides_tot
     slides_distributed=Activity.get_general_slides_distributed(t.n); ; activity_points=tot_points-slide_points
     if slides_distributed then slides_remaining=slide_points - slides_distributed else slides_remaining=slide_points/SLIDES_CONVERSION_FACTOR end
     pathologist_working=self.get_path_working.map { |x| x.ini }
     path_count= self.get_path_working.count
-    setup={blocks_west: t.blocks_west,
-          blocks_east: t.blocks_east,
-          blocks_hr: t.blocks_hr,
-          blocks_tot: blocks_tot,
-          tot_points: tot_points,
-          slide_points: slide_points,
-          activity_points: activity_points,
+    setup={blocks_tot: t.blocks_tot,
+          total_GI: t.total_GI,
+          total_SO: t.total_SO,
+          total_ESD: t.total_ESD,
+          total_cytology: t.total_cytology,
+          tot_points: pc.total_general_predicted_points,
+          slide_points: pc.predicted_general_slides_tot,
+          activity_points: pc.general_activity_points,
           pathologist_all: self.get_path_all.map { |x| x.ini  },
           pathologist_working: (pathologist_working).sort,
           pathologist_absent: (self.get_path_absent).sort,
@@ -161,7 +182,7 @@ class Today
           slides_remaining: slides_remaining,
           generalist_count:Pathologist.get_number_generalist
           }
-    setup[:points_per_pathologist]= t.get_predicted_points_per_non_specialist
+    setup[:points_per_pathologist]= pc.predicted_points_per_non_specialist
     return setup
   end
 
@@ -183,10 +204,13 @@ class Today
     t=Tdc.today @n
     #puts params
     #puts " params is #{params}; and has key #{params.has_key? 'blocks_east'}"
-    self.set_blocks_east params['blocks_east'] #unless (not (params.has_key? 'blocks_east'))
-    self.set_blocks_west params['blocks_west'] #unless (not (params.has_key? 'blocks_west'))
-    self.set_blocks_hr params['blocks_hr']
-    #puts "where are you #{params['blocks_hr']}"
+    t.blocks_tot=params['total_blocks'] #unless (not (params.has_key? 'blocks_east'))
+    t.total_GI=params['total_GI'] #unless (not (params.has_key? 'blocks_west'))
+    t.total_SO=params['total_SO']
+    t.total_ESD=params['total_ESD']
+    t.total_cytology=params['total_cytology']
+    t.save
+    puts t.blocks_tot
     self.set_present(params['path_present']) unless (not (params.has_key? 'path_present'))
     self.set_absent(params['path_absent']) unless (not (params.has_key? 'path_absent'))
     return true
@@ -194,34 +218,35 @@ class Today
 
   def get_entry
     t=Tdc.today @n
+    pc=PointsCalculator.new
     puts "#{t.date } with an #{t.n}; Today n is #{@n}"
-    slides_distributed=Activity.get_general_slides_distributed(t.n)
-    slides_remaining=t.expected_generalist_distribution_slides- slides_distributed 
     entry={
       pathologist_working: Pathologist.get_path_working(t.n).map{ |x| x.ini}.sort(),
       paths_acts_points: Pathologist.all_activities_points(t.n),
       paths_tot_points: Pathologist.path_all_points(t.n),
-      slides_distributed: slides_distributed,
-      slides_remaining: slides_remaining,
+      slides_distributed: Activity.get_general_slides_distributed(t.n),
+      slides_remaining: pc.predicted_general_slides_pending,
+      date: t.date.to_date,
        # avoid 0 division crashes
-      slides_remaining_per_pathologist: slides_remaining/(Pathologist.get_number_generalist(t.n) or 1)
+      slides_remaining_per_pathologist: pc.predicted_slides_per_non_specialist
      }
   end
 
   # as get entry but restricted to generalists
   def get_live
     t=Tdc.today @n
-    slides_distributed=Activity.get_general_slides_distributed(t.n)
-    slides_remaining=t.expected_generalist_distribution_slides- slides_distributed 
+    pc=PointsCalculator.new
+    puts "#{t.date } with an #{t.n}; Today n is #{@n}"
     entry={
-      pathologist_working: Pathologist.get_generalist(t.n).map{ |x| x.ini}.sort(),
+      pathologist_working: Pathologist.get_path_working(t.n).map{ |x| x.ini}.sort(),
       paths_acts_points: Pathologist.all_activities_points(t.n),
-      paths_tot_points: Pathologist.path_all_points_generalist(t.n),
-      slides_distributed: slides_distributed,
-      slides_remaining: slides_remaining,
-      # avoid 0 division crashes
-      slides_remaining_per_pathologist: slides_remaining/(Pathologist.get_number_generalist(t.n) or 1)
-    }
+      paths_tot_points: Pathologist.path_all_points(t.n),
+      slides_distributed: Activity.get_general_slides_distributed(t.n),
+      slides_remaining: pc.predicted_general_slides_pending,
+      date: t.date.to_date,
+       # avoid 0 division crashes
+      slides_remaining_per_pathologist: pc.predicted_slides_per_non_specialist
+     }
   end
 
 

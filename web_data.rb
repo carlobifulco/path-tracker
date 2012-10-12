@@ -32,7 +32,7 @@ def get_business_utc n=0
 end
 
 ####Total Daily Cases container
-# This is the days container 
+# This is the days container
 # It has Pathologists of the day.
 # And they then have activities...
 # The status of this is nt actoamtilly updated in regards of teh many it has (Pathologist and Activities)
@@ -44,11 +44,17 @@ class Tdc
   safe
   key :pathologists, Array
   many :pathologist, :in => :pathologists #objects are in pathologist; ids in pathologists
+  #old entries
   key :blocks_west, Integer, :default=>0
   key :blocks_east, Integer, :default=>0
-  key :tot_points, Integer, :default=>0
   key :blocks_hr, Integer, :default=>0
+  # new entries
+  key :tot_points, Integer, :default=>0
   key :blocks_tot,Integer, :default=>0
+  key :total_GI, Integer, :default=>0
+  key :total_SO, Integer, :default=>0
+  key :total_ESD, Integer, :default=>0
+  key :total_cytology, Integer, :default=>0
   key :expected_generalist_distribution_slides, Integer, :default=>0
   key :tot_points_pathologist, Integer, :default=>0
   # date stores the Tdc instance day in a utc representation of the date
@@ -56,18 +62,11 @@ class Tdc
   key :date, Time
   #n is the number of **working** days ahead of today
   key :n, Integer
-  before_save :update_blocks_tot
+
 
   def show_date
-   # 
+   #
     puts self.date
-  end
-
-  # Updates total number of slides
-  # Also updates theoretical generalist only slides distribution number
-  def update_blocks_tot
-    self.blocks_tot=(self.blocks_hr+self.blocks_west+self.blocks_east).to_i
-    self.expected_generalist_distribution_slides=(blocks_tot*SLIDES_CONVERSION_FACTOR).to_i
   end
 
 
@@ -154,7 +153,7 @@ class Tdc
   #magic souce formula....
   # total of all expected slide points
   #blocks enetered are generalist blocks only
-  def get_predicted_points_slide_tot 
+  def get_predicted_points_slide_tot
      #conversion blocks slides
      total_slide_points= SLIDES_CONVERSION_FACTOR * (self.blocks_west+self.blocks_east+self.blocks_hr)
      total_slide_points.to_int
@@ -165,17 +164,8 @@ class Tdc
   def get_predicted_points_all
     self.tot_points=(self.get_predicted_points_slide_tot + Activity.get_general_non_slide_points(self.n))
   end
-
-  #again based on generalist blocks and activities only
-  def get_predicted_points_per_non_specialist
-    non_specialist_count=Pathologist.get_number_generalist(self.n)
-    if non_specialist_count !=0
-      self.get_predicted_points_all/non_specialist_count
-    else
-      return 1
-    end
-  end
 end
+
 
 #index Tdc
 Tdc.ensure_index(:date)
@@ -272,11 +262,12 @@ class Pathologist
   # Returns dict with initials, points range, location and pathologist initial
   def self.path_all_points n=0, pathologist=self.get_path_working(n)
     #n=working_n n
-    t=Tdc.today
-    points_per_path=t.get_predicted_points_per_non_specialist
+    t=Tdc.today(n) 
+    pc=PointsCalculator.new
+    points_per_path=pc.predicted_points_per_non_specialist
     path_all_points=[]
     pathologist.each do |x|
-      path_all_points<<{ini: x.ini, tot: x.total_points, range: points_per_path, location: x.location}
+      path_all_points<<{ini: x.ini, tot: x.total_points, slides: x.slide_points, range: points_per_path, location: x.location}
     end
     # Sort by location
     path_all_points.sort_by do |a|
@@ -312,6 +303,11 @@ class Pathologist
 
   def total_points
     self.activities.map{|x| x.tot_points}.reduce(:+) or 0
+  end
+
+  #selected slide related activity and return the sum of their points
+  def slide_points
+    self.activities.select{|a| DATA["slide_activities"].include? a.name}.map{|x| x.tot_points}.reduce(:+) or 0
   end
 
 end
@@ -371,7 +367,7 @@ class Activity
 
   def self.get_specialist_non_slide_points n=0
     date=get_business_utc n
-    #find pathologists ids on derm and GI
+    #find pathologists ids on derm and GI for the day
     p_inis=where(:date=>date, :name=> DATA["no-points"].keys).all().map {|x| x.ini}
     #find slide activities with non specialist
     m=where(:date=>date, :name=> {:$nin=>DATA["slide_activities"]}, :ini=>p_inis).all

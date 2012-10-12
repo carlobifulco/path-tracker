@@ -22,7 +22,7 @@ end
 
 #####Slide conversion factor
 #------------------------
-SLIDES_CONVERSION_FACTOR=1.2
+SLIDES_CONVERSION_FACTOR=1
 
 puts "********************************************************"
 puts "Using database #{DATA_BASENAME} and setting #{DATA_FILE}"
@@ -60,5 +60,5 @@ def switch_to_production
   puts "SWITTCHED TO PRODUCTION DATABASE!!!"
 end
 
-switch_to_testing
+#switch_to_testing
 

@@ -96,6 +96,8 @@ no-points:
 slide_activities:
   - Slides-large-cases
   - Slides-small-cases
+  - Non-gyns
+  - Paps
 
 b_psv:
   - "MM"

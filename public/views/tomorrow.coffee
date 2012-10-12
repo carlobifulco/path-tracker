@@ -119,9 +119,11 @@ show_sparklines=(func=false)->
     $("#serialize").show() if func
     $("#serialize").click(()->serialize()) if func
     decorate()
+    render_template("status",data)
     )
 
 window.show_sparklines=show_sparklines
+
 
 
 ###### Get cardinal activities, will be defereed
