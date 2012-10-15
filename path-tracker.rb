@@ -13,9 +13,7 @@ require "web_data"
 require 'coffee-script'
 require "sinatra"
 #require 'sinatra-websocket'
-require "erb"
-require 'sinatra/mustache'
-require "pp"
+
 
 
 set :server, 'thin'
@@ -108,7 +106,7 @@ get ("/entry") do
 end
 
 post "/entry" do
-  pp params
+  puts params
   on_array=[]; t=Today.new; path_name=params['path_name']
   params.keys.each do |key|
     value=params[key]
@@ -149,7 +147,7 @@ end
 
 post "/tomorrow" do
   puts "***************Tomorrow baby***********"
-  pp params
+  puts params
   on_array=[]; t=Today.new 1; path_name=params['path_name']
   params.keys.each do |key|
     value=params[key]

@@ -262,7 +262,7 @@ class Today
     p.activities<<a
     a.save
     p.save
-    pp "just updated for you #{path_ini}'s #{a.name} to a number of #{a.n} and tot_points of #{a.tot_points} "
+    puts "just updated for you #{path_ini}'s #{a.name} to a number of #{a.n} and tot_points of #{a.tot_points} "
   end
 
   #activities entry point for cardinal

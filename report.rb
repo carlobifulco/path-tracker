@@ -1,6 +1,6 @@
 require "statsample"
 require "web_data"
-require 'rserve'
+require 'rserve-client'
 
 con=Rserve::Connection.new
 

@@ -60,5 +60,5 @@ def switch_to_production
   puts "SWITTCHED TO PRODUCTION DATABASE!!!"
 end
 
-#switch_to_testing
+switch_to_testing
 
