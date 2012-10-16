@@ -5,6 +5,8 @@ $LOAD_PATH << File.join(my_directory,'/lib')
 $LOAD_PATH << my_directory
 
 
+
+
 # in
 require "web_data"
 
@@ -12,7 +14,7 @@ require "web_data"
 #require "bundler/setup"
 require 'coffee-script'
 require "sinatra"
-#require 'sinatra-websocket'
+require 'sinatra-websocket'
 
 
 

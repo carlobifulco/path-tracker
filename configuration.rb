@@ -1,23 +1,24 @@
 ####TO install Rserve
 # R CMD INSTALL  Rserve_1.7-0.tar.gz
 # R CMD Rserve
-
+my_directory=File.dirname(File.expand_path(__FILE__))
 
 #testing argv data here ["-p", "4000", "test"] --first 2 args are ports
 puts "argv data here #{ARGV}"
 puts "enter testing argv data here [-p, 4000, test] --first 2 args are ports"
 if ARGV[2] =="test" then TESTING=true else TESTING=false end
 puts "testig is #{TESTING}"
+puts "working dir is #{my_directory}"
 
 
 #####Configuration
 #-------------
 if not TESTING
   DATA_BASENAME='path-tracker'
-  DATA_FILE="./base_line_data.yml"
+  DATA_FILE=File.join(my_directory,"./base_line_data.yml")
 else
   DATA_BASENAME='test'
-  DATA_FILE="./base_line_data_test.yml"
+  DATA_FILE=File.join(my_directory,"./base_line_data_test.yml")
 end
 
 #####Slide conversion factor
@@ -31,7 +32,7 @@ puts "********************************************************"
 #####Dump of database
 #-----------------
 
-system "whenever --update-crontab path-tracker"
+system "whenever  --load-file #{File.join my_directory,'config/schedule.rb'} --update-crontab "
 
 
 ####Holidays observed at work
