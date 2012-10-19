@@ -56,8 +56,8 @@ def simulate n=0
   n= working_n n
   populate n
   t=Today.new n
-  t.set_blocks_east [444,200,100].sample
-  t.set_blocks_west [344,400,233].sample
+  #t.set_blocks_east [444,200,100].sample
+  #t.set_blocks_west [344,400,233].sample
   all_activities=DATA["regular_activities"].merge DATA["cardinal_activities"]
   DATA["regular_activities"].each do |act,points|
     p=(t.tdc.pathologist).sample

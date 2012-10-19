@@ -286,12 +286,19 @@ class Pathologist
     DATA["initials"]
   end
 
+  #main data source for visualization of bars in entry
   def self.all_activities_points n=0
     r={}
     self.get_path_working(n).each {|x| r[x.ini]=x.activities_points}
     return r
   end
 
+  def self.all_activities_points_generalist n=0
+    r={}
+    self.get_generalist(n).each {|x| r[x.ini]=x.activities_points}
+    return r
+  end
+  #main data source for visualization of bars in live
   def activities_points
     activities_points={}
     self.activities.each {|x| activities_points[x['name']]={tot_points: x['tot_points'],
@@ -334,9 +341,7 @@ class Activity
   end
 
   def self.get_ini_name n=0, path_ini,activity_name
-    path_id=Today.new(n).get_path_by_ini(path_ini)._id
-    #puts "PATH-ID=#{path_id}"
-    d=where(:date=>get_business_utc(n), :pathologist_id=>path_id, :name=>activity_name)
+    d=where(:date=>get_business_utc(n), :ini=>path_ini, :name=>activity_name)
     d=d.to_a if d
     if d.count >0 then return  d[0] else return false end
   end
@@ -373,6 +378,11 @@ class Activity
     return ((m.map{|x| x.tot_points}.reduce(:+)) or 0)
   end
 
+  #searches subspecialists for the activity date
+  # and the checks is the 
+  def has_path_subspecialty? subspecialty_name
+    self.pathologist.activities.map{|x| x.name}.include? subspecialty_name 
+  end
 
  #all activities points only for generalists unless slide related
   def self.get_general_non_slide_points n=0

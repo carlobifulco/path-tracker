@@ -238,9 +238,10 @@ class Today
     pc=PointsCalculator.new
     puts "#{t.date } with an #{t.n}; Today n is #{@n}"
     entry={
-      pathologist_working: Pathologist.get_path_working(t.n).map{ |x| x.ini}.sort(),
-      paths_acts_points: Pathologist.all_activities_points(t.n),
-      paths_tot_points: Pathologist.path_all_points(t.n),
+      #this is different  --no specialists...
+      pathologist_working: Pathologist.get_generalist(t.n).map{ |x| x.ini}.sort(),
+      paths_acts_points: Pathologist.all_activities_points_generalist(t.n),
+      paths_tot_points: Pathologist.path_all_points(t.n, pathologist=Pathologist.get_generalist()),
       slides_distributed: Activity.get_general_slides_distributed(t.n),
       slides_remaining: pc.predicted_general_slides_pending,
       date: t.date.to_date,

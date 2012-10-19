@@ -15,6 +15,7 @@ require "web_data"
 require 'coffee-script'
 require "sinatra"
 require 'sinatra-websocket'
+require "report"
 
 
 
@@ -147,6 +148,8 @@ get "/get_live" do
 end
 
 
+
+
 post "/tomorrow" do
   puts "***************Tomorrow baby***********"
   puts params
@@ -224,6 +227,15 @@ get('/logout'){ response.set_cookie(settings.username, false) ; redirect '/' }
 get '/long_term' do
   '<h3>Work in Progress. <a href="/"> Back to the base. </a> </h3>'
 end
+
+get '/report_activity_points/:name' do |name|
+  (report_activity_points name).to_json
+end
+
+get '/report_activity_points/:name/:subspecialty' do |name, subspecialty|
+  (report_activity_points_for_subspecialty name, subspecialty).to_json
+end
+
 
 get '/websocket' do
   if !request.websocket?

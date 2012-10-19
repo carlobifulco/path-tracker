@@ -1,12 +1,38 @@
+my_directory=File.dirname(File.expand_path(__FILE__))
+$LOAD_PATH << File.join(my_directory,'/lib')
+$LOAD_PATH << my_directory
+
+
 require "statsample"
 require "web_data"
-require 'rserve-client'
+#require 'rserve-client'
 
-con=Rserve::Connection.new
-
-
+#con=Rserve::Connection.new
 
 
+def reduce_points_by_day activity_search_results_array
+  activity_hash={}
+  # creates this data structure
+  #{2012-10-03 07:00:00 UTC=>[12], 2012-10-11 07:00:00 UTC=>[60, 30]}
+  activity_search_results_array.each do |a|
+    activity_hash[a.date]=[] unless activity_hash.has_key? a.date
+    activity_hash[a.date]<<a.tot_points
+  end
+  puts activity_hash
+  activity_hash.map{|k,v| v.reduce(:+)}
+end
+
+def report_activity_points activity_name
+  reduce_points_by_day (Activity.where :name => activity_name).all
+end
+
+def report_activity_points_for_subspecialty activity_name, subspecialty
+  reduce_points_by_day (Activity.where :name => activity_name).all.select{|x| x.has_path_subspecialty? subspecialty}
+end
+
+def report_activity_points_for_pathologist activity_name, path_ini
+ reduce_points_by_day (Activity.where :name => activity_name).all.select{|x| x.ini ==path_ini}
+end
 
 def report_day n
   t=Tdc.today n
