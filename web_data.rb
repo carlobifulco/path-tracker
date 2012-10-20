@@ -53,6 +53,7 @@ class Tdc
   key :total_GI, Integer, :default=>0
   key :total_SO, Integer, :default=>0
   key :total_ESD, Integer, :default=>0
+  key :left_over_previous_day_slides, Integer, :default=>0
   key :total_cytology, Integer, :default=>0
   key :expected_generalist_distribution_slides, Integer, :default=>0
   key :tot_points_pathologist, Integer, :default=>0

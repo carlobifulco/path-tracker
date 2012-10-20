@@ -33,6 +33,7 @@ parse_html=()->
   total_SO=$("#total_SO")[0].value
   total_ESD=$("#total_ESD")[0].value
   total_cytology=$("#total_cytology")[0].value
+  left_over_previous_day_slides=$("#left_over_previous_day_slides")[0].value
   data=
     path_present: _.union(get_checked("working"),get_unchecked("absent"))
     path_absent: _.union(get_checked("absent"),get_unchecked("working"))
@@ -41,6 +42,9 @@ parse_html=()->
     total_SO: total_SO
     total_ESD: total_ESD
     total_cytology: total_cytology
+    left_over_previous_day_slides: left_over_previous_day_slides
+    
+
   return data
 window.parse_html=parse_html
 

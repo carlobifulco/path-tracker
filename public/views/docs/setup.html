@@ -30,6 +30,7 @@
   <span class="nx">total_SO</span><span class="o">=</span><span class="nx">$</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">total_SO&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">].</span><span class="nx">value</span>
   <span class="nx">total_ESD</span><span class="o">=</span><span class="nx">$</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">total_ESD&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">].</span><span class="nx">value</span>
   <span class="nx">total_cytology</span><span class="o">=</span><span class="nx">$</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">total_cytology&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">].</span><span class="nx">value</span>
+  <span class="nx">left_over_previous_day_slides</span><span class="o">=</span><span class="nx">$</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="s">left_over_previous_day_slides&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">].</span><span class="nx">value</span>
   <span class="nv">data=</span>
     <span class="nv">path_present: </span><span class="nx">_</span><span class="p">.</span><span class="nx">union</span><span class="p">(</span><span class="nx">get_checked</span><span class="p">(</span><span class="s">&quot;working&quot;</span><span class="p">),</span><span class="nx">get_unchecked</span><span class="p">(</span><span class="s">&quot;absent&quot;</span><span class="p">))</span>
     <span class="nv">path_absent: </span><span class="nx">_</span><span class="p">.</span><span class="nx">union</span><span class="p">(</span><span class="nx">get_checked</span><span class="p">(</span><span class="s">&quot;absent&quot;</span><span class="p">),</span><span class="nx">get_unchecked</span><span class="p">(</span><span class="s">&quot;working&quot;</span><span class="p">))</span>
@@ -38,6 +39,9 @@
     <span class="nv">total_SO: </span><span class="nx">total_SO</span>
     <span class="nv">total_ESD: </span><span class="nx">total_ESD</span>
     <span class="nv">total_cytology: </span><span class="nx">total_cytology</span>
+    <span class="nv">left_over_previous_day_slides: </span><span class="nx">left_over_previous_day_slides</span>
+    
+
   <span class="k">return</span> <span class="nx">data</span>
 <span class="nb">window</span><span class="p">.</span><span class="nx">parse_html</span><span class="o">=</span><span class="nx">parse_html</span>
 

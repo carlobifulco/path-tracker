@@ -23,7 +23,7 @@ end
 
 #####Slide conversion factor
 #------------------------
-SLIDES_CONVERSION_FACTOR=1
+SLIDES_CONVERSION_FACTOR=0.8
 
 puts "********************************************************"
 puts "Using database #{DATA_BASENAME} and setting #{DATA_FILE}"

@@ -3,6 +3,7 @@ $LOAD_PATH << File.join(my_directory,'/lib')
 $LOAD_PATH << my_directory
 
 require "web_data"
+require "configuration"
 
 # Main interface to the web application
 # Setter methods
@@ -97,15 +98,27 @@ end
 
 ####Points calculator
 class PointsCalculator
-  attr_accessor :t,:predicted_general_slides_tot,:general_slides_distributed,:predicted_general_slides_pending
-  attr_accessor :total_general_predicted_points,:general_activity_points
-  def initialize n=0, slides_conversion_factor=1
+  attr_accessor :predicted_general_slides_tot,:general_slides_distributed,:predicted_general_slides_pending
+  attr_accessor :total_general_predicted_points,:general_activity_points, :general_non_slide_points
+  attr_accessor :slides_conversion_factor
+  def initialize n=0, slides_conversion_factor=SLIDES_CONVERSION_FACTOR
+    @slides_conversion_factor=slides_conversion_factor
     @t=Tdc.today n
-    @predicted_general_slides_tot=((@t.blocks_tot-@t.total_GI-@t.total_SO-@t.total_ESD).*slides_conversion_factor).to_i+@t.total_cytology
+    #find slidesdelivered
     @general_slides_distributed=Activity.get_general_slides_distributed(@t.n)
+    # find theoretical tot slides based on blocks an conversion factor
+    @predicted_general_slides_tot=((@t.blocks_tot-@t.total_GI-@t.total_SO-@t.total_ESD).*@slides_conversion_factor).to_i+@t.total_cytology+@t.left_over_previous_day_slides
+    #correct if factor is wrong  --ie more slides are out then theroetically possible
+    if @general_slides_distributed > @predicted_general_slides_tot
+      @slides_conversion_factor=(@general_slides_distributed/@predicted_general_slides_tot.to_f)
+      puts "old #{@predicted_general_slides_tot}, distributed #{@general_slides_distributed}"
+      @predicted_general_slides_tot=(@predicted_general_slides_tot*@slides_conversion_factor).to_i
+      puts "Adjusted ratio to #{@slides_conversion_factor}; new #{@predicted_general_slides_tot}"
+    end
+  
     @predicted_general_slides_pending=@predicted_general_slides_tot- @general_slides_distributed
-    @total_general_predicted_points=@predicted_general_slides_tot+Activity.get_general_non_slide_points(@t.n)
     @general_activity_points=Activity.get_general_non_slide_points(@t.n)
+    @total_general_predicted_points=@predicted_general_slides_tot+@general_activity_points
     @non_specialist_count=Pathologist.get_number_generalist(@t.n)
   end
     #again based on generalist blocks and activities only
@@ -158,17 +171,17 @@ class Today
     #Tdcs need to be genrated fresh for each call
     t=Tdc.today @n
     pc=PointsCalculator.new @n
-    tot_points=pc.total_general_predicted_points
-    general_slides_tot=pc.predicted_general_slides_tot
-    slide_points=pc.predicted_general_slides_tot
-    slides_distributed=Activity.get_general_slides_distributed(t.n); ; activity_points=tot_points-slide_points
-    if slides_distributed then slides_remaining=slide_points - slides_distributed else slides_remaining=slide_points/SLIDES_CONVERSION_FACTOR end
+    slides_distributed=pc.general_slides_distributed;
+    activity_points=pc.total_general_predicted_points-pc.predicted_general_slides_tot
+    if slides_distributed then slides_remaining=pc.predicted_general_slides_tot - slides_distributed else slides_remaining=pc.predicted_general_slides_tot/SLIDES_CONVERSION_FACTOR end
     pathologist_working=self.get_path_working.map { |x| x.ini }
     path_count= self.get_path_working.count
     setup={blocks_tot: t.blocks_tot,
+          slides_conversion_factor: pc.slides_conversion_factor,
           total_GI: t.total_GI,
           total_SO: t.total_SO,
           total_ESD: t.total_ESD,
+          left_over_previous_day_slides: t.left_over_previous_day_slides,
           total_cytology: t.total_cytology,
           tot_points: pc.total_general_predicted_points,
           slide_points: pc.predicted_general_slides_tot,
@@ -178,7 +191,7 @@ class Today
           pathologist_absent: (self.get_path_absent).sort,
           path_count: path_count,
           date: t.date.to_s,
-          slides_distributed: slides_distributed,
+          slides_distributed: pc.general_slides_distributed,
           slides_remaining: slides_remaining,
           generalist_count:Pathologist.get_number_generalist
           }
@@ -209,6 +222,7 @@ class Today
     t.total_SO=params['total_SO']
     t.total_ESD=params['total_ESD']
     t.total_cytology=params['total_cytology']
+    t.left_over_previous_day_slides=params["left_over_previous_day_slides"]
     t.save
     puts t.blocks_tot
     self.set_present(params['path_present']) unless (not (params.has_key? 'path_present'))
