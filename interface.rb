@@ -109,13 +109,13 @@ class PointsCalculator
     # find theoretical tot slides based on blocks an conversion factor
     @predicted_general_slides_tot=((@t.blocks_tot-@t.total_GI-@t.total_SO-@t.total_ESD).*@slides_conversion_factor).to_i+@t.total_cytology+@t.left_over_previous_day_slides
     #correct if factor is wrong  --ie more slides are out then theroetically possible
-    if @general_slides_distributed > @predicted_general_slides_tot
+    if @general_slides_distributed > @predicted_general_slides_tot and predicted_general_slides_tot!=0
       @slides_conversion_factor=(@general_slides_distributed/@predicted_general_slides_tot.to_f)
-      puts "old #{@predicted_general_slides_tot}, distributed #{@general_slides_distributed}"
+      puts "old #{@predicted_general_slides_tot}, distributed #{@general_slides_distributed}; new cf: #{@slides_conversion_factor}"
       @predicted_general_slides_tot=(@predicted_general_slides_tot*@slides_conversion_factor).to_i
       puts "Adjusted ratio to #{@slides_conversion_factor}; new #{@predicted_general_slides_tot}"
     end
-  
+
     @predicted_general_slides_pending=@predicted_general_slides_tot- @general_slides_distributed
     @general_activity_points=Activity.get_general_non_slide_points(@t.n)
     @total_general_predicted_points=@predicted_general_slides_tot+@general_activity_points
@@ -123,14 +123,14 @@ class PointsCalculator
   end
     #again based on generalist blocks and activities only
   def predicted_slides_per_non_specialist
-    
+
     if @non_specialist_count !=0
       @predicted_general_slides_pending/@non_specialist_count
     else
       return 1
     end
   end
-  
+
   def predicted_points_per_non_specialist
     if @non_specialist_count !=0
       @total_general_predicted_points/@non_specialist_count
