@@ -6,7 +6,7 @@ $LOAD_PATH << my_directory
 
 
 
-
+require "configuration"
 # in
 require "web_data"
 
@@ -36,9 +36,11 @@ set :root, File.dirname(__FILE__)
 set :views, Proc.new { File.join(root, "public/views") }
 enable :sessions
 
+#Testing unless prduction
+switch_to_testing
+
 ####helpers
 #These have access to the params in  sinatra get/post funtions
-
 helpers do
   def admin? ; request.cookies[settings.username] == settings.token ; end
   def protected! ; halt [ 401, '<h4>Not Authorized. <a href="/login"> Login </a> with proper credentials.</h4>' ] unless admin? ; end

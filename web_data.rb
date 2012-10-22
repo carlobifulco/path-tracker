@@ -20,7 +20,7 @@ require "configuration"
 # Returns a date/time in UTC format of the nth day after today
 def get_business_utc n=0
   #if future
-  if n>=0
+  if n >= 0
     business_days=(((1*n).business_day.after Date.today).to_date - Date.today).to_int
     return (Date.today+business_days).to_time.utc
   else
@@ -262,7 +262,7 @@ class Pathologist
   # Returns dict with initials, points range, location and pathologist initial
   def self.path_all_points n=0, pathologist=self.get_path_working(n)
     #n=working_n n
-    t=Tdc.today(n) 
+    t=Tdc.today(n)
     pc=PointsCalculator.new
     points_per_path=pc.predicted_points_per_non_specialist
     path_all_points=[]
@@ -380,9 +380,9 @@ class Activity
   end
 
   #searches subspecialists for the activity date
-  # and the checks is the 
+  # and the checks is the
   def has_path_subspecialty? subspecialty_name
-    self.pathologist.activities.map{|x| x.name}.include? subspecialty_name 
+    self.pathologist.activities.map{|x| x.name}.include? subspecialty_name
   end
 
  #all activities points only for generalists unless slide related

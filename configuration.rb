@@ -3,6 +3,12 @@
 # R CMD Rserve
 my_directory=File.dirname(File.expand_path(__FILE__))
 
+require "whenever"
+require 'business_time'
+require "holidays"
+require "mongo_mapper"
+
+
 #testing argv data here ["-p", "4000", "test"] --first 2 args are ports
 puts "argv data here #{ARGV}"
 puts "enter testing argv data here [-p, 4000, test] --first 2 args are ports"
@@ -19,6 +25,7 @@ if not TESTING
 else
   DATA_BASENAME='test'
   DATA_FILE=File.join(my_directory,"./base_line_data_test.yml")
+  set :port, 4000
 end
 
 #####Slide conversion factor
@@ -54,6 +61,7 @@ DATA=YAML.load(File.read DATA_FILE)
 def switch_to_testing
   MongoMapper.database = 'test'
   puts "SWITTCHED TO TEST DATABASE"
+  set :port, 4000
 end
 
 def switch_to_production
@@ -61,5 +69,5 @@ def switch_to_production
   puts "SWITTCHED TO PRODUCTION DATABASE!!!"
 end
 
-switch_to_testing
+
 

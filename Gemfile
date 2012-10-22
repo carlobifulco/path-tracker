@@ -8,5 +8,8 @@ gem 'business_time'
 gem "mongo_mapper"
 gem "whenever"
 gem "holidays"
+gem "redis"
+gem "rserve"
+gem "pony"
 
 
