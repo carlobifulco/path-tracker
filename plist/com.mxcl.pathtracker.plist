@@ -7,7 +7,7 @@
   <key>ProgramArguments</key>
   <array>
     <string>/Users/carlobifulco/.rbenv/versions/1.9.3-p194/bin/ruby</string>
-    <string>/Users/carlobifulco/Dropbox/code/path-tracker/path-tracker.rb</string>
+    <string>/Users/carlobifulco/Dropbox/code/path-tracker-deploy/path-tracker.rb</string>
   </array>
   <key>RunAtLoad</key>
   <true/>
