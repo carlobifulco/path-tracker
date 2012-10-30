@@ -15,7 +15,7 @@ require "web_data"
 require 'coffee-script'
 require "sinatra"
 require 'sinatra-websocket'
-require "report"
+require "report_svg"
 
 
 
@@ -32,12 +32,24 @@ set :password,'007'
 ####SINATRA SETUPS
 set :root, File.dirname(__FILE__)
 
+####decides if testing or production based on working directory
+#Testing unless prduction
+case File.basename(my_directory)
+  when "path-tracker-deploy"
+    puts "I am deploying production"
+    switch_to_production
+  when "path-tracker"
+    puts "I am deployng testing"
+    switch_to_testing
+end
+
+
+
+
 # Keeping coffee, compiled JS and html5 in the same directory
 set :views, Proc.new { File.join(root, "public/views") }
 enable :sessions
 
-#Testing unless prduction
-switch_to_testing
 
 ####helpers
 #These have access to the params in  sinatra get/post funtions
@@ -237,6 +249,20 @@ end
 get '/report_activity_points/:name/:subspecialty' do |name, subspecialty|
   (report_activity_points_for_subspecialty name, subspecialty).to_json
 end
+
+get "/delta_day/:n" do |n|
+  p=PlotterDeltaDay.new
+
+  "<h1>#{get_business_utc(n.to_i).to_date.to_s }</h1> <br> #{p.get p.plot n.to_i} <BR>"
+end
+
+get "/delta_summary" do
+  p=PlotterDeltaSummary.new
+   "<h1>#{get_business_utc(0).to_date.to_s }</h1> <br> #{p.get p.plot} <BR>"
+
+end
+
+
 
 
 get '/websocket' do

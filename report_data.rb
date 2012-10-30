@@ -8,36 +8,8 @@ require "web_data"
 #require 'rserve'
 require "redis"
 require "redis-namespace"
-require 'pony'
 require "csv"
-require 'rserve/simpler'
-#r = Rserve::Simpler.new
 
-
-$r=Rserve::Simpler.new
-
-display=ENV["DISPLAY"]
-$r.command ("X11(display='#{display}')")
-$r.command ("library('ggplot2')")
-#puts $r.eval ("capabilities()").to_s
-#Redis configutation
-# :password=>"redisreallysucks",
-$redis=Redis.new(:thread_safe=>true,:port=>6379,:host=>$HOST)
-# Redis table
-UseDb=1
-ConfigurationDb=2
-$redis.select UseDb
-
-#Redis namespace
-#
-# Example:
-#
-#r['foo'] = 1000
-#This will perform the equivalent of:
-#redis-cli set ns:foo 1000
-def redis_name_spaced name_space
-  Redis::Namespace.new(name_space, :redis =>$Redis4)
-end
 
 
 #configuration parameters live in the configuration table
@@ -86,8 +58,6 @@ module Setup
  end
 end
 
-
-
 class ReportActivity
   def self.reduce_points_by_day activity_search_results_array
     activity_hash={}
@@ -112,18 +82,6 @@ class ReportActivity
   def self.report_activity_points_for_pathologist activity_name, path_ini
    reduce_points_by_day (Activity.where :name => activity_name, :ini=>path_ini).all
   end
-end
-
-def r_boxplot data
-  temp_file=Tempfile.new "boxplot-pdf"
-
-  $r.assign "raw_data", data
-  $r.eval "boxplot(raw_data)"
-  $r.eval "dev.copy(png,'#{temp_file.path}')"
-  $r.eval "dev.off()"
-  temp_file_data=File.read temp_file.path
-  temp_file.unlink
-  temp_file_data
 end
 
 
@@ -196,7 +154,27 @@ end
 
 
 class DistributionReport
-
+  #this works on an Tdc instance
+  def self.get_day_summary_t t
+    if t
+      points= {:specialty_non_slide_points => Activity.get_specialist_non_slide_points(t.n),
+                :specialty_slide_points => Activity.get_specialist_slides_distributed(t.n),
+                :general_non_slide_points => Activity.get_general_non_slide_points(t.n),
+                :general_slides_distributed => Activity.get_general_slides_distributed(t.n)}
+      points[:tot_points]=points.values.reduce(:+)
+      points[:tot_general_points]=points[:general_non_slide_points]+points[:general_slides_distributed]
+      points[:average_generalist_points]=points[:tot_general_points]/(Pathologist.get_number_generalist t.n)
+      generalist_dev={}
+      Pathologist.get_generalist(t.n).each do |p|
+        generalist_dev[p.ini.to_sym] = - (points[:average_generalist_points] - p.total_points)
+      end
+      points[:generalist_dev]=generalist_dev
+      return points
+    else
+      return false
+    end
+  end
+  #this works on an n
   def self.get_day_summary n
     t=Tdc.today n
     if t
@@ -228,11 +206,25 @@ class Deviation < DistributionReport
   # Returns a list containing  dictionaries of pathologist=>tot_deviation
   #
   # => [{:JAO=>-1, :JS=>-1, :SEK=>-1,
-  def self.points_deviation_list_for_generalist n
+  def self.deviation_list n
     dev_list=[]
     (-n..0).each do |x|
       day_summary=get_day_summary(x)
       #ensure that there is data
+      if day_summary
+        dev_list<<day_summary [:generalist_dev]
+      # enter 0 if no data
+      else
+        #dev_list<<false
+      end
+    end
+    dev_list
+  end
+
+  def self.deviation_all
+    dev_list=[]
+    Tdc.all.each do |t|
+      day_summary=get_day_summary_t(t)
       if day_summary
         dev_list<<day_summary [:generalist_dev]
       # enter 0 if no data
@@ -255,7 +247,8 @@ class Deviation < DistributionReport
   # Eats a points deviation list and spits  {:SEK=>[-1, -10],:JAO=>[-1, -9, -10],
   # Then reduces the list component
   # to > {:SEK=>-11, :JAO=>-20
-  def self.get_sum_points_deviation points_deviation_list
+  def self.sum_deviation points_deviation_list
+    if points_deviation_list==[] then return false end
     points_deviation_list.select {|x| x!= false}
     sum_points_deviation={}
     #flip over paths;  -1 because that is date n=0
@@ -273,69 +266,5 @@ class Deviation < DistributionReport
   end
 end
 
-
-
-def rify_hash hash_frame
-
-  puts "data.frame(x=#{rify_list hash_frame.keys}, y=#{rify_list hash_frame.values})"
-
-end
-
-
-
-def rify_list data_list
-  "c(#{data_list.to_json})".gsub("[","").gsub("]","").gsub(":","")
-end
-
-def rify_mongomapper mongo_mapper_class
-  $d=CSV.generate do |csv|
-    keys=mongo_mapper_class.keys.keys
-    csv << keys
-    mongo_mapper_class.all.each do |a|
-      temp=[]
-      keys.each do |k|
-        temp << a.send(k)
-      end
-      csv<<temp
-    end
-  end
-  t=Tempfile.new "#{mongo_mapper_class}"
-  t.write $d
-  t.close
-  t.path
-end
-
-#### Plotting Engine
-#
-#
-class PlotterR
-  class << self; attr_accessor :redis_svg end
-  @redis_svg=redis_name_spaced "svg"
-  #Plots graph from days work
-  #
-  # Input [{:SZ=>-79,
-  #:JS=>-78,
-  #:SEK=>-52,
-  #
-  # Output is plot
-  def self.plot_day_distribution (n)
-    hash_frame={}
-    data=Deviation.for_day n
-    if data==false then return false end
-
-    hash_frame["ini"]=data.keys.map{|x| x.to_s}
-    hash_frame["deviation_from_mean_points"]=data.values
-    t=Tempfile.new ["svg-file",".svg"]
-    $r.command( df: hash_frame.to_dataframe ) do
-      <<-EOF
-      ggplot(data=df, aes(ini,deviation_from_mean_points))+geom_bar()+coord_flip()+ scale_y_continuous(name="Deviation from mean distribution")+scale_x_discrete(name="")
-      ggsave("#{t.path}")
-      EOF
-    end
-    @redis_svg.set (get_business_utc n).to_date.to_s ,File.read(t.path)
-    t.unlink
-    (get_business_utc n).to_date.to_s
-  end
-end
 
 

@@ -3,10 +3,13 @@
 # R CMD Rserve
 my_directory=File.dirname(File.expand_path(__FILE__))
 
+
 require "whenever"
 require 'business_time'
 require "holidays"
 require "mongo_mapper"
+require "redis"
+require "redis-namespace"
 
 
 #testing argv data here ["-p", "4000", "test"] --first 2 args are ports
@@ -19,6 +22,17 @@ puts "working dir is #{my_directory}"
 
 #####Configuration
 #-------------
+
+#Redis configutation
+# :password=>"redisreallysucks",
+$redis=Redis.new(:thread_safe=>true,:port=>6379,:host=>$HOST)
+# Redis table
+UseDb=1
+ConfigurationDb=2
+$redis.select UseDb
+
+
+#### Command line options
 if not TESTING
   DATA_BASENAME='path-tracker'
   DATA_FILE=File.join(my_directory,"./base_line_data.yml")
@@ -60,14 +74,15 @@ DATA=YAML.load(File.read DATA_FILE)
 
 def switch_to_testing
   MongoMapper.database = 'test'
+  $redis_testing=true
+  set :port, 5000
   puts "SWITTCHED TO TEST DATABASE"
-  set :port, 4000
 end
 
 def switch_to_production
   MongoMapper.database = DATA_BASENAME
+  $redis_testing=false
   puts "SWITTCHED TO PRODUCTION DATABASE!!!"
 end
-
 
 
