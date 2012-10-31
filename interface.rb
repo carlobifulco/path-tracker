@@ -271,9 +271,16 @@ class Today
 
   #activities entry point for regular
   def set_regular path_ini, activity_name, n
+    #XXX needto find out 
     p=self.get_path_by_ini path_ini
     a=self.get_activity path_ini, activity_name
     a.n=n
+    if a.updated_at == []
+       a.updated_at << [n,Time.now()]
+    else
+       a.updated_at  << [n,Time.now()] if (a.updated_at[-1][0] != n)
+    end
+    #a.specialty_only=p.specialty_only
     p.activities<<a
     a.save
     p.save

@@ -9,7 +9,33 @@ require "whenever"
 require 'business_time'
 require "holidays"
 require "interface"
+require "sinatra"
 require "configuration"
+
+
+
+####decides if testing or production based on working directory
+#Testing unless prduction
+puts "HELLO FROM YOU FRIENDLY PATH-TRACKER; my #{ARGV}"
+
+unless ARGV[0] =="production" 
+  case File.basename(my_directory)
+    when "path-tracker-deploy"
+      puts "I am deploying production"
+      switch_to_production
+    when "path-tracker"
+      puts "I am deployng testing"
+      switch_to_testing
+  end
+end
+
+#overrides entry if needed
+if ARGV[0] =="production" then switch_to_production; set :port, 5000 ; end
+
+
+#### Local logins
+MongoMapper.database = $data_basename
+DATA=YAML.load(File.read $data_file)
 
 
 
@@ -28,6 +54,11 @@ def get_business_utc n=0
     business_days=(Date.today - ((- n).business_day.before Date.today).to_date).to_int
     return (Date.today-business_days).to_time.utc
   end
+end
+
+
+def get_n_from_utc utc_time
+  - (utc_time.to_date.business_days_until Date.today)
 end
 
 ####Total Daily Cases container
@@ -227,10 +258,21 @@ class Pathologist
       if DATA["distribution-specialty"].include? a.name
         #puts "changing status of #{self.ini} to specialty only true"
         self.specialty_only=true
+        self.activities.each do |ai|
+          ai.specialty_only=true
+          ai.specialty=a.name
+          ai.save
+        end
         return
       end
     end
     self.specialty_only=false
+    self.activities.each do |a|
+        a.specialty_only=false
+        a.specialty=""
+        a.save
+    end
+
     #these before save methods need to return true if all goes well
     return true
   end
@@ -332,9 +374,12 @@ class Activity
   key :tot_points, Integer
   #pathologist initials
   key :ini, String
+  key :specialty_only, Boolean, :default=>false
+  key :specialty, String, default=""
   belongs_to :pathologist
   before_save :update_tot_points
   before_update :update_tot_points
+  key :updated_at, Array
 
   def self.today n=0
     d=where(:date=>get_business_utc(n))

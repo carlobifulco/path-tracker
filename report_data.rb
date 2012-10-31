@@ -156,19 +156,23 @@ end
 class DistributionReport
   #this works on an Tdc instance
   def self.get_day_summary_t t
-    if t
+    if t.date
+      n=get_n_from_utc(t.date)
+
       points= {:specialty_non_slide_points => Activity.get_specialist_non_slide_points(t.n),
                 :specialty_slide_points => Activity.get_specialist_slides_distributed(t.n),
                 :general_non_slide_points => Activity.get_general_non_slide_points(t.n),
                 :general_slides_distributed => Activity.get_general_slides_distributed(t.n)}
       points[:tot_points]=points.values.reduce(:+)
       points[:tot_general_points]=points[:general_non_slide_points]+points[:general_slides_distributed]
-      points[:average_generalist_points]=points[:tot_general_points]/(Pathologist.get_number_generalist t.n)
+      points[:average_generalist_points]=points[:tot_general_points]/(Pathologist.get_number_generalist n) unless (Pathologist.get_number_generalist n) ==0
       generalist_dev={}
-      Pathologist.get_generalist(t.n).each do |p|
+      #puts Pathologist.get_generalist(n), n
+      Pathologist.get_generalist(n).each do |p|
         generalist_dev[p.ini.to_sym] = - (points[:average_generalist_points] - p.total_points)
       end
       points[:generalist_dev]=generalist_dev
+      points[:date]=t.date
       return points
     else
       return false
@@ -196,6 +200,8 @@ class DistributionReport
     end
   end
 end
+
+
 
 class Deviation < DistributionReport
 
@@ -252,13 +258,15 @@ class Deviation < DistributionReport
     points_deviation_list.select {|x| x!= false}
     sum_points_deviation={}
     #flip over paths;  -1 because that is date n=0
-    points_deviation_list[-1].keys.each do |k|
+   DATA["initials"].map{|x|x.to_sym}.each do |k|
+
       #creates a new container array
       sum_points_deviation[k]=[]
       points_deviation_list.each do |l|
         #and fills it up after rotating on each dictionary by matching entry
         if l.has_key? k then sum_points_deviation[k]<<l[k] end
       end
+      puts sum_points_deviation[k]
       #now reduce
       puts sum_points_deviation[k] = (sum_points_deviation[k]).reduce(:+)
     end

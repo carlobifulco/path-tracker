@@ -91,9 +91,9 @@ class PlotterRedis
   def get_redis_name_spaced name_space
     #checks global testing and if true introduces separate namespacing
     if $redis_testing
-      Redis::Namespace.new("testing_"+name_space, :redis =>$Redis4)
+      Redis::Namespace.new("testing_"+name_space, :redis =>$redis)
     else
-      Redis::Namespace.new(name_space, :redis =>$Redis4)
+      Redis::Namespace.new(name_space, :redis =>$redis)
     end
   end
 
@@ -116,6 +116,8 @@ class PlotterRedis
     end
   end
 
+  #plots in R and returns SVG data
+  # input is a hash with simple keys value mapping;  Keys are x, values are Y of the plot
   def bar_plot data
     if data==false then return false end
     hash_frame={}
@@ -126,7 +128,7 @@ class PlotterRedis
     t=Tempfile.new ["svg-file",".svg"]
     $r.command( df: hash_frame.to_dataframe ) do
       <<-EOF
-      ggplot(data=df, aes(ini,deviation_from_mean_points))+geom_bar()+coord_flip()+ scale_y_continuous(name="Deviation from mean distribution")+scale_x_discrete(name="")
+      ggplot(data=df, aes(ini,deviation_from_mean_points))+geom_bar()+coord_flip()+ scale_y_continuous(name="Deviation from mean total points distribution")+scale_x_discrete(name="")
       ggsave("#{t.path}")
       EOF
     end
@@ -185,9 +187,33 @@ class PlotterDeltaSummary <PlotterRedis
     data=Deviation.sum_deviation(Deviation.deviation_all)
     @redis_name_spaced.set redis_key, bar_plot(data)
     @redis_name_spaced.expire redis_key, @@expire
-    return redis_key
+    return redis_key      
 
-      
+  end
+end
+
+
+def delta_day
+  r={}
+  DATA["initials"].map{|x|x.to_sym}.each do |k|
+   r[k]= Actity.find_by_ini(k).map{|x| x.tot_points}
+  end
+  r
+end
+
+class BoxPlotDistDelta <PlotterRedis
+  
+  def initialize
+   @redis_name_spaced=get_redis_name_spaced self.class.to_s
+  end
+
+  def plot
+     #key is today's date
+    redis_key= (get_business_utc 0).to_date.to_s 
+    #check if already existing already existing
+    return redis_key unless @redis_name_spaced.get(redis_key) ==nil
+    puts "making graph and storing it in redis name spaced"
+    data=Deviation.deviation_all
 
   end
 end
