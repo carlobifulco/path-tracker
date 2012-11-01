@@ -275,11 +275,6 @@ class Today
     p=self.get_path_by_ini path_ini
     a=self.get_activity path_ini, activity_name
     a.n=n
-    if a.updated_at == []
-       a.updated_at << [n,Time.now()]
-    else
-       a.updated_at  << [n,Time.now()] if (a.updated_at[-1][0] != n)
-    end
     #a.specialty_only=p.specialty_only
     p.activities<<a
     a.save
@@ -301,13 +296,15 @@ class Today
       a.save
       # if activity is one of the no-work-acts them set pathologist as specialty only
       #puts "Specialty? :#{DATA["no-points"].keys.include? activity_name}"
-      if DATA["no-points"].keys.include? activity_name
+      if DATA["distribution-specialty"].keys.include? activity_name
         p.specialty_only=true
+        p.update_specialty_status
       end
     end
+    #deke off activities
     off_array.each do |activity_name|
       a=Activity.get_ini_name(t.n,path_ini,activity_name)
-      a.delete if a
+      a.destroy if a
     end
     p.save
   end

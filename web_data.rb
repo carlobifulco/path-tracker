@@ -223,7 +223,7 @@ class Pathologist
   #array where instances of Activity get packed and assigned via <<
   many :activities
   key :location, String
-  before_save :update_site, :update_specialty_status
+  before_save :update_site
   # important  --remove activity if path is at home...
   after_update :delete_activities_if_not_working
 
@@ -252,29 +252,18 @@ class Pathologist
     end
   end
 
+  
+  #this needed to be done at a pathologist level
+  #Otherives had save save atcivity loops...
+  # This is called from interface.rb if cardinal activity matches list
+  # of psecialty only cases
   def update_specialty_status
     #puts "updating specialty status"
     self.activities.each do |a|
-      if DATA["distribution-specialty"].include? a.name
-        #puts "changing status of #{self.ini} to specialty only true"
-        self.specialty_only=true
-        self.activities.each do |ai|
-          ai.specialty_only=true
-          ai.specialty=a.name
-          ai.save
-        end
-        return
-      end
+        a.specialty_only=true
+        a.specialty=a.name
+        a.save   
     end
-    self.specialty_only=false
-    self.activities.each do |a|
-        a.specialty_only=false
-        a.specialty=""
-        a.save
-    end
-
-    #these before save methods need to return true if all goes well
-    return true
   end
 
   def self.get_all_path n=0
@@ -377,9 +366,31 @@ class Activity
   key :specialty_only, Boolean, :default=>false
   key :specialty, String, default=""
   belongs_to :pathologist
-  before_save :update_tot_points
+  before_save :update_tot_points, :update_time
   before_update :update_tot_points
   key :updated_at, Array
+  before_destroy :uncheck_subspecialty
+
+  def update_time
+    if self.updated_at == []
+       self.updated_at << [self.n,Time.now()]
+    else
+       self.updated_at  << [self.n,Time.now()] if (self.updated_at[-1][0] != self.n)
+    end
+  end
+
+  
+  #called upon destruction
+  #resets specialty staus of other activities owner by the pathologist
+  def uncheck_subspecialty
+      if DATA["distribution-specialty"].keys.include? self.name
+        (Activity.where :pathologist_id => self.pathologist_id).all.each do |a|
+          a.specialty_only=false
+          a.specialty=""
+          a.save
+        end
+      end
+  end
 
   def self.today n=0
     d=where(:date=>get_business_utc(n))
