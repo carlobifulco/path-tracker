@@ -18,5 +18,6 @@ gem "redis"
 gem "redis-namespace"
 gem 'rserve-simpler'
 gem "sinatra-websocket"
+gem "bson_ext"
 
 
