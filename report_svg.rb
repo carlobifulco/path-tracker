@@ -15,11 +15,11 @@ require "report_data"
 
 
 
-$r=Rserve::Simpler.new
+# $r=Rserve::Simpler.new
 
-display=ENV["DISPLAY"]
-$r.command ("X11(display='#{display}')")
-$r.command ("library('ggplot2')")
+# display=ENV["DISPLAY"]
+# $r.command ("X11(display='#{display}')")
+# $r.command ("library('ggplot2')")
 #puts $r.eval ("capabilities()").to_s
 
 

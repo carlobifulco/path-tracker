@@ -9,6 +9,8 @@ GEM
       multi_json (~> 1.0)
     addressable (2.3.2)
     bson (1.7.0)
+    bson_ext (1.7.0)
+      bson (~> 1.7.0)
     builder (3.0.0)
     business_time (0.6.1)
       activesupport (>= 3.1.0)
@@ -119,6 +121,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bson_ext
   business_time
   coffee-script
   holidays

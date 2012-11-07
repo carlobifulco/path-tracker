@@ -18,8 +18,8 @@
     <key>WorkingDirectory</key>
     <string>/usr/local/var</string>
     <key>StandardErrorPath</key>
-    <string>/usr/local/var/log/redis.log</string>
+    <string>/Users/carlobifulco/Dropbox/code/path-tracker/log/redis.log</string>
     <key>StandardOutPath</key>
-    <string>/usr/local/var/log/redis.log</string>
+   <string>/Users/carlobifulco/Dropbox/code/path-tracker/log/redis.log</string>
   </dict>
 </plist>

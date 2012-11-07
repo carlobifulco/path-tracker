@@ -20,8 +20,8 @@
   <key>WorkingDirectory</key>
   <string>/usr/local</string>
   <key>StandardErrorPath</key>
-  <string>/usr/local/var/log/mongodb/output.log</string>
+  <string>/Users/carlobifulco/Dropbox/code/path-tracker/log/mongo.log</string>
   <key>StandardOutPath</key>
-  <string>/usr/local/var/log/mongodb/output.log</string>
+    <string>/Users/carlobifulco/Dropbox/code/path-tracker/log/mongo.log</string>
 </dict>
 </plist>
