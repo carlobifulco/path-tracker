@@ -34,6 +34,10 @@ end
 def create_activity day,act,points,n,p
   a=Activity.new;
   a.name=act
+  if DATA["distribution-specialty"].keys.include? a.name
+    p.specialty_only=true
+    p.update_specialty_status a.name
+  end
   a.points=points
   a.n=n
   a.ini=p.ini
@@ -72,6 +76,15 @@ def simulate n=0
       create_activity n,a,1,[20,40,30,23,60,79].sample,p
     end
   end
+  tdc=Tdc.today n
+  tdc.blocks_tot=[500,300,600].sample
+  tdc.total_GI=[50,60,30].sample
+  tdc.total_SO=[50,60,30].sample
+  tdc.total_ESD=[50,60,30].sample
+  tdc.total_cytology=[50,60,30].sample
+  tdc.left_over_previous_day_slides=[50,60,30].sample
+  tdc.save
+
   pp Pathologist.all_activities_points n
 end
 

@@ -18,7 +18,12 @@ require "redis-namespace"
 #####Configuration
 #-------------
 
-#Redis configutation
+#####MongoDumping
+DUMP_DIRECTORY= "/Users/carlobifulco/mongodump"
+Dir.mkdir DUMP_DIRECTORY unless Dir.exists? DUMP_DIRECTORY
+
+
+#####Redis configutation
 # :password=>"redisreallysucks",
 $redis=Redis.new(:thread_safe=>true,:port=>6379,:host=>$HOST)
 # Redis table
@@ -48,7 +53,7 @@ all_observed.map{|holiday| BusinessTime::Config.holidays << holiday[:date]}
 
 def switch_to_testing
   $data_basename='test'
-  $data_file=File.join($my_directory,"./base_line_data_test.yml")
+  $data_file=File.join($my_directory,"./base_line_data.yml")
   $redis_testing=true
   set :port, 5000
   puts "SWITTCHED TO TEST DATABASE"

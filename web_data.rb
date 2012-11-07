@@ -37,6 +37,11 @@ if ARGV[0] =="production" then switch_to_production; set :port, 5000 ; end
 MongoMapper.database = $data_basename
 DATA=YAML.load(File.read $data_file)
 
+class Date
+  def utc
+    self.to_time.utc
+  end
+end
 
 
 ####Business day conversion
@@ -252,16 +257,16 @@ class Pathologist
     end
   end
 
-  
+
   #this needed to be done at a pathologist level
   #Otherives had save save atcivity loops...
   # This is called from interface.rb if cardinal activity matches list
   # of psecialty only cases
-  def update_specialty_status
+  def update_specialty_status activity_name
     #puts "updating specialty status"
     self.activities.each do |a|
         a.specialty_only=true
-        a.specialty=a.name
+        a.specialty=activity_name
         a.save   
     end
   end
@@ -371,6 +376,8 @@ class Activity
   key :updated_at, Array
   before_destroy :uncheck_subspecialty
 
+
+  # callback.  Time stamp array.  Only if N is modified or new
   def update_time
     if self.updated_at == []
        self.updated_at << [self.n,Time.now()]
@@ -380,7 +387,7 @@ class Activity
   end
 
   
-  #called upon destruction
+  #callback ; called upon destruction
   #resets specialty staus of other activities owner by the pathologist
   def uncheck_subspecialty
       if DATA["distribution-specialty"].keys.include? self.name
@@ -462,7 +469,7 @@ class Activity
     #find pathologists ids on derm and GI
     p=where(:date=>date, :name=> DATA["no-points"].keys).all().map {|x| x.ini}
     #find all cases with slides
-    m=where(:date=>date, :name=> DATA["slide_activities"],:ini=> {:$nin=>p}).all
+    m=where(:date=>date, :name=> DATA["slide_activities"],:specialty_only=> false)
 
     return ((m.map {|x| x.n}.reduce(:+)) or 0)
     #.map{|x| x.n}.reduce(:+)

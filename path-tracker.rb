@@ -4,7 +4,7 @@ my_directory=File.dirname(File.expand_path(__FILE__))
 $LOAD_PATH << File.join(my_directory,'/lib')
 $LOAD_PATH << my_directory
 
-
+require "bundler/setup"
 require "sinatra"
 require "configuration"
 require "mongo_mapper"
@@ -18,6 +18,7 @@ require 'coffee-script'
 
 require 'sinatra-websocket'
 require "report_svg"
+require "new_report"
 
 
 
@@ -155,6 +156,14 @@ get "/get_live" do
   Today.new.get_live.to_json
 end
 
+get "/get_dashboard" do
+  r=report_json
+  r.to_json
+end
+
+get "/dashboard" do
+  erb :dashboard
+end
 
 
 
@@ -253,9 +262,22 @@ end
 get "/delta_summary" do
   p=PlotterDeltaSummary.new
    "<h1>#{get_business_utc(0).to_date.to_s }</h1> <br> #{p.get p.plot} <BR>"
-
 end
 
+
+get "/past_ini_date" do
+  "/past_ini_date/:ini/:n<BR>
+  Example: /past_ini_date/YW/-5 will yield DR. YW 5 Days ago"
+end
+
+get "/past_ini_date/:ini/:n" do |ini,n|
+  results="<h1>#{ini}: Summary for #{get_business_utc(n.to_i)}</h1>"
+  puts ini, n
+  if n.to_i>=0 then return "<h1> Cannot do this in the future and the day is not yet over </h1>" end 
+  puts  (Activity.where :date=>get_business_utc(n.to_i), :ini=>ini).all
+  (Activity.where :date=>get_business_utc(n.to_i), :ini=>ini).all.each {|x| results += "<h3>#{x.name}: #{x.tot_points}</h3>"}
+  results
+end
 
 
 

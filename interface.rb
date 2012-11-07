@@ -107,12 +107,14 @@ class PointsCalculator
     #find slidesdelivered
     @general_slides_distributed=Activity.get_general_slides_distributed(@t.n)
     # find theoretical tot slides based on blocks an conversion factor
-    @predicted_general_slides_tot=((@t.blocks_tot-@t.total_GI-@t.total_SO-@t.total_ESD).*@slides_conversion_factor).to_i+@t.total_cytology+@t.left_over_previous_day_slides
+    @predicted_general_slides_tot=get_predicted_general_slides_tot @slides_conversion_factor
+    @blocks_tot=(@t.blocks_tot-@t.total_GI-@t.total_SO-@t.total_ESD)
+    puts  @slides_conversion_factor, "HRE WE ARE"
     #correct if factor is wrong  --ie more slides are out then theroetically possible
-    if @general_slides_distributed > @predicted_general_slides_tot and predicted_general_slides_tot!=0
-      @slides_conversion_factor=(@general_slides_distributed/@predicted_general_slides_tot.to_f)
-      puts "old #{@predicted_general_slides_tot}, distributed #{@general_slides_distributed}; new cf: #{@slides_conversion_factor}"
-      @predicted_general_slides_tot=(@predicted_general_slides_tot*@slides_conversion_factor).to_i
+    if @general_slides_distributed > @predicted_general_slides_tot and (@predicted_general_slides_tot != 0) 
+      @slides_conversion_factor=(@general_slides_distributed/@blocks_tot.to_f) unless (@blocks_tot.to_f ==0)
+      puts "old  number of predicted slides was #{@predicted_general_slides_tot} but distributed #{@general_slides_distributed}; new cf: #{@slides_conversion_factor}"
+      @predicted_general_slides_tot=get_predicted_general_slides_tot @slides_conversion_factor
       puts "Adjusted ratio to #{@slides_conversion_factor}; new #{@predicted_general_slides_tot}"
     end
 
@@ -129,6 +131,10 @@ class PointsCalculator
     else
       return 1
     end
+  end
+
+  def get_predicted_general_slides_tot slides_conversion_factor
+    ((@t.blocks_tot-@t.total_GI-@t.total_SO-@t.total_ESD).*slides_conversion_factor).to_i+@t.total_cytology+@t.left_over_previous_day_slides
   end
 
   def predicted_points_per_non_specialist
@@ -298,7 +304,8 @@ class Today
       #puts "Specialty? :#{DATA["no-points"].keys.include? activity_name}"
       if DATA["distribution-specialty"].keys.include? activity_name
         p.specialty_only=true
-        p.update_specialty_status
+        # important call 
+        p.update_specialty_status activity_name
       end
     end
     #deke off activities
