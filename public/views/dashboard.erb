@@ -1,0 +1,47 @@
+<script style=" display: none;" id="sparkline_template" type="text/x-handlebars-template">
+<div class="container-fluid">
+  <div class="row-fluid">
+      <ul class="nav nav-tabs nav-stacked" id="myTab1">
+        <table class="table table-striped table-hover" style="float: left; text-align: left">
+          {{#each plot}}
+          <li>
+            <tr>
+              <td>
+                <a>{{this.name}}</a>
+              </td>
+              <td>
+                <!-- 
+                // Supplied values must be in this order: target, performance, range1, range2, range3, ...
+                -->
+                <span class="inlinesparkline">{{this.r}}</span>
+              </td>
+            </tr>
+          </li>
+          <li></li>
+          {{/each}}
+        </div>
+        </ul>
+    </table>
+  </div>
+</div>
+</script>
+
+
+
+<!-- Here is were the templates will be rendered; by convention for the renderig name_html -->
+
+
+
+<br><br>
+<span id="sparkline_html" class="span2"></span>
+
+
+
+
+
+
+
+
+
+<!-- calls the coffee generated script -->
+<script src="views/dashboard.js" type="text/javascript" charset="utf-8"></script>
