@@ -144,9 +144,10 @@ def clean
   end
 end
 
-def to_production
+def to_production message
+  puts `git commit -am #{message}`
   Dir.chdir "../path-tracker-deploy"
-  `git pull`
+  puts `git pull`
    Dir.chdir "../path-tracker"
 end
 
