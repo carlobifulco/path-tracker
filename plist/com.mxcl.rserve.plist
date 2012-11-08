@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>KeepAlive</key>
+    <true/>
+    <key>Label</key>
+    <string>homebrew.mxcl.rserve</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/R</string>
+         <string>CMD</string>
+         <string>Rserve</string>
+         <string>--no-save</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>UserName</key>
+    <string>carlobifulco</string>
+    <key>WorkingDirectory</key>
+    <string>/usr/local/var</string>
+    <key>StandardErrorPath</key>
+    <string>/var/log/path-tracker/rserve.log</string>
+    <key>StandardOutPath</key>
+    <string>/var/log/path-tracker/rserve.log</string>
+  </dict>
+</plist>
