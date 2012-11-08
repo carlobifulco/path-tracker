@@ -21,5 +21,9 @@
   <string>/var/log/path-tracker/path-tracker.log</string>
   <key>StandardOutPath</key>
   <string>/var/log/path-tracker/path-tracker.log</string>
+   <key>EnvironmentVariables</key>
+    <dict>
+      <key>DISPLAY</key>  <string>/tmp/launch-woydZL/org.macosforge.xquartz:0</string>
+    </dict>
 </dict>
 </plist>

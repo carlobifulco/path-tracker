@@ -149,6 +149,7 @@ def to_production message
   Dir.chdir "../path-tracker-deploy"
   puts `git pull`
    Dir.chdir "../path-tracker"
+   `sudo cp ~/Dropbox/code/path-tracker/plist/* /Library/LaunchDaemons/`
 end
 
 def tail n=100
