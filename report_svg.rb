@@ -17,7 +17,8 @@ require "report_data"
 def r_connect
   $r=Rserve::Simpler.new
   display=ENV["DISPLAY"]
-  # puts $r >> ("X11(display='#{display}')")
+  puts display, "IS ABOVE ME"
+  puts $r >> ("X11(display='#{display}')")
   puts $r >> ("library('ggplot2')")
   puts $r >> "capabilities()"
 end
