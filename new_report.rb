@@ -193,6 +193,7 @@ def report_json
   #change structure to make it more amanable for handlebars
   results_array=[]
   r.each do |k,v|
+    v.delete(nil)
     results_array<<{:name=> k, :r=>v}
   end
 
