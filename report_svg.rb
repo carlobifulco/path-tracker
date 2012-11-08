@@ -17,9 +17,9 @@ require "report_data"
 def r_connect
   $r=Rserve::Simpler.new
   display=ENV["DISPLAY"]
-  #$r.command ("X11(display='#{display}')")
-  $r.command ("library('ggplot2')")
-  puts $r.eval ("capabilities()").to_s
+  puts $r >> ("X11(display='#{display}')")
+  puts $r >> ("library('ggplot2')")
+  puts $r >> "capabilities()"
 end
 
 r_connect
@@ -29,10 +29,10 @@ r_connect
 def r_boxplot data
   temp_file=Tempfile.new "boxplot-pdf"
 
-  $r.assign "raw_data", data
-  $r.eval "boxplot(raw_data)"
-  $r.eval "dev.copy(png,'#{temp_file.path}')"
-  $r.eval "dev.off()"
+  $r >> {"raw_data" =>data}
+  $r.command "boxplot(raw_data)"
+  $r.command "dev.copy(png,'#{temp_file.path}')"
+  $r.command "dev.off()"
   temp_file_data=File.read temp_file.path
   temp_file.unlink
   temp_file_data

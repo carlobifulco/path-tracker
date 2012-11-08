@@ -151,6 +151,11 @@ def to_production message
    Dir.chdir "../path-tracker"
 end
 
+def tail n=100
+  puts `tail -n #{n} /var/log/path-tracker/path-tracker.log`
+
+end
+
 
 def dump_database
 
