@@ -71,7 +71,7 @@ end
 
 class DistReport
 
-  attr_accessor :r, :tdc, :pc, :all, :all_sum, :tot_each
+  attr_accessor :r, :tdc, :pc, :all, :all_sum, :tot_each, :vector
 
   def initialize n=0
     @n=n
@@ -104,11 +104,11 @@ class DistReport
   end
 
   def general_day_points_mean
-    @mean_tot_points_generalist=@vector.mean  unless @vector ==nil
+    @mean_tot_points_generalist=@vector.mean  if @vector.class ==Statsample::Vector
   end
 
   def general_day_points_sd
-    @sd_tot_points_generalist=@vector.sd unless @vector ==nil
+    @sd_tot_points_generalist=@vector.sd if @vector.class ==Statsample::Vector
   end
 end
 
@@ -207,6 +207,7 @@ $scheduler.cron '0 23 * * 1-5' do
   # every day of the week at 11pm
   puts 'activate reportimg system'
   report_build
+  puts "report completed"
 end
 
 def mongodump
@@ -233,6 +234,11 @@ $scheduler.cron '5 22 * * 1-5' do
   mongoexport
 end
 
+# $scheduler.every '10s' do
+#   puts "Hola"
+# end
+
+
 
 def test_graph
   switch_to_testing  
@@ -249,3 +255,4 @@ puts "**************#{$scheduler.cron_jobs}**************"
 puts "\n----------------------------------------"
 #If not in event machine
 #$scheduler.join
+
