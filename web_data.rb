@@ -1,5 +1,11 @@
+my_directory=File.dirname(File.expand_path(__FILE__))
+$LOAD_PATH << File.join(my_directory,'/lib')
+$LOAD_PATH << my_directory
+
+
 require "mongo_mapper"
 require "pp"
+require "utilities"
 
 #Configuration
 #-------------
@@ -22,13 +28,20 @@ class Tdc
   key :tot_points_pathologist, Integer, :default=>0
   #Date.today.to_time.utc
   #Tdc.where(:date=>Date.today.to_time.utc).to_a
-  key :date, Time, :default=>Date.today.to_time.utc
+  key :date, Time
 
 
   #returns only one Tdc
   def self.today
     d=where(:date=>Date.today.to_time.utc)
-    if d.count>0 then d.to_a[0] else Tdc.new end
+    if d.to_a.count>0 
+      return d.to_a[0] 
+    else 
+      t=Tdc.new
+      t.date=Date.today.to_time.utc
+      t.save 
+      return t
+    end
   end
 
   #only todays match
@@ -136,8 +149,8 @@ class Today
 
   def get_setup
     #populates if day is empty
-    if self.get_path_working.count==0 then populate end
     t=Tdc.today
+    if t.pathologists.count==0 then populate end
     tot_points=self.get_points_tot();blocks_tot=t.blocks_west+t.blocks_east; slide_points=(blocks_tot*1.2).to_i; activity_points=tot_points-slide_points
     pathologist_working=self.get_path_working.map { |x| x.ini }
     path_count= self.get_path_working.count
@@ -163,6 +176,7 @@ class Today
   end
 
   def set_setup params
+    t=Tdc.today
     puts " params is #{params}; and has key #{params.has_key? 'blocks_east'}"
     self.set_blocks_east params['blocks_east'] #unless (not (params.has_key? 'blocks_east'))
     self.set_blocks_west params['blocks_west'] #unless (not (params.has_key? 'blocks_west'))
@@ -172,7 +186,8 @@ class Today
   end
 
   def get_entry
-    if self.get_path_working.count==0 then populate end
+     #populates if day is empty
+    t=Tdc.today
     entry={pathologist_working: self.get_path_working.map { |x| x.ini}.sort(),
       paths_acts_points: Pathologist.all_activities_points,
       paths_tot_points: Pathologist.path_all_points
@@ -220,7 +235,7 @@ class Pathologist
   belongs_to :tdc
   key :ini, String #intials
   key :site, String
-  key :date, Time, :default=>Date.today.to_time.utc
+  key :date, Time
   key :working, Boolean, :default=>true
   many :activities
   # important  --remove activity if path is at home...
@@ -239,6 +254,7 @@ class Pathologist
     d=where(:date=>Date.today.to_time.utc)
     d.to_a if d
   end
+
 
   def delete_activities_if_not_working
     puts "#{self} getting called"
@@ -348,75 +364,7 @@ end
 
 def populate
   t=Tdc.today
-  all_paths.each {|ini| t.pathologist<<Pathologist.new({:ini=>ini})}
+  all_paths.each {|ini| t.pathologist<<Pathologist.new({:ini=>ini,:date=>Date.today.to_time.utc})}
   t.save
 end
 
-def random_assign_activity act,points,n
-  a=Activity.new
-  a.name=act
-  a.points=points
-  a.n=n
-  p=Pathologist.today.sample
-  p.activities<<a
-  a.save
-  p.save
-  pp p .activities
-end
-
-def simulate
-  populate
-  t=Today.new
-  t.set_blocks_east [444,200,100].sample
-  t.set_blocks_west [344,400,233].sample
-  all_activities=DATA["regular_activities"].merge DATA["cardinal_activities"]
-  DATA["regular_activities"].each do |act,points|
-    random_assign_activity act, points, [1,2,3,4,5,6,7,8,9,10].sample()
-  end
-  DATA["cardinal_activities"].each do |act,points|
-    random_assign_activity act, points, 1
-  end
-  pp Pathologist.all_activities_points
-end
-
-
-def simulate2
-  10.times do |x|
-    simulate
-  end
-end
-
-#setting up the entry for only 2 pathologist
-def test_2
-  clean
-  populate
-  Pathologist.today.each do |p|
-    puts "#{p.ini} #{p.ini=='CBB'} " 
-    if (p.ini=="CBB" or p.ini=="SW") then  puts "CBB"; next end
-    p.working=false
-    p.save
-  end
-  Pathologist.today()
-end
-
-def todays_work
-  t=Today.new
-  t.set_blocks_east [232,333,555].sample
-  t.set_blocks_west [444,555,666].sample
-  pathologist_work={}
-  Pathologist.today.each do |p|
-    pathologist_work[p.ini]=[]
-    p.activities.each do |a|
-      pathologist_work[p.ini]<<{name: a.name,points: a.points, tot_points: a.tot_points, fac: a.n}
-   end
-
-  end
-
-  return pathologist_work #.to_json
-end
-
-def clean
-  Tdc.delete_all
-  Activity.delete_all
-  Pathologist.delete_all
-end
