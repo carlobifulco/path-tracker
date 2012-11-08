@@ -18,8 +18,8 @@
   <key>WorkingDirectory</key>
   <string>/Users/carlobifulco/Dropbox/code/path-tracker-deploy</string>
   <key>StandardErrorPath</key>
-  <string>/Users/carlobifulco/Dropbox/code/path-tracker/log/path-tracker.log</string>
+  <string>/var/log/path-tracker/path-tracker.log</string>
   <key>StandardOutPath</key>
-  <string>/Users/carlobifulco/Dropbox/code/path-tracker/log/path-tracker.log</string>
+  <string>/var/log/path-tracker/path-tracker.log</string>
 </dict>
 </plist>

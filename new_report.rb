@@ -6,6 +6,7 @@ $LOAD_PATH << my_directory
 
 require "web_data"
 require 'rufus/scheduler'
+require 'statsample'
 
 
 
@@ -21,6 +22,11 @@ class DayReport
   key :left_over_previous_day_slides, Integer
   key :date, Time
   key :pathologist_working, Integer
+  key :general_day_points_hash, String #json of an hash
+  key :general_day_points_tot, Integer
+  key :general_day_points_mean, Float
+  key :general_day_points_sd, Float
+
   #before_save :write_date
 
   def write_date
@@ -63,6 +69,49 @@ class SetupReport
   end
 end
 
+class DistReport
+
+  attr_accessor :r, :tdc, :pc, :all, :all_sum, :tot_each
+
+  def initialize n=0
+    @n=n
+    @tdc=Tdc.today(n)
+    @pc=PointsCalculator.new(n)
+    @r={}
+    @all=(Activity.where :date=>get_business_utc(n),:specialty_only =>false).all.map {|x| {x.ini=> x}}
+
+    @all_sum={}
+    @all.each do |x|
+      ini= x.keys[0]
+      @all_sum[ini.to_sym]=[] unless @all_sum.has_key? ini.to_sym
+      @all_sum[ini.to_sym]<<x[ini]
+    tot_each
+    make_vector
+    end 
+  end
+
+  def tot_each
+    @tot_each=@all_sum.map {|k,v| {k=>v.map{|x| x.tot_points}.reduce(:+)}}
+  end
+
+  def general_day_points_tot
+    @tot_each.map {|x| x.values[0]}.reduce(:+) unless @tot_each ==nil
+  end
+
+  def make_vector
+    if @tot_each == nil then return end
+    @vector=@tot_each.map {|x| x.values[0]}.to_scale
+  end
+
+  def general_day_points_mean
+    @mean_tot_points_generalist=@vector.mean  unless @vector ==nil
+  end
+
+  def general_day_points_sd
+    @sd_tot_points_generalist=@vector.sd unless @vector ==nil
+  end
+end
+
 
 ### This is build around teh counting of activities events matching certain criteria
 class SpecialtyReport
@@ -102,23 +151,35 @@ class SpecialtyReport
 end
 
 def report_build n=0
-  dr=DayReport.new
+  #load specialty reports
+  dr=DayReport.new 
   dr.all_gi=SpecialtyReport.all_gi(n).tot_points
   dr.all_heme=SpecialtyReport.all_heme(n).tot_points
   dr.all_derm=SpecialtyReport.all_derm(n).tot_points
   dr.all_general=SpecialtyReport.all_general(n).tot_points
   dr.all_cytology=SpecialtyReport.all_cytology(n).tot_points
   dr.date=get_business_utc n
+  #load setup reports
   s=SetupReport.new n
   dr.slides_blocks_ratio=s.get_general_slides_blocks_ratio
   dr.left_over_previous_day_slides=s.get_left_over_previous_day_slides
   dr.pathologist_working=s.get_pathologist_working
+
+  
+  #load distribution reports
+  d=DistReport.new n
+  #xxx
+  dr.general_day_points_hash= d.tot_each.to_json 
+  dr.general_day_points_tot= d.general_day_points_tot
+  dr.general_day_points_mean= d.general_day_points_mean
+  dr.general_day_points_sd= d.general_day_points_sd
+
   dr.save
 end
 
 def report_json 
   r={}
-  exclude=["date", "_id", "reporter_mongo_id"]
+  exclude=["date", "_id", "reporter_mongo_id", "general_day_points_hash"]
   #precreate empty arrays
   DayReport.keys.keys.each do |k|
     r[k]=[] unless exclude.include? k
@@ -183,6 +244,8 @@ def test_graph
   end
 end
 
-
+puts "\n---------------------------------------"
+puts "**************#{$scheduler.cron_jobs}**************"
+puts "\n----------------------------------------"
 #If not in event machine
 #$scheduler.join

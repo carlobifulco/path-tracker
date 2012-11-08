@@ -14,14 +14,13 @@ require 'rserve/simpler'
 require "report_data"
 
 
-
-# $r=Rserve::Simpler.new
-
-# display=ENV["DISPLAY"]
-# $r.command ("X11(display='#{display}')")
-# $r.command ("library('ggplot2')")
-#puts $r.eval ("capabilities()").to_s
-
+def r_connect
+  $r=Rserve::Simpler.new
+  display=ENV["DISPLAY"]
+  $r.command ("X11(display='#{display}')")
+  $r.command ("library('ggplot2')")
+  puts $r.eval ("capabilities()").to_s
+end
 
 
 
