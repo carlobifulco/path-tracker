@@ -144,6 +144,12 @@ def clean
   end
 end
 
+def to_production
+  Dir.chdir "../path-tracker-deploy"
+  `git pull`
+   Dir.chdir "../path-tracker"
+end
+
 
 def dump_database
 

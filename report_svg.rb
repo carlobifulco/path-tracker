@@ -22,7 +22,7 @@ def r_connect
   puts $r.eval ("capabilities()").to_s
 end
 
-
+r_connect
 
 
 
@@ -105,7 +105,7 @@ class PlotterRedis
   end
 
   def get_by_n n
-    redis_key= (get_business_utc n).to_date.to_s 
+    redis_key= (get_business_utc n).to_date.to_s
     redis_name_spaced.get redis_key
   end
 
@@ -123,7 +123,7 @@ class PlotterRedis
     hash_frame["ini"]=data.keys.map{|x| x.to_s}
     hash_frame["deviation_from_mean_points"]=data.values
     puts "hash_frame", hash_frame
-    #tempfile is used to save SVG output. This is then unlinked. 
+    #tempfile is used to save SVG output. This is then unlinked.
     t=Tempfile.new ["svg-file",".svg"]
     $r.command( df: hash_frame.to_dataframe ) do
       <<-EOF
@@ -143,10 +143,10 @@ end
 class PlotterDeltaDay <PlotterRedis
 
 
-  def initialize 
+  def initialize
     @redis_name_spaced=get_redis_name_spaced "day_distribution"
   end
-  
+
   #Plots graph from days work
   #
   # Input [{:SZ=>-79,
@@ -155,7 +155,7 @@ class PlotterDeltaDay <PlotterRedis
   #
   # Output is plot
   def plot (n)
-    redis_key= (get_business_utc n).to_date.to_s 
+    redis_key= (get_business_utc n).to_date.to_s
     #check if already existing already existing
     return redis_key unless @redis_name_spaced.get(redis_key) ==nil
     puts "making graph and storing it in redis name spaced"
@@ -164,7 +164,7 @@ class PlotterDeltaDay <PlotterRedis
     data=Deviation.for_day n
     if data==false then return false end
     @redis_name_spaced.set redis_key, bar_plot(data)
-    #set to expire at 
+    #set to expire at
     @redis_name_spaced.expire redis_key, @@expire
     redis_key
   end
@@ -179,14 +179,14 @@ class PlotterDeltaSummary <PlotterRedis
 
   def plot
     #key is today's date
-    redis_key= (get_business_utc 0).to_date.to_s 
+    redis_key= (get_business_utc 0).to_date.to_s
     #check if already existing already existing
     return redis_key unless @redis_name_spaced.get(redis_key) ==nil
     puts "making graph and storing it in redis name spaced"
     data=Deviation.sum_deviation(Deviation.deviation_all)
     @redis_name_spaced.set redis_key, bar_plot(data)
     @redis_name_spaced.expire redis_key, @@expire
-    return redis_key      
+    return redis_key
 
   end
 end
@@ -201,14 +201,14 @@ def delta_day
 end
 
 class BoxPlotDistDelta <PlotterRedis
-  
+
   def initialize
    @redis_name_spaced=get_redis_name_spaced self.class.to_s
   end
 
   def plot
      #key is today's date
-    redis_key= (get_business_utc 0).to_date.to_s 
+    redis_key= (get_business_utc 0).to_date.to_s
     #check if already existing already existing
     return redis_key unless @redis_name_spaced.get(redis_key) ==nil
     puts "making graph and storing it in redis name spaced"
