@@ -40,7 +40,7 @@ DayReport.ensure_index([[:date, -1],])
 
 #
 class SetupReport
-  
+
   attr_accessor :r, :tdc, :pc
 
   def initialize n=0
@@ -55,13 +55,13 @@ class SetupReport
   end
 
   def get_general_slides_blocks_ratio
-    
+
     distributed_general_slides=SpecialtyReport.all_general(@n).tot_points
     all_blocks=(@tdc.blocks_tot-@tdc.total_GI-@tdc.total_SO-@tdc.total_ESD)
     if distributed_general_slides==nil then return false end
     if all_blocks==0 then return false end
-    return distributed_general_slides/all_blocks.to_f  
-  
+    return distributed_general_slides/all_blocks.to_f
+
   end
 
   def get_pathologist_working
@@ -87,7 +87,7 @@ class DistReport
       @all_sum[ini.to_sym]<<x[ini]
     tot_each
     make_vector
-    end 
+    end
   end
 
   def tot_each
@@ -152,7 +152,7 @@ end
 
 def report_build n=0
   #load specialty reports
-  dr=DayReport.new 
+  dr=DayReport.new
   dr.all_gi=SpecialtyReport.all_gi(n).tot_points
   dr.all_heme=SpecialtyReport.all_heme(n).tot_points
   dr.all_derm=SpecialtyReport.all_derm(n).tot_points
@@ -165,11 +165,11 @@ def report_build n=0
   dr.left_over_previous_day_slides=s.get_left_over_previous_day_slides
   dr.pathologist_working=s.get_pathologist_working
 
-  
+
   #load distribution reports
   d=DistReport.new n
   #xxx
-  dr.general_day_points_hash= d.tot_each.to_json 
+  dr.general_day_points_hash= d.tot_each.to_json
   dr.general_day_points_tot= d.general_day_points_tot
   dr.general_day_points_mean= d.general_day_points_mean
   dr.general_day_points_sd= d.general_day_points_sd
@@ -177,7 +177,7 @@ def report_build n=0
   dr.save
 end
 
-def report_json 
+def report_json
   r={}
   exclude=["date", "_id", "reporter_mongo_id", "general_day_points_hash"]
   #precreate empty arrays
@@ -235,14 +235,14 @@ $scheduler.cron '5 22 * * 1-5' do
   mongoexport
 end
 
-# $scheduler.every '10s' do
-#   puts "Hola"
-# end
+$scheduler.every '10m' do
+   puts "Hola; 10 minutes passed"
+ end
 
 
 
 def test_graph
-  switch_to_testing  
+  switch_to_testing
   DayReport.delete_all
   clean
   (-50..0).each do |i|
