@@ -154,7 +154,7 @@ def clean
   end
 end
 
-def to_production message
+def commit_to_production message
   puts `git commit -am #{message}`
   Dir.chdir "../path-tracker-deploy"
   puts `git pull`
