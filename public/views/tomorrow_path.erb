@@ -1,0 +1,45 @@
+<br><br>
+
+<script id="working_template"  type="text/x-handlebars-template">
+
+        <div id="working"  >
+        <small><strong> Working:</strong></small>
+        {{#pathologist_working}}
+        <small>{{this}}</small> <input type="checkbox" name="{{this}}" checked/>
+        {{/pathologist_working}}
+        </div>
+</script>
+
+<script id="absent_template"  type="text/x-handlebars-template">
+      <br>
+        <div id="absent" >
+        <small><strong>Absent: </strong></small>
+        {{#pathologist_absent}}
+        <small>{{this}}</small> <input type="checkbox" name="{{this}}" checked/>
+        {{/pathologist_absent}}
+        </div>
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+<span id="working_html" class="span10"></span>
+<span id="absent_html" class="span10"></span>
+
+<p  class="span10"><br><br><br><button class= "btn btn-large" value="Update" id="ajax_button" style="">SUBMIT</button></p>
+
+
+
+
+<!-- calls the coffee generated script -->
+<script src="views/tomorrow_path.js" type="text/javascript" charset="utf-8"></script>
