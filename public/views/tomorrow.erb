@@ -74,6 +74,30 @@
 
 
 
+<script id="working_template"  type="text/x-handlebars-template">
+
+        <div id="working"  >
+        <small><strong> Working:</strong></small>
+        {{#pathologist_working}}
+        <small>{{this}}</small> <input type="checkbox" name="{{this}}" checked/>
+        {{/pathologist_working}}
+        </div>
+</script>
+
+<script id="absent_template"  type="text/x-handlebars-template">
+      <br>
+        <div id="absent" >
+        <small><strong>Absent: </strong></small>
+        {{#pathologist_absent}}
+        <small>{{this}}</small> <input type="checkbox" name="{{this}}" checked/>
+        {{/pathologist_absent}}
+        </div>
+</script>
+
+
+
+
+
 
 
 
@@ -92,6 +116,8 @@
 
 <span id="sparkline_html" class="span2"></span>
 <span id="status_html" class="span6 offset1"></span>
+<span id="working_html" class="span6 offset1"></span>
+<span id="absent_html" class="span6 offset1"></span>
 
 
 

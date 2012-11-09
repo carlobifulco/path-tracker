@@ -109,6 +109,17 @@ end
 # populate main data entry
 get ("/get_setup") {t=Today.new; @setup=t.get_setup.to_json}
 
+get "/get_setup/:n" do |n|
+  t=Today.new n.to_i
+  @setup=t.get_setup.to_json
+end
+
+post "/setup/:n" do |n|
+  puts params
+  t=Today.new n.to_i
+  return (t.set_path_tomorrow params).to_json
+end
+
 #login page
 get ("/login") {erb :login}
 
@@ -146,6 +157,11 @@ end
 get ("/tomorrow") do
   protected!
   erb :tomorrow
+end
+
+get ("/tomorrow_path") do
+  protected!
+  erb :tomorrow_path
 end
 
 get "/live" do
@@ -254,7 +270,7 @@ get '/report_activity_points/:name/:subspecialty' do |name, subspecialty|
 end
 
 get "/delta_day/:n" do |n|
-  if n.to_i>=0 then return "<h1> Cannot do this in the future and the day is not yet over </h1>" end 
+  if n.to_i>=0 then return "<h1> Cannot do this in the future and the day is not yet over </h1>" end
   p=PlotterDeltaDay.new
   "<h1>#{get_business_utc(n.to_i).to_date.to_s }</h1> <br> #{p.get p.plot n.to_i} <BR>"
 end
@@ -273,7 +289,7 @@ end
 get "/past_ini_date/:ini/:n" do |ini,n|
   results="<h1>#{ini}: Summary for #{get_business_utc(n.to_i)}</h1>"
   puts ini, n
-  if n.to_i>=0 then return "<h1> Cannot do this in the future and the day is not yet over </h1>" end 
+  if n.to_i>=0 then return "<h1> Cannot do this in the future and the day is not yet over </h1>" end
   puts  (Activity.where :date=>get_business_utc(n.to_i), :ini=>ini).all
   (Activity.where :date=>get_business_utc(n.to_i), :ini=>ini).all.each {|x| results += "<h3>#{x.name}: #{x.tot_points}</h3>"}
   results

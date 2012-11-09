@@ -27,6 +27,26 @@ class DayReport
   key :general_day_points_mean, Float
   key :general_day_points_sd, Float
 
+ ######Returns only one DayReport and always the same for a certain day
+  #
+  #n is the number of days from today
+  #
+  #Returns an instance of Tdc
+  def self.today n=0
+    business_utc=get_business_utc(n)
+    existing=where(:date=>business_utc)
+    # existing instance n working days ahead of today
+    if existing.to_a.count>0
+      return existing.to_a[0]
+    else
+      dr=DayReport.new
+      dr.date=business_utc
+      dr.save
+      return dr
+    end
+  end
+
+
   #before_save :write_date
 
   def write_date
@@ -152,7 +172,7 @@ end
 
 def report_build n=0
   #load specialty reports
-  dr=DayReport.new
+  dr=DayReport.today n
   dr.all_gi=SpecialtyReport.all_gi(n).tot_points
   dr.all_heme=SpecialtyReport.all_heme(n).tot_points
   dr.all_derm=SpecialtyReport.all_derm(n).tot_points
@@ -235,8 +255,8 @@ $scheduler.cron '5 22 * * 1-5' do
   mongoexport
 end
 
-$scheduler.every '10m' do
-   puts "Hola; 10 minutes passed"
+$scheduler.every '60m' do
+   puts "Hola; 60 minutes passed"
  end
 
 

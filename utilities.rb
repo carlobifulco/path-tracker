@@ -1,3 +1,4 @@
+####Loading paths
 #libs for the generation of the DOT Files
 #add the current dir  and lib to the load path
 my_directory=File.dirname(File.expand_path(__FILE__))
@@ -12,14 +13,11 @@ require 'business_time'
 
 #### Utilities
 
-def all_paths
-  DATA["initials"]
-end
 
-def populate n=0
+def populate n=0, number_of_path=DATA["initials"].count
   date=(Date.today+n)
   t=Tdc.today n
-   DATA["initials"].each do |ini|
+   DATA["initials"].sample(number_of_path).each do |ini|
     if not Pathologist.where({:ini=>ini,:date=>date.to_time.utc}).any?
       t.pathologist<<Pathologist.new({:ini=>ini,:date=>date.to_time.utc})
       puts "#{ini} created"
@@ -28,6 +26,18 @@ def populate n=0
     end
   end
   t.save
+end
+
+def sim_2 n
+  switch_to_testing
+  clean
+  t=Tdc.today n
+  all_p=Pathologist.get_all_path(n)
+  (all_p.count-3).times do |x|
+    p=all_p[x]
+    p.working=false
+    p.save
+  end
 end
 
 
@@ -158,8 +168,4 @@ def tail n=100
 end
 
 
-def dump_database
 
-
-
-end

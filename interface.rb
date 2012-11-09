@@ -111,7 +111,7 @@ class PointsCalculator
     @blocks_tot=(@t.blocks_tot-@t.total_GI-@t.total_SO-@t.total_ESD)
     puts  @slides_conversion_factor, "HRE WE ARE"
     #correct if factor is wrong  --ie more slides are out then theroetically possible
-    if @general_slides_distributed > @predicted_general_slides_tot and (@predicted_general_slides_tot != 0) 
+    if @general_slides_distributed > @predicted_general_slides_tot and (@predicted_general_slides_tot != 0)
       @slides_conversion_factor=(@general_slides_distributed/@blocks_tot.to_f) unless (@blocks_tot.to_f ==0)
       puts "old  number of predicted slides was #{@predicted_general_slides_tot} but distributed #{@general_slides_distributed}; new cf: #{@slides_conversion_factor}"
       @predicted_general_slides_tot=get_predicted_general_slides_tot @slides_conversion_factor
@@ -218,6 +218,13 @@ class Today
     end
   end
 
+  def set_path_tomorrow params
+    t=Tdc.today @n
+    self.set_present(params['path_present']) unless (not (params.has_key? 'path_present'))
+    self.set_absent(params['path_absent']) unless (not (params.has_key? 'path_absent'))
+    return true
+  end
+
 
   def set_setup params
     t=Tdc.today @n
@@ -277,7 +284,7 @@ class Today
 
   #activities entry point for regular
   def set_regular path_ini, activity_name, n
-    #XXX needto find out 
+    #XXX needto find out
     p=self.get_path_by_ini path_ini
     a=self.get_activity path_ini, activity_name
     a.n=n
@@ -304,7 +311,7 @@ class Today
       #puts "Specialty? :#{DATA["no-points"].keys.include? activity_name}"
       if DATA["distribution-specialty"].keys.include? activity_name
         p.specialty_only=true
-        # important call 
+        # important call
         p.update_specialty_status activity_name
       end
     end

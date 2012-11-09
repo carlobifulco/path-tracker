@@ -26,6 +26,26 @@ icons=()->
         $("##{i}").prepend($('<i class="icon-picture"></i>'))
 
 
+#####checking of present absent
+
+get_checked=(id)->
+  checked_boxes=$("##{id} input[type='checkbox']:checked")
+  $(i).attr("name") for i in checked_boxes
+window.get_checked=get_checked
+
+get_all=(id)->
+  all_boxes=$("##{id} input[type='checkbox']")
+  $(i).attr("name") for i in all_boxes
+window.get_all=get_all
+
+get_unchecked=(id)->
+  i for i in get_all(id) when i not in get_checked(id)
+window.get_unchecked=get_unchecked
+
+get_path_status=()->
+  data=
+    path_present: _.union(get_checked("working"),get_unchecked("absent"))
+    path_absent: _.union(get_checked("absent"),get_unchecked("working"))
 
 
 
@@ -57,6 +77,13 @@ decorate=()->
         $("##{ini}").parent().parent().addClass("success")
 
   icons()
+
+make_hb=(match)->
+  hb=Handlebars.compile(match[0].innerHTML)
+window.make_hb=make_hb
+
+
+
 
 
 
@@ -99,9 +126,13 @@ window.has_a_distribution_preference=has_a_distribution_preference
 
 
 
-#wrapper around the rendering; uses the html target convention "id_html"
+#wrapper around the rendering; uses the html target convention "id_html" and "id_template"
 render_template=(id,data)->
-  $("##{id}_html").html(render(data,($("##{id}_template")[0]).innerHTML))
+  rendered_template=render(data,($("##{id}_template")[0]).innerHTML)
+  console.log rendered_template
+  hook= $("##{id}_html")
+  if hook.length==0 then console.log "NO HOOCK"
+  $("##{id}_html").html(rendered_template)
 window.render_template=render_template
 
 show_sparklines=(func=false)->
