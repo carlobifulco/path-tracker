@@ -223,7 +223,7 @@ end
 $scheduler = Rufus::Scheduler.start_new
 
 
-
+# every 23 hours
 $scheduler.cron '0 23 * * 1-5' do
   # every day of the week at 11pm
   puts 'activate reportimg system'

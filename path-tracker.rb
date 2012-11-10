@@ -53,6 +53,7 @@ helpers do
   def protected! ; halt [ 401, '<h4>Not Authorized. <a href="/login"> Login </a> with proper credentials.</h4>' ] unless admin? ; end
 end
 
+
 #### CSS
 # css as sass
 get '/sass' do
@@ -69,28 +70,6 @@ end
 #mainpage
 get "/" do
   erb :index
-end
-
-get "/test" do
-  puts request
-  if !request.websocket?
-    erb :test
-  else
-    request.websocket do |ws|
-      ws.onopen do
-        ws.send("Hello World!")
-        settings.sockets << ws
-      end
-      ws.onmessage do |msg|
-        puts "this is the msg: #{msg}"
-        EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
-      end
-      ws.onclose do
-        warn("wetbsocket closed")
-        settings.sockets.delete(ws)
-      end
-    end
-  end
 end
 
 # main data entry
@@ -114,6 +93,7 @@ get "/get_setup/:n" do |n|
   @setup=t.get_setup.to_json
 end
 
+# Used by tomorrow
 post "/setup/:n" do |n|
   puts params
   t=Today.new n.to_i
@@ -123,11 +103,27 @@ end
 #login page
 get ("/login") {erb :login}
 
+#login post
+post '/login' do
+  #check if tehy match settings
+  if params['username']==settings.username&&params['password']==settings.password
+      #set a username-token cookie
+      response.set_cookie(settings.username,settings.token)
+      return true.to_json
+    else
+      # return false
+      response.set_cookie(settings.username, false)
+      return false.to_json
+    end
+end
+
+# main interface
 get ("/entry") do
   protected!
   erb :entry
 end
 
+#main data entry for days slides/activities
 post "/entry" do
   puts params
   on_array=[]; t=Today.new; path_name=params['path_name']
@@ -146,13 +142,16 @@ post "/entry" do
   return {:ok=>true}.to_json
 end
 
+# populates data entry for days slides/activities
 get "/get_entry" do
   Today.new.get_entry.to_json
 end
 
+#populates the tomorrow window
 get "/get_tomorrow" do
   Today.new(1).get_entry.to_json
 end
+
 
 get ("/tomorrow") do
   protected!
@@ -202,7 +201,7 @@ post "/tomorrow" do
   return {:ok=>true}.to_json
 end
 
-# updates view for selected pathologist
+##### updates view for selected pathologist
 get "/path/activities/points" do
   t=Today.new
   {path: t.get_path_activities_points}.to_json
@@ -241,25 +240,16 @@ get '/today' do
   erb :today
 end
 
-#login post
-post '/login' do
-  #check if tehy match settings
-  if params['username']==settings.username&&params['password']==settings.password
-      #set a username-token cookie
-      response.set_cookie(settings.username,settings.token)
-      return true.to_json
-    else
-      # return false
-      response.set_cookie(settings.username, false)
-      return false.to_json
-    end
-end
+
 
 get('/logout'){ response.set_cookie(settings.username, false) ; redirect '/' }
 
 get '/long_term' do
   '<h3>Work in Progress. <a href="/"> Back to the base. </a> </h3>'
 end
+
+#### reporting activities
+#--------------------------
 
 get '/report_activity_points/:name' do |name|
   (ReportActivity.report_activity_points name).to_json
@@ -297,6 +287,9 @@ end
 
 
 
+#### Experiments
+#------------------
+
 get '/websocket' do
   if !request.websocket?
     puts "#{request} #{request.params()} #{!request.websocket?}"
@@ -317,6 +310,34 @@ get '/websocket' do
     end
   end
 end
+
+
+
+#scockets games
+
+get "/test" do
+  puts request
+  if !request.websocket?
+    erb :test
+  else
+    request.websocket do |ws|
+      ws.onopen do
+        ws.send("Hello World!")
+        settings.sockets << ws
+      end
+      ws.onmessage do |msg|
+        puts "this is the msg: #{msg}"
+        EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
+      end
+      ws.onclose do
+        warn("wetbsocket closed")
+        settings.sockets.delete(ws)
+      end
+    end
+  end
+end
+
+
 
 __END__
 @@ websocket

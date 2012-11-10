@@ -17,17 +17,35 @@ require "report_data"
 def r_connect
   $r=Rserve::Simpler.new
   display=ENV["DISPLAY"]
-  puts display, "IS ABOVE ME"
-  puts $r >> ("X11(display='#{display}')")
-  puts $r >> ("library('ggplot2')")
-  puts $r >> "capabilities()"
+  if display.class==String and display.start_with? "/tmp/launch"
+    puts display, "IS ABOVE ME"
+    puts $r >> ("X11(display='#{display}')")
+    puts $r >> ("library('ggplot2')")
+    puts $r >> "capabilities()"
+  end
 end
 
-r_connect
+
+#check on status of x_server
+def xwindows?
+  if $r==nil 
+    r_connect 
+  else
+    begin
+      $r >> "dev.new()"
+      $r >> "plot(c(1,2,3))" 
+      $r >> "dev.off()"
+    rescue 
+      r_connect
+    end
+  end
+end
+
 
 
 
 def r_boxplot data
+  xwindows?
   temp_file=Tempfile.new "boxplot-pdf"
 
   $r >> {"raw_data" =>data}
@@ -119,6 +137,7 @@ class PlotterRedis
   #plots in R and returns SVG data
   # input is a hash with simple keys value mapping;  Keys are x, values are Y of the plot
   def bar_plot data
+    xwindows?
     if data==false then return false end
     hash_frame={}
     hash_frame["ini"]=data.keys.map{|x| x.to_s}
