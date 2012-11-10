@@ -5,37 +5,37 @@ $LOAD_PATH << my_directory
 
 #require "statsample"
 require "web_data"
-#require 'rserve'
+require 'rserve'
 require "redis"
 require "redis-namespace"
 require 'pony'
 require "csv"
-require 'rserve/simpler'
+#require 'rserve/simpler'
 require "report_data"
 
 
 def r_connect
-  $r=Rserve::Simpler.new
+  $r=Rserve::Connection.new
   display=ENV["DISPLAY"]
   if display.class==String and display.start_with? "/tmp/launch"
     puts display, "IS ABOVE ME"
-    puts $r >> ("X11(display='#{display}')")
-    puts $r >> ("library('ggplot2')")
-    puts $r >> "capabilities()"
+    $r.eval("X11(display='#{display}')")
+    $r.eval("library('ggplot2')")
+    $r.eval "capabilities()"
   end
 end
 
 
 #check on status of x_server
 def xwindows?
-  if $r==nil 
-    r_connect 
+  if $r==nil
+    r_connect
   else
     begin
       $r >> "dev.new()"
-      $r >> "plot(c(1,2,3))" 
+      $r >> "plot(c(1,2,3))"
       $r >> "dev.off()"
-    rescue 
+    rescue
       r_connect
     end
   end
@@ -45,16 +45,22 @@ end
 
 
 def r_boxplot data
-  xwindows?
+  #xwindows?
   temp_file=Tempfile.new "boxplot-pdf"
 
-  $r >> {"raw_data" =>data}
-  $r.command "boxplot(raw_data)"
-  $r.command "dev.copy(png,'#{temp_file.path}')"
-  $r.command "dev.off()"
+  $r.assign "data", data
+  $r.eval"boxplot(data)"
+  z="dev.copy(png,'#{temp_file.path}')"
+  $r.eval z
+  c="svg('#{temp_file.path}')"
+  $r.eval c
+
+  $r.eval "dev.off()"
   temp_file_data=File.read temp_file.path
+
+  x={temp_file.path => temp_file_data}
   temp_file.unlink
-  temp_file_data
+  x
 end
 
 
