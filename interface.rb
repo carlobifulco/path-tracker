@@ -103,19 +103,23 @@ class PointsCalculator
   attr_accessor :slides_conversion_factor
   def initialize n=0, slides_conversion_factor=SLIDES_CONVERSION_FACTOR
     @slides_conversion_factor=slides_conversion_factor
+    #puts "#{slides_conversion_factor}  --here"
     @t=Tdc.today n
-    #find slidesdelivered
+    #1st number upon which all the rest is build
+    @general_tot=(@t.blocks_tot-@t.total_GI-@t.total_SO-@t.total_ESD)+@t.total_cytology+@t.left_over_previous_day_slides
+    #puts @general_tot
+    #2nd find slidesdelivered
     @general_slides_distributed=Activity.get_general_slides_distributed(@t.n)
     # find theoretical tot slides based on blocks an conversion factor
-    @predicted_general_slides_tot=get_predicted_general_slides_tot @slides_conversion_factor
-    @blocks_tot=(@t.blocks_tot-@t.total_GI-@t.total_SO-@t.total_ESD)
-    puts  @slides_conversion_factor, "HRE WE ARE"
+    @predicted_general_slides_tot=get_predicted_general_slides_tot(@slides_conversion_factor)
+
+    #puts  @slides_conversion_factor, "HeRE WE ARE"
     #correct if factor is wrong  --ie more slides are out then theroetically possible
     if @general_slides_distributed > @predicted_general_slides_tot and (@predicted_general_slides_tot != 0)
-      @slides_conversion_factor=(@general_slides_distributed/@blocks_tot.to_f) unless (@blocks_tot.to_f ==0)
-      puts "old  number of predicted slides was #{@predicted_general_slides_tot} but distributed #{@general_slides_distributed}; new cf: #{@slides_conversion_factor}"
-      @predicted_general_slides_tot=get_predicted_general_slides_tot @slides_conversion_factor
-      puts "Adjusted ratio to #{@slides_conversion_factor}; new #{@predicted_general_slides_tot}"
+      @slides_conversion_factor=ratio
+      puts "number of predicted slides was #{@predicted_general_slides_tot} but we have distributed #{@general_slides_distributed}; new cf is: #{@slides_conversion_factor}"
+      @predicted_general_slides_tot=get_predicted_general_slides_tot(@slides_conversion_factor)
+      puts "Adjusted ratio to #{@slides_conversion_factor}; new numebr of predicted slides is #{@predicted_general_slides_tot}"
     end
 
     @predicted_general_slides_pending=@predicted_general_slides_tot- @general_slides_distributed
@@ -132,9 +136,15 @@ class PointsCalculator
       return 1
     end
   end
+  #### heart of the system
+  def ratio
+    (@general_slides_distributed/@general_tot.to_f) unless (@general_tot.to_f ==0)
+  end
 
+  #general blocks only * conversion factor +cyto and left overs
   def get_predicted_general_slides_tot slides_conversion_factor
-    ((@t.blocks_tot-@t.total_GI-@t.total_SO-@t.total_ESD).*slides_conversion_factor).to_i+@t.total_cytology+@t.left_over_previous_day_slides
+    #puts "general tot =#{@general_tot}; #{slides_conversion_factor}"
+    (@general_tot*slides_conversion_factor).to_i
   end
 
   def predicted_points_per_non_specialist
@@ -183,6 +193,7 @@ class Today
     pathologist_working=self.get_path_working.map { |x| x.ini }
     path_count= self.get_path_working.count
     setup={blocks_tot: t.blocks_tot,
+          blocks_general: t.blocks_tot - (t.total_GI + t.total_SO + t.total_ESD),
           slides_conversion_factor: pc.slides_conversion_factor,
           total_GI: t.total_GI,
           total_SO: t.total_SO,

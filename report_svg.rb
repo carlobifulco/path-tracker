@@ -5,65 +5,33 @@ $LOAD_PATH << my_directory
 
 #require "statsample"
 require "web_data"
-require 'rserve'
+#require 'rserve'
 require "redis"
 require "redis-namespace"
 require 'pony'
 require "csv"
-#require 'rserve/simpler'
+require 'rserve/simpler'
 require "report_data"
+require "report_new"
+#require 'statsample'
 
 
-def r_connect
-  $r=Rserve::Connection.new
-  display=ENV["DISPLAY"]
-  if display.class==String and display.start_with? "/tmp/launch"
-    puts display, "IS ABOVE ME"
-    $r.eval("X11(display='#{display}')")
-    $r.eval("library('ggplot2')")
-    $r.eval "capabilities()"
-  end
-end
+#connect to R
+$r=Rserve::Simpler.new
+$r >> ("library('ggplot2')")
 
 
-#check on status of x_server
-def xwindows?
-  if $r==nil
-    r_connect
-  else
-    begin
-      $r >> "dev.new()"
-      $r >> "plot(c(1,2,3))"
-      $r >> "dev.off()"
-    rescue
-      r_connect
-    end
-  end
-end
+# def connect
+#   #display=ENV["DISPLAY"]
+#   # if display.class==String and display.start_with? "/tmp/launch"
+#   #   puts display, "IS ABOVE ME"
+#   #   puts $r >> ("X11(display='#{display}')")
+#   #   puts $r >> ("library('ggplot2')")
+#   #   puts $r >> "capabilities()"
+#   # end
+# end
 
-
-
-
-def r_boxplot data
-  #xwindows?
-  temp_file=Tempfile.new "boxplot-pdf"
-
-  $r.assign "data", data
-  $r.eval"boxplot(data)"
-  z="dev.copy(png,'#{temp_file.path}')"
-  $r.eval z
-  c="svg('#{temp_file.path}')"
-  $r.eval c
-
-  $r.eval "dev.off()"
-  temp_file_data=File.read temp_file.path
-
-  x={temp_file.path => temp_file_data}
-  temp_file.unlink
-  x
-end
-
-
+# connect
 
 
 def rify_hash hash_frame
@@ -95,6 +63,53 @@ def rify_mongomapper mongo_mapper_class
   t.close
   t.path
 end
+
+
+
+def boxplot data
+  temp_file=Tempfile.new "boxplot-pdf"
+  $r >> "svg('#{temp_file.path}')"
+  $r >> {"raw_data" =>data}
+  $r.command "boxplot(raw_data)"
+  $r >> "dev.off()"
+  temp_file_data=File.read temp_file.path
+  temp_file.unlink
+  temp_file_data
+end
+
+def boxplot_distribution n
+  dist=JSON.parse (DayReport.today n).general_day_points_hash
+  puts values=dist.map {|x| x.values[0]}
+  puts keys=dist.map {|x| x.keys[0]}
+end
+
+
+
+
+#plots in R and returns SVG data
+# input is a hash with simple keys value mapping;  Keys are x, values are Y of the plot
+def bar_plot data
+  if data==false then return false end
+  hash_frame={}
+  hash_frame["ini"]=data.keys.map{|x| x.to_s}
+  hash_frame["deviation_from_mean_points"]=data.values
+  puts "hash_frame", hash_frame
+  #tempfile is used to save SVG output. This is then unlinked.
+  temp_file=Tempfile.new ["svg-file",".svg"]
+  $r.command(df: hash_frame.to_dataframe)
+  $r >> "svg('#{temp_file.path}')"
+  $r >> "ggplot(data=df, aes(ini,deviation_from_mean_points))+geom_bar()+coord_flip()+ scale_y_continuous(name='Deviation from mean total points distribution')+scale_x_discrete(name='')"
+  $r >> "dev.off()"
+  results=File.read(temp_file.path)
+  temp_file.unlink
+  return results
+end
+
+
+
+
+
+
 
 
 ####Superclass For plotSVG engines
@@ -139,29 +154,9 @@ class PlotterRedis
       @redis_name_spaced.del key
     end
   end
-
-  #plots in R and returns SVG data
-  # input is a hash with simple keys value mapping;  Keys are x, values are Y of the plot
-  def bar_plot data
-    xwindows?
-    if data==false then return false end
-    hash_frame={}
-    hash_frame["ini"]=data.keys.map{|x| x.to_s}
-    hash_frame["deviation_from_mean_points"]=data.values
-    puts "hash_frame", hash_frame
-    #tempfile is used to save SVG output. This is then unlinked.
-    t=Tempfile.new ["svg-file",".svg"]
-    $r.command( df: hash_frame.to_dataframe ) do
-      <<-EOF
-      ggplot(data=df, aes(ini,deviation_from_mean_points))+geom_bar()+coord_flip()+ scale_y_continuous(name="Deviation from mean total points distribution")+scale_x_discrete(name="")
-      ggsave("#{t.path}")
-      EOF
-    end
-    results=File.read(t.path)
-    t.unlink
-    return results
-  end
 end
+
+
 
 #### Plotting Engine
 #

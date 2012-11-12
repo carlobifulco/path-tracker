@@ -7,6 +7,7 @@ $LOAD_PATH << my_directory
 
 require "web_data"
 require 'business_time'
+require "report_new"
 
 
 
@@ -30,14 +31,38 @@ end
 
 def sim_2 n
   switch_to_testing
-  clean
+  #clean
   t=Tdc.today n
+  #only 3 working
   all_p=Pathologist.get_all_path(n)
   (all_p.count-3).times do |x|
     p=all_p[x]
     p.working=false
     p.save
   end
+#assign activities
+  (Pathologist.get_path_working n).each do |p|
+    a=Activity.new
+    a.name="Slides-small-cases"
+    a.n=33
+    a.ini=p.ini
+    a.points=1
+    p.activities<<a
+    a.save
+    p.save
+    puts p.activities
+  end
+  #set days
+  t.blocks_tot=130
+  t.total_SO=10
+  t.total_GI=10
+  t.total_ESD=10
+  t.total_cytology=10
+  t.left_over_previous_day_slides=10
+  t.save
+  # p=Pathologist.get_all_path(n).sample
+  # p.specialty_only=true
+  # p.save
 end
 
 
@@ -148,6 +173,7 @@ def clean
     Tdc.delete_all
     Activity.delete_all
     Pathologist.delete_all
+    DayReport.delete_all
     puts " YOU HAVE A CLEAN DATABASE"
   else
     puts "CANNOT CLEAN A PRODUCTION SETTING..."

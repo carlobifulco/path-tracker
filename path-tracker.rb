@@ -17,8 +17,8 @@ require "web_data"
 require 'coffee-script'
 
 require 'sinatra-websocket'
-require "report_svg"
-require "new_report"
+#require "report_svg"
+#require "report_new"
 
 
 

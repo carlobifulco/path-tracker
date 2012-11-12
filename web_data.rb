@@ -4,7 +4,7 @@ $LOAD_PATH << my_directory
 
 
 require "mongo_mapper"
-require "utilities"
+
 require "whenever"
 require 'business_time'
 require "holidays"
@@ -18,7 +18,7 @@ require "configuration"
 #Testing unless prduction
 puts "HELLO FROM YOU FRIENDLY PATH-TRACKER; my #{ARGV}"
 
-unless ARGV[0] =="production" 
+unless ARGV[0] =="production"
   case File.basename(my_directory)
     when "path-tracker-deploy"
       puts "I am deploying production"
@@ -36,6 +36,12 @@ if ARGV[0] =="production" then switch_to_production; set :port, 5000 ; end
 #### Local logins
 MongoMapper.database = $data_basename
 DATA=YAML.load(File.read $data_file)
+
+### these need to have an existing database connection
+require "utilities"
+require "report_svg"
+require "report_new"
+
 
 class Date
   def utc
@@ -267,7 +273,7 @@ class Pathologist
     self.activities.each do |a|
         a.specialty_only=true
         a.specialty=activity_name
-        a.save   
+        a.save
     end
   end
 
@@ -386,7 +392,7 @@ class Activity
     end
   end
 
-  
+
   #callback ; called upon destruction
   #resets specialty staus of other activities owner by the pathologist
   def uncheck_subspecialty
