@@ -112,44 +112,47 @@ class PointsCalculator
     @general_slides_distributed=Activity.get_general_slides_distributed(@t.n)
     # find theoretical tot slides based on blocks an conversion factor
     @predicted_general_slides_tot=get_predicted_general_slides_tot(@slides_conversion_factor)
-
     #puts  @slides_conversion_factor, "HeRE WE ARE"
     #correct if factor is wrong  --ie more slides are out then theroetically possible
-    if @general_slides_distributed > @predicted_general_slides_tot and (@predicted_general_slides_tot != 0)
-      @slides_conversion_factor=ratio
-      puts "number of predicted slides was #{@predicted_general_slides_tot} but we have distributed #{@general_slides_distributed}; new cf is: #{@slides_conversion_factor}"
-      @predicted_general_slides_tot=get_predicted_general_slides_tot(@slides_conversion_factor)
-      puts "Adjusted ratio to #{@slides_conversion_factor}; new numebr of predicted slides is #{@predicted_general_slides_tot}"
-    end
-
+    ratio_adjustment
     @predicted_general_slides_pending=@predicted_general_slides_tot- @general_slides_distributed
     @general_activity_points=Activity.get_general_non_slide_points(@t.n)
     @total_general_predicted_points=@predicted_general_slides_tot+@general_activity_points
     @non_specialist_count=Pathologist.get_number_generalist(@t.n)
   end
-    #again based on generalist blocks and activities only
-  def predicted_slides_per_non_specialist
 
-    if @non_specialist_count !=0
-      @predicted_general_slides_pending/@non_specialist_count
+  #again based on generalist blocks and activities only
+  def predicted_slides_per_non_specialist
+    if non_specialist_count !=0
+      predicted_general_slides_pending/non_specialist_count
     else
       return 1
     end
   end
+
   #### heart of the system
-  def ratio
-    (@general_slides_distributed/@general_tot.to_f) unless (@general_tot.to_f ==0)
+  def hard_ratio
+    (general_slides_distributed/general_tot.to_f) unless (general_tot.to_f ==0)
+  end
+  # move away from baseline if numbers greater then initial trashold
+  def ratio_adjustment
+    if general_slides_distributed > predicted_general_slides_tot and (predicted_general_slides_tot != 0)
+      slides_conversion_factor=hard_ratio
+      puts "number of predicted slides was #{predicted_general_slides_tot} but we have distributed #{general_slides_distributed}; new cf is: #{slides_conversion_factor}"
+      predicted_general_slides_tot=get_predicted_general_slides_tot(slides_conversion_factor)
+      puts "Adjusted ratio to #{slides_conversion_factor}; new numebr of predicted slides is #{predicted_general_slides_tot}"
+    end
   end
 
   #general blocks only * conversion factor +cyto and left overs
   def get_predicted_general_slides_tot slides_conversion_factor
     #puts "general tot =#{@general_tot}; #{slides_conversion_factor}"
-    (@general_tot*slides_conversion_factor).to_i
+    (general_tot*slides_conversion_factor).to_i
   end
 
   def predicted_points_per_non_specialist
-    if @non_specialist_count !=0
-      @total_general_predicted_points/@non_specialist_count
+    if non_specialist_count !=0
+      total_general_predicted_points/non_specialist_count
     else
       return 1
     end
