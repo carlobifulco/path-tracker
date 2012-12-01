@@ -101,13 +101,13 @@ class PointsCalculator
   attr_accessor :predicted_general_slides_tot,:general_slides_distributed,:predicted_general_slides_pending
   attr_accessor :total_general_predicted_points,:general_activity_points, :general_non_slide_points
   attr_accessor :slides_conversion_factor
+  attr_accessor :general_tot, :non_specialist_count
   def initialize n=0, slides_conversion_factor=SLIDES_CONVERSION_FACTOR
     @slides_conversion_factor=slides_conversion_factor
     #puts "#{slides_conversion_factor}  --here"
     @t=Tdc.today n
     #1st number upon which all the rest is build
-    @general_tot=(@t.blocks_tot-@t.total_GI-@t.total_SO-@t.total_ESD)+@t.total_cytology+@t.left_over_previous_day_slides
-    #puts @general_tot
+    @general_tot = (@t.blocks_tot-@t.total_GI-@t.total_SO-@t.total_ESD)+@t.total_cytology+@t.left_over_previous_day_slides
     #2nd find slidesdelivered
     @general_slides_distributed=Activity.get_general_slides_distributed(@t.n)
     # find theoretical tot slides based on blocks an conversion factor
