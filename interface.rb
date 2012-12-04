@@ -137,9 +137,9 @@ class PointsCalculator
   # move away from baseline if numbers greater then initial trashold
   def ratio_adjustment
     if general_slides_distributed > predicted_general_slides_tot and (predicted_general_slides_tot != 0)
-      slides_conversion_factor=hard_ratio
+      @slides_conversion_factor=hard_ratio
       puts "number of predicted slides was #{predicted_general_slides_tot} but we have distributed #{general_slides_distributed}; new cf is: #{slides_conversion_factor}"
-      predicted_general_slides_tot=get_predicted_general_slides_tot(slides_conversion_factor)
+      @predicted_general_slides_tot=get_predicted_general_slides_tot(slides_conversion_factor)
       puts "Adjusted ratio to #{slides_conversion_factor}; new numebr of predicted slides is #{predicted_general_slides_tot}"
     end
   end

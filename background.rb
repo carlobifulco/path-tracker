@@ -21,13 +21,13 @@ $scheduler.cron '0 23 * * 1-5' do
 end
 
 def mongodump
-  command= "mongodump -d path-tracker -o /Users/carlobifulco/mongodump"
+  command= "mongodump -d path-tracker -o /Users/carlobifulco/Dropbox/mongo_path_tracker/dump"
   puts command
   system command
 end
 
 def mongoexport
-  command="mongoexport --collection activities --out /Users/carlobifulco/mongodump/activities.json"
+  command="mongoexport --collection activities --out /Users/carlobifulco/Dropbox/mongo_path_tracker/activities.json"
   puts command
   system command
 end
