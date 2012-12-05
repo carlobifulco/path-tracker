@@ -92,7 +92,7 @@ end
 
 class DistReport
 
-  attr_accessor :r, :tdc, :pc, :all, :all_sum, :tot_each, :vector
+  attr_accessor :r, :tdc, :pc, :all_sum, :tot_each, :vector
   attr_accessor :general_day_points_mean, :general_day_points_sd
 
   def initialize n=0
@@ -109,7 +109,7 @@ class DistReport
       @all_sum[ini.to_sym]<<x[ini]
     #make [{:MM=>173},{:MKL=>174},...
     @tot_each=@all_sum.map {|k,v| {k=>v.map{|x| x.tot_points}.reduce(:+)}}
-    #make_vector
+    get_mean_sd
     end
   end
 
@@ -188,7 +188,6 @@ def report_build n=0
   dr.general_day_points_tot= d.general_day_points_tot
   dr.general_day_points_mean= d.general_day_points_mean
   dr.general_day_points_sd= d.general_day_points_sd
-
   dr.save
 end
 

@@ -28,9 +28,9 @@ set :server, 'thin'
 set :sockets, []
 
 
-set :username,'Bond'
+set :username,'total'
 set :token,'shakenN0tstirr3d'
-set :password,'007'
+set :password,'recall'
 
 
 
