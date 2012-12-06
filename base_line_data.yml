@@ -42,10 +42,13 @@ regular_activities:
   Carry-over-points-from-previous-day: 1
   Diagnostic-Kidney: 15
   Diagnostic-Liver: 8
+  MSI: 4
+  Transfusion-reaction-consults: 5
+  Autopsy-slides: 1
 
 
 cardinal_activities:
-  Autopsy-Slides: 20
+  Autopsy: 20
   Qc: 15
   Cp: 15
   Administration: 15

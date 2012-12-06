@@ -493,5 +493,30 @@ Activity.ensure_index([[:date, -1], [:pathologist_id, 1], [:name,1]])
 
 
 
+class Log
+  include MongoMapper::Document
+  safe
+  key :path_ini, String
+  key :request, String
+  key :date, Time, :default=>Date.today.to_time.utc
+  key :time, Time
+  key :ip, String
+
+
+  def self.get_ini n=0, path_ini
+    d=where(:date=>get_business_utc(n), :path_ini=>path_ini)
+    d=d.to_a if d
+    if d.count >0 
+      d.each  do  |log| 
+        puts "#{log.ip}: #{log.time.to_time}\n\t #{JSON.parse(log.request)}" 
+      end
+    else 
+      return false
+    end
+  end
+end
+
+
+
 
 

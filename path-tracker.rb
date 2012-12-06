@@ -125,20 +125,27 @@ end
 
 #main data entry for days slides/activities
 post "/entry" do
+  #puts "the request is coming from #{request.ip} at #{Time.now}"
+  log=Log.new
+  log.request=params.to_json
+  log.time=Time.now.utc
+  log.path_ini=request["path_name"]
+  log.ip=request.ip
+  log.save
   puts params
   on_array=[]; t=Today.new; path_name=params['path_name']
   params.keys.each do |key|
     value=params[key]
-    puts value.class
+    #puts value.class
     #regular activities
     t.set_regular(path_name,key,value) if (key!="path_name" and value!="" and (DATA["regular_activities"].has_key? key))
     #checkbox cardinal activity
-    if value=="on" then on_array<<key;puts "You have checkboxed #{key} and added it to #{on_array}"; end
-    puts "are all conditions met? for #{key} #{(key!="path_name" and value!="" and (DATA["regular_activities"].has_key? key))}"
+    if value=="on" then on_array<<key;end
+    #puts "are all conditions met? for #{key} #{(key!="path_name" and value!="" and (DATA["regular_activities"].has_key? key))}"
   end
   #cardinals
   t.set_cardinal path_name, on_array
-  EM.next_tick { settings.sockets.each{|s| s.send("Hello things changed for #{path_name}") } }
+  #EM.next_tick { settings.sockets.each{|s| s.send("Hello things changed for #{path_name}") } }
   return {:ok=>true}.to_json
 end
 
@@ -197,7 +204,7 @@ post "/tomorrow" do
   end
   #cardinals
   t.set_cardinal path_name, on_array
-  EM.next_tick { settings.sockets.each{|s| s.send("Hello things changed for #{path_name}") } }
+  #EM.next_tick { settings.sockets.each{|s| s.send("Hello things changed for #{path_name}") } }
   return {:ok=>true}.to_json
 end
 
