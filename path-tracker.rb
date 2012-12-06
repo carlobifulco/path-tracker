@@ -266,22 +266,22 @@ get '/report_activity_points/:name/:subspecialty' do |name, subspecialty|
   (ReportActivity.report_activity_points_for_subspecialty name, subspecialty).to_json
 end
 
+
+####APIs
+#-------
+#xxx
 get "/delta_day/:n" do |n|
   if n.to_i>=0 then return "<h1> Cannot do this in the future and the day is not yet over </h1>" end
   p=PlotterDeltaDay.new
   "<h1>#{get_business_utc(n.to_i).to_date.to_s }</h1> <br> #{p.get p.plot n.to_i} <BR>"
 end
 
+#xxx
 get "/delta_summary" do
   p=PlotterDeltaSummary.new
    "<h1>#{get_business_utc(0).to_date.to_s }</h1> <br> #{p.get p.plot} <BR>"
 end
 
-
-get "/past_ini_date" do
-  "/past_ini_date/:ini/:n<BR>
-  Example: /past_ini_date/YW/-5 will yield DR. YW 5 Days ago"
-end
 
 get "/past_ini_date/:ini/:n" do |ini,n|
   results="<h1>#{ini}: Summary for #{get_business_utc(n.to_i)}</h1>"
@@ -290,6 +290,18 @@ get "/past_ini_date/:ini/:n" do |ini,n|
   puts  (Activity.where :date=>get_business_utc(n.to_i), :ini=>ini).all
   (Activity.where :date=>get_business_utc(n.to_i), :ini=>ini).all.each {|x| results += "<h3>#{x.name}: #{x.tot_points}</h3>"}
   results
+end
+
+# logging info for pathologist; day n=0
+get "/log/:ini" do |ini|
+  Log.get_ini ini
+end
+
+
+### API's summary
+get "/api" do
+  protected!
+  erb :api
 end
 
 

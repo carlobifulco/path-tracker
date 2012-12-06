@@ -506,10 +506,13 @@ class Log
   def self.get_ini n=0, path_ini
     d=where(:date=>get_business_utc(n), :path_ini=>path_ini)
     d=d.to_a if d
+    text=[]<<"<h1>Log</h1><ul>"
     if d.count >0 
       d.each  do  |log| 
-        puts "#{log.ip}: #{log.time.to_time}\n\t #{JSON.parse(log.request)}" 
+        text << "<li>#{log.ip}: #{log.time.to_time} <br> #{JSON.parse(log.request)}</li>" 
       end
+      text <<"</ul>"
+      text.join
     else 
       return false
     end

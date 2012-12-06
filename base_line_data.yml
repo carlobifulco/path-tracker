@@ -44,11 +44,11 @@ regular_activities:
   Diagnostic-Liver: 8
   MSI: 4
   Transfusion-reaction-consults: 5
-  Autopsy-slides: 1
+
 
 
 cardinal_activities:
-  Autopsy: 20
+  Autopsy-slides: 20
   Qc: 15
   Cp: 15
   Administration: 15
