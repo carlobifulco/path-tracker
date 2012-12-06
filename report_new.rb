@@ -203,9 +203,10 @@ def report_build n=0
   dr.save
 end
 
+# interface to web;  only fields to be displayed
 def report_json
   r={}
-  exclude=["date", "_id", "reporter_mongo_id", "general_day_points_hash"]
+  exclude=["date", "_id", "reporter_mongo_id", "general_day_points_hash", "general_day_points_variation"]
   #precreate empty arrays
   DayReport.keys.keys.each do |k|
     r[k]=[] unless exclude.include? k
