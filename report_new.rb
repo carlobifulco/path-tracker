@@ -26,6 +26,7 @@ class DayReport
   key :general_day_points_tot, Integer
   key :general_day_points_mean, Float
   key :general_day_points_sd, Float
+  key :general_day_points_variation, String
 
  ######Returns only one DayReport and always the same for a certain day
   #
@@ -125,6 +126,18 @@ class DistReport
     @general_day_points_sd= $r >> "sd(values)"
     {:mean => @general_day_points_mean, :sd => @general_day_points_sd, :values=> @values}
   end
+
+  def get_diff_for_each_path
+    r={}
+    if tot_each
+      tot_each.each do |dict|
+        k=dict.keys[0]; v=dict.values[0]
+        r[k]=v-general_day_points_mean
+      end
+    end
+    r
+  end
+
 end
 
 
@@ -186,6 +199,7 @@ def report_build n=0
   dr.general_day_points_tot= (d.general_day_points_tot or 0)
   dr.general_day_points_mean= (d.general_day_points_mean or 0)
   dr.general_day_points_sd= (d.general_day_points_sd or 0)
+  dr.general_day_points_variation = (d.get_diff_for_each_path or 0).to_json
   dr.save
 end
 

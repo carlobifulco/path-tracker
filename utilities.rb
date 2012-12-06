@@ -190,8 +190,21 @@ end
 
 def tail n=100
   puts `tail -n #{n} /var/log/path-tracker/path-tracker.log`
-
 end
+
+
+#removes existing database and replaces it with dump located in Dropbox
+def import_production
+  switch_to_production 
+  clean
+  command= "mongorestore /Users/carlobifulco/Dropbox/mongo_path_tracker/dump"
+  puts command
+  system command
+end
+
+
+
+
 
 
 
