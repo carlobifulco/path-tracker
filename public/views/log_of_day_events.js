@@ -6,9 +6,11 @@
     return get_data();
   });
 
-  get_data = function(ini) {
-    var _this = this;
-    if (ini == null) ini = $("#ini").val();
+  get_data = function(e) {
+    var ini;
+    if (e == null) e = false;
+    ini = $("#ini").val();
+    console.log(ini);
     return $.get("/log/" + ini, function(data) {
       console.log("getting");
       console.log(data);

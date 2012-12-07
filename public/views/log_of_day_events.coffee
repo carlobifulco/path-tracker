@@ -3,7 +3,9 @@ $("#get_data").click(()->
 
 
 
-get_data=(ini=$("#ini").val())->
+get_data=(e=false)=>
+  ini=$("#ini").val()
+  console.log ini
   $.get("/log/#{ini}", (data)=>
     console.log "getting"
     console.log data
