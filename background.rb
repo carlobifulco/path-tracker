@@ -6,6 +6,12 @@ require 'rufus/scheduler'
 require 'report_new'
 
 
+#####MongoDumping
+DUMP_DIRECTORY= "/Users/carlobifulco/Dropbox/mongo_path_tracker"
+Dir.mkdir DUMP_DIRECTORY unless Dir.exists? DUMP_DIRECTORY
+Dir.mkdir (DUMP_DIRECTORY+"/dump") unless Dir.exists? (DUMP_DIRECTORY+"/dump") 
+
+
 #Scheduling
 #-----------
 

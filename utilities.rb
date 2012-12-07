@@ -202,6 +202,17 @@ def import_production
   system command
 end
 
+# write mongo in dump directory
+def mongodump
+  case  $data_basename
+    when 'path-tracker'
+      command= "mongodump -d path-tracker -o /Users/carlobifulco/Dropbox/mongo_path_tracker/dump"
+      puts command
+      system command
+    when 'test'
+      puts "Cannot dump a testing database"
+  end
+end
 
 
 

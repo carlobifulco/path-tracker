@@ -18,9 +18,7 @@ require "redis-namespace"
 #####Configuration
 #-------------
 
-#####MongoDumping
-DUMP_DIRECTORY= "/Users/carlobifulco/mongodump"
-Dir.mkdir DUMP_DIRECTORY unless Dir.exists? DUMP_DIRECTORY
+
 
 
 #####Redis configutation
@@ -37,7 +35,7 @@ $redis.select UseDb
 #####Dump of database
 #-----------------
 
-system "whenever  --load-file #{File.join $my_directory,'config/schedule.rb'} --update-crontab "
+# system "whenever  --load-file #{File.join $my_directory,'config/schedule.rb'} --update-crontab "
 
 
 ####Holidays observed at work

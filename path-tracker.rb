@@ -127,6 +127,7 @@ end
 post "/entry" do
   #puts "the request is coming from #{request.ip} at #{Time.now}"
   log=Log.new
+  puts "Created new log with a date of : #{log.date}"
   log.request=params.to_json
   log.time=Time.now.utc
   log.path_ini=request["path_name"]
