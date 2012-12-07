@@ -305,6 +305,10 @@ get "/api" do
   erb :api
 end
 
+get "/log_of_day_events" do
+  protected!
+  erb :log_of_day_events
+end
 
 
 #### Experiments
