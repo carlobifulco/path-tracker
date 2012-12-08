@@ -19,7 +19,7 @@ gem "redis-namespace"
 gem 'rserve-simpler'
 gem "sinatra-websocket"
 gem "bson_ext"
-
+gem 'chronic'
 gem "statsample"
 
 

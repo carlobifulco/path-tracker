@@ -120,6 +120,7 @@ PLATFORMS
 DEPENDENCIES
   bson_ext
   business_time
+  chronic
   coffee-script
   holidays
   mongo_mapper

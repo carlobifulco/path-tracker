@@ -135,7 +135,11 @@ class DistReport
         r[k]=v-general_day_points_mean
       end
     end
-    r
+    if r=={} 
+      return 0
+    else 
+      return r
+    end 
   end
 
 end
