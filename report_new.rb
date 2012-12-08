@@ -114,6 +114,14 @@ class DistReport
     end
   end
 
+  def cleanNaN x
+    if (x.respond_to? :nan? and x.nan?)
+      return 0
+    else
+      return x
+    end
+  end
+
   def general_day_points_tot
     @tot_each.map {|x| x.values[0]}.reduce(:+) unless @tot_each ==nil
   end
@@ -122,8 +130,9 @@ class DistReport
     if @tot_each == nil then return end
     @values=@tot_each.map {|x| x.values[0]}
     $r.assign "values", @values
-    @general_day_points_mean = $r >>"mean(values)"
-    @general_day_points_sd= $r >> "sd(values)"
+    @general_day_points_mean = cleanNaN($r >>"mean(values)")
+    @general_day_points_sd= cleanNaN($r >> "sd(values)")
+
     {:mean => @general_day_points_mean, :sd => @general_day_points_sd, :values=> @values}
   end
 
