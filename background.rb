@@ -3,6 +3,7 @@ $LOAD_PATH << my_directory; $LOAD_PATH << File.join(my_directory,'/lib')
 
 
 require 'rufus/scheduler'
+require 'chronic'
 require 'report_new'
 
 
@@ -18,10 +19,11 @@ Dir.mkdir (DUMP_DIRECTORY+"/dump") unless Dir.exists? (DUMP_DIRECTORY+"/dump")
 $scheduler = Rufus::Scheduler.start_new
 
 
-# at 23 hours on all days 
-$scheduler.cron '0 23 * * 1-7' do
+# every hour
+$scheduler.every '1h' do
+#$scheduler.cron '0 23 * * 1-7' do
   # every day of the week at 11pm
-  puts 'activate reportimg system'
+  puts 'activate reporting system'
   report_build
   puts "report completed"
 end

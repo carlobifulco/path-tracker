@@ -498,7 +498,7 @@ class Log
   safe
   key :path_ini, String
   key :request, String
-  key :date, Time, :default=>Date.today.to_time.utc
+  key :date, Time
   key :time, Time
   key :ip, String
 

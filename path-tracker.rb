@@ -131,6 +131,7 @@ post "/entry" do
   log.request=params.to_json
   log.time=Time.now.utc
   log.path_ini=request["path_name"]
+  log.date=Date.today.to_time.utc
   log.ip=request.ip
   log.save
   puts params
