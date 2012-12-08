@@ -51,6 +51,16 @@ enable :sessions
 helpers do
   def admin? ; request.cookies[settings.username] == settings.token ; end
   def protected! ; halt [ 401, '<h4>Not Authorized. <a href="/login"> Login </a> with proper credentials.</h4>' ] unless admin? ; end
+  def log_event n
+    log=Log.new
+    log.request=params.to_json
+    log.time=Time.now.utc
+    log.path_ini=request["path_name"]
+    log.date=get_business_utc n
+    log.ip=request.ip
+    puts "Created new log with a date of : #{log.date}"
+    log.save
+  end
 end
 
 
@@ -126,14 +136,7 @@ end
 #main data entry for days slides/activities
 post "/entry" do
   #puts "the request is coming from #{request.ip} at #{Time.now}"
-  log=Log.new
-  puts "Created new log with a date of : #{log.date}"
-  log.request=params.to_json
-  log.time=Time.now.utc
-  log.path_ini=request["path_name"]
-  log.date=Date.today.to_time.utc
-  log.ip=request.ip
-  log.save
+  log_event 0
   puts params
   on_array=[]; t=Today.new; path_name=params['path_name']
   params.keys.each do |key|
@@ -194,6 +197,7 @@ end
 post "/tomorrow" do
   puts "***************Tomorrow baby***********"
   puts params
+  log_event 1
   on_array=[]; t=Today.new 1; path_name=params['path_name']
   params.keys.each do |key|
     value=params[key]
