@@ -303,6 +303,10 @@ get "/log/:ini" do |ini|
   Log.get_ini ini
 end
 
+get "/log/:ini/:n" do |ini,n|
+   Log.get_ini n,ini
+end
+
 
 ### API's summary
 get "/api" do
