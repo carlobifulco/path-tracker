@@ -304,7 +304,7 @@ get "/log/:ini" do |ini|
 end
 
 get "/log/:ini/:n" do |ini,n|
-   Log.get_ini n,ini
+   Log.get_ini n.to_i,ini
 end
 
 
