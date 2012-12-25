@@ -273,6 +273,13 @@ get '/report_activity_points/:name/:subspecialty' do |name, subspecialty|
 end
 
 
+
+post '/entry_click_log' do
+  log_event 0
+  puts params
+end
+
+
 ####APIs
 #-------
 #xxx

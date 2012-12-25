@@ -129,6 +129,8 @@ show_cardinal=()->
   $.get("/activities_cardinal", (data)->
     window.cardinal_data=JSON.parse data
     render_template("cardinal", data)
+    #click_log
+    checkbox_click()
     )
 window.show_cardinal=show_cardinal
 
@@ -160,6 +162,7 @@ window.update=update
 show=(id)->
   $("#status_html").hide()
   window.id=id
+
   render_template("id",({id: id} ))
   #render cardinal template
   show_cardinal()
@@ -204,6 +207,14 @@ entry_click=()->
 window.entry_click=entry_click
 
 
+checkbox_click=()->
+   $('[type=checkbox]').click((e)->
+      console.log e
+      console.log "#{window.id}; #{e.srcElement.id}: #{e.srcElement.checked}"
+    )
+window.checkbox_click=checkbox_click
+
+
 
 window.show=show
 
@@ -212,6 +223,7 @@ $(document).ready =>
   console.log "here I am"
   #show_cardinal()
   #show_regular()
+
   show_sparklines()
   KeyboardJS.bind.key("enter",serialize)
 

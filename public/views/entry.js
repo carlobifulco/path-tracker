@@ -1,5 +1,5 @@
 (function() {
-  var decorate, entry_click, get_activities, has_a_distribution_preference, has_a_location, has_a_specialty, icons, render, render_template, serialize, show, show_cardinal, show_regular, show_sparklines, update, update_yaml,
+  var checkbox_click, decorate, entry_click, get_activities, has_a_distribution_preference, has_a_location, has_a_specialty, icons, render, render_template, serialize, show, show_cardinal, show_regular, show_sparklines, update, update_yaml,
     _this = this;
 
   update_yaml = function() {
@@ -178,7 +178,8 @@
   show_cardinal = function() {
     return $.get("/activities_cardinal", function(data) {
       window.cardinal_data = JSON.parse(data);
-      return render_template("cardinal", data);
+      render_template("cardinal", data);
+      return checkbox_click();
     });
   };
 
@@ -256,6 +257,15 @@
   };
 
   window.entry_click = entry_click;
+
+  checkbox_click = function() {
+    return $('[type=checkbox]').click(function(e) {
+      console.log(e);
+      return console.log("" + window.id + "; " + e.srcElement.id + ": " + e.srcElement.checked);
+    });
+  };
+
+  window.checkbox_click = checkbox_click;
 
   window.show = show;
 
