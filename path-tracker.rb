@@ -16,7 +16,7 @@ require "web_data"
 #require "bundler/setup"
 require 'coffee-script'
 
-require 'sinatra-websocket'
+#require 'sinatra-websocket'
 #require "report_svg"
 #require "report_new"
 
@@ -25,7 +25,7 @@ require 'sinatra-websocket'
 
 
 set :server, 'thin'
-set :sockets, []
+#set :sockets, []
 
 
 set :username,'total'
@@ -331,91 +331,91 @@ end
 #### Experiments
 #------------------
 
-get '/websocket' do
-  if !request.websocket?
-    puts "#{request} #{request.params()} #{!request.websocket?}"
-    erb :websocket
-  else
-    request.websocket do |ws|
-      ws.onopen do
-        ws.send("Hello World!")
-        settings.sockets << ws
-      end
-      ws.onmessage do |msg|
-        EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
-      end
-      ws.onclose do
-        warn("wetbsocket closed")
-        settings.sockets.delete(ws)
-      end
-    end
-  end
-end
+# get '/websocket' do
+#   if !request.websocket?
+#     puts "#{request} #{request.params()} #{!request.websocket?}"
+#     erb :websocket
+#   else
+#     request.websocket do |ws|
+#       ws.onopen do
+#         ws.send("Hello World!")
+#         settings.sockets << ws
+#       end
+#       ws.onmessage do |msg|
+#         EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
+#       end
+#       ws.onclose do
+#         warn("wetbsocket closed")
+#         settings.sockets.delete(ws)
+#       end
+#     end
+#   end
+# end
 
 
 
 #scockets games
 
-get "/test" do
-  puts request
-  if !request.websocket?
-    erb :test
-  else
-    request.websocket do |ws|
-      ws.onopen do
-        ws.send("Hello World!")
-        settings.sockets << ws
-      end
-      ws.onmessage do |msg|
-        puts "this is the msg: #{msg}"
-        EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
-      end
-      ws.onclose do
-        warn("wetbsocket closed")
-        settings.sockets.delete(ws)
-      end
-    end
-  end
-end
+# get "/test" do
+#   puts request
+#   if !request.websocket?
+#     erb :test
+#   else
+#     request.websocket do |ws|
+#       ws.onopen do
+#         ws.send("Hello World!")
+#         settings.sockets << ws
+#       end
+#       ws.onmessage do |msg|
+#         puts "this is the msg: #{msg}"
+#         EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
+#       end
+#       ws.onclose do
+#         warn("wetbsocket closed")
+#         settings.sockets.delete(ws)
+#       end
+#     end
+#   end
+# end
 
 
 
-__END__
-@@ websocket
-<html>
-  <body>
-     <h1>Simple Echo & Chat Server</h1>
-     <form id="form">
-       <input type="text" id="input" value="send a message"></input>
-     </form>
-     <div id="msgs"></div>
-  </body>
+#__END__
+# @@ websocket
+# <html>
+#   <body>
+#      <h1>Simple Echo & Chat Server</h1>
+#      <form id="form">
+#        <input type="text" id="input" value="send a message"></input>
+#      </form>
+#      <div id="msgs"></div>
+#   </body>
 
-  <script type="text/javascript">
-    window.onload = function(){
-      (function(){
-        var show = function(el){
-          return function(msg){ el.innerHTML = msg + '<br />' + el.innerHTML; }
-        }(document.getElementById('msgs'));
+#   <script type="text/javascript">
+#     window.onload = function(){
+#       (function(){
+#         var show = function(el){
+#           return function(msg){ el.innerHTML = msg + '<br />' + el.innerHTML; }
+#         }(document.getElementById('msgs'));
 
-        var ws       = new WebSocket('ws://' + window.location.host + window.location.pathname);
-        ws.onopen    = function()  { show('websocket opened'); };
-        ws.onclose   = function()  { show('websocket closed'); }
-        ws.onmessage = function(m) { show('websocket message: ' +  m.data); };
+#         var ws       = new WebSocket('ws://' + window.location.host + window.location.pathname);
+#         ws.onopen    = function()  { show('websocket opened'); };
+#         ws.onclose   = function()  { show('websocket closed'); }
+#         ws.onmessage = function(m) { show('websocket message: ' +  m.data); };
 
-        var sender = function(f){
-          var input     = document.getElementById('input');
-          input.onclick = function(){ input.value = "" };
-          f.onsubmit    = function(){
-            ws.send(input.value);
-            input.value = "send a message";
-            return false;
-          }
-        }(document.getElementById('form'));
-      })();
-    }
-  </script>
-</html>
+#         var sender = function(f){
+#           var input     = document.getElementById('input');
+#           input.onclick = function(){ input.value = "" };
+#           f.onsubmit    = function(){
+#             ws.send(input.value);
+#             input.value = "send a message";
+#             return false;
+#           }
+#         }(document.getElementById('form'));
+#       })();
+#     }
+#   </script>
+# </html>
 
 
 
