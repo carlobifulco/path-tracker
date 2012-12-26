@@ -260,8 +260,16 @@
 
   checkbox_click = function() {
     return $('[type=checkbox]').click(function(e) {
+      var data;
       console.log(e);
-      return console.log("" + window.id + "; " + e.srcElement.id + ": " + e.srcElement.checked);
+      console.log("" + window.id + "; " + e.srcElement.id + ": " + e.srcElement.checked);
+      data = {
+        path_name: window.id,
+        click: "" + e.srcElement.id + ": " + e.srcElement.checked
+      };
+      return $.post("/entry_click_log", data, function(e) {
+        return console.log("Post of click returned:" + e);
+      });
     });
   };
 
@@ -270,7 +278,7 @@
   window.show = show;
 
   $(document).ready(function() {
-    console.log("here I am");
+    console.log("here I am, suffering");
     show_sparklines();
     return KeyboardJS.bind.key("enter", serialize);
   });

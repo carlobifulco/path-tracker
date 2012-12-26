@@ -211,7 +211,12 @@ checkbox_click=()->
    $('[type=checkbox]').click((e)->
       console.log e
       console.log "#{window.id}; #{e.srcElement.id}: #{e.srcElement.checked}"
-    )
+      data=
+        path_name: window.id
+        click: "#{e.srcElement.id}: #{e.srcElement.checked}"
+      $.post("/entry_click_log", data, (e)->
+        console.log "Post of click returned:#{e}")
+      )
 window.checkbox_click=checkbox_click
 
 
@@ -220,11 +225,12 @@ window.show=show
 
 
 $(document).ready =>
-  console.log "here I am"
+  console.log "here I am, suffering"
   #show_cardinal()
   #show_regular()
 
   show_sparklines()
   KeyboardJS.bind.key("enter",serialize)
+
 
 

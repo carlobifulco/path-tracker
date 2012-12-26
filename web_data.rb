@@ -403,6 +403,16 @@ class Activity
           a.save
         end
       end
+      # this should log any activity destructiom
+      puts "Destruction happening, trying to log"
+      l=Log.new
+      l.path_ini=self.ini
+      l.time=Time.now.utc()
+      l.date=get_business_utc(0)
+      l.request={"database destruction"=>1}.to_json
+      l.ip=self.name
+      puts l, l.path_ini, l.date, l.request
+      l.save
   end
 
   def self.today n=0
@@ -514,7 +524,7 @@ class Log
       text <<"</ul>"
       text.join
     else 
-      return false
+      return "<h6>No Matches;  Please Use initials in CAPS</h6>"
     end
   end
 end

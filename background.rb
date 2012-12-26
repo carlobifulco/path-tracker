@@ -20,7 +20,8 @@ $scheduler = Rufus::Scheduler.start_new
 
 
 # every hour
-$scheduler.every '1h' do
+$scheduler.cron '0 23 * * 1-7' do
+#$scheduler.every '24h' do
 #$scheduler.cron '0 23 * * 1-7' do
   # every day of the week at 11pm
   puts 'activate reporting system'

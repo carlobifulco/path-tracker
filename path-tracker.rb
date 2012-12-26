@@ -277,6 +277,7 @@ end
 post '/entry_click_log' do
   log_event 0
   puts params
+  return {:ok=>1}.to_json
 end
 
 
