@@ -24,15 +24,5 @@
   <string>/var/log/path-tracker/mongo.log</string>
   <key>StandardOutPath</key>
     <string>/var/log/path-tracker/mongo.log</string>
-
-  <key>HardResourceLimits</key>
-
-  <key>NumberOfFiles</key>
-  <integer>1024</integer>
-
-  <key>SoftResourceLimits</key>
-
-  <key>NumberOfFiles</key>
-  <integer>1024</integer>
 </dict>
 </plist>
