@@ -24,14 +24,14 @@
   <string>/var/log/path-tracker/mongo.log</string>
   <key>StandardOutPath</key>
     <string>/var/log/path-tracker/mongo.log</string>
-</dict>
-<key>HardResourceLimits</key>
-<dict>
+
+  <key>HardResourceLimits</key>
+
   <key>NumberOfFiles</key>
   <integer>1024</integer>
-</dict>
-<key>SoftResourceLimits</key>
-<dict>
+
+  <key>SoftResourceLimits</key>
+
   <key>NumberOfFiles</key>
   <integer>1024</integer>
 </dict>
