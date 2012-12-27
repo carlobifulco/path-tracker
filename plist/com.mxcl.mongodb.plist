@@ -6,10 +6,11 @@
   <string>homebrew.mxcl.mongodb</string>
   <key>ProgramArguments</key>
   <array>
-    <string>/usr/local/bin/mongod  --rest</string>
+    <string>/usr/local/bin/mongod</string>
     <string>run</string>
     <string>--config</string>
     <string>/usr/local/etc/mongod.conf</string>
+     <string>--rest</string>
   </array>
   <key>RunAtLoad</key>
   <true/>
