@@ -6,7 +6,7 @@
   <string>homebrew.mxcl.mongodb</string>
   <key>ProgramArguments</key>
   <array>
-    <string>ulimit -n 1000 && /usr/local/bin/mongod</string>
+    <string>/usr/local/bin/mongod</string>
     <string>run</string>
     <string>--config</string>
     <string>/usr/local/etc/mongod.conf</string>
