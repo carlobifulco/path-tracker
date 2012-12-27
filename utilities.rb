@@ -174,6 +174,7 @@ def clean
     Activity.delete_all
     Pathologist.delete_all
     DayReport.delete_all
+    Log.delete_all
     puts " YOU HAVE A CLEAN DATABASE"
   else
     puts "CANNOT CLEAN A PRODUCTION SETTING..."

@@ -16,16 +16,13 @@ require "web_data"
 #require "bundler/setup"
 require 'coffee-script'
 
-#require 'sinatra-websocket'
-#require "report_svg"
-#require "report_new"
 
 
 
 
 
 set :server, 'thin'
-#set :sockets, []
+
 
 
 set :username,'total'
@@ -326,6 +323,12 @@ get "/log_of_day_events" do
   protected!
   erb :log_of_day_events
 end
+
+
+#require 'sinatra-websocket'
+#require "report_svg"
+#require "report_new"
+#set :sockets, []
 
 
 #### Experiments

@@ -529,6 +529,8 @@ class Log
   end
 end
 
+Log.ensure_index([[:date, -1], [:path_ini_id, 1]])
+
 
 
 
