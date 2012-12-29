@@ -1,5 +1,5 @@
 (function() {
-  var checkbox_click, decorate, entry_click, get_activities, has_a_distribution_preference, has_a_location, has_a_specialty, icons, render, render_template, serialize, show, show_cardinal, show_regular, show_sparklines, update, update_yaml,
+  var checkbox_click, decorate, entry_click, get_activities, has_a_distribution_preference, has_a_location, has_a_specialty, icons, log_activities, render, render_template, serialize, show, show_cardinal, show_regular, show_sparklines, update, update_yaml,
     _this = this;
 
   update_yaml = function() {
@@ -218,6 +218,7 @@
       var activities, i, _i, _len, _ref, _results;
       data = JSON.parse(data);
       activities = data["path"]["" + id];
+      log_activities(id, activities);
       _ref = _.keys(activities);
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -231,6 +232,24 @@
     });
   };
 
+  log_activities = function(id, activities) {
+    var payload;
+    if (activities == null) {
+      activities = {
+        test: "OK"
+      };
+    }
+    payload = {
+      id: id,
+      activities: activities || "None"
+    };
+    return $.post('/activity_update_log', payload, function(e) {
+      return console.log(e);
+    });
+  };
+
+  window.log_activities = log_activities;
+
   serialize = function() {
     var data;
     data = $("#entry").serializeArray();
@@ -239,9 +258,10 @@
     return $.post("/entry", $("#entry").serializeArray(), function(e) {
       if (JSON.parse(e)["ok"]) {
         alert("Data updated");
-        return show_sparklines(function() {
+        show_sparklines(function() {
           return $("#" + ($("#path_name").val())).css("color", "red");
         });
+        return show($("#path_name").val());
       }
     });
   };

@@ -514,7 +514,7 @@ class Log
 
 
   def self.get_ini n=0, path_ini
-    d=where(:date=>get_business_utc(n), :path_ini=>path_ini)
+    d=where(:date=>get_business_utc(n), :path_ini=>path_ini).sort(:time)
     d=d.to_a if d
     text=[]<<"<h1>Log</h1><ul>"
     if d.count >0 

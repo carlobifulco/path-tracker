@@ -172,11 +172,21 @@ show=(id)->
   $.get("/path/activities/points",(data)=>
     data=JSON.parse(data)
     activities=data["path"]["#{id}"]
+    log_activities id, activities
     update(i,activities[i].n) for i in _.keys(activities))
   #update all  sparklines
   show_sparklines(()->$("##{id}").css("color", "red"))
   #$(".show_entry").css("color", "")
 
+
+####logging of activities updates
+log_activities=(id,activities={test:"OK"})->
+  payload=
+    id: id
+    activities: activities or "None"
+  $.post('/activity_update_log',payload, (e)->
+    console.log e)
+window.log_activities=log_activities
 
 
 #serialize and call post /entry
@@ -188,6 +198,8 @@ serialize=()->
     if JSON.parse(e)["ok"]
       alert "Data updated"
       show_sparklines(()->$("##{$("#path_name").val()}").css("color", "red"))
+      #### Not sure this makes sense XXX duplication of the above line
+      show($("#path_name").val())
   )
 
 window.serialize=serialize

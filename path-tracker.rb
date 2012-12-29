@@ -277,6 +277,23 @@ post '/entry_click_log' do
   return {:ok=>1}.to_json
 end
 
+post '/activity_update_log' do
+  puts params
+  id=params["id"]
+  activities=(params["activities"] or {:activities => "none"})
+  puts id, activities
+
+  log=Log.new
+  log.request=activities.to_json
+  log.time=Time.now.utc
+  log.path_ini=id
+  log.date=get_business_utc 0
+  log.ip=request.ip
+    # puts "Created new log with a date of : #{log.date}"
+  log.save
+  return {:ok=>1}.to_json
+end
+
 
 ####APIs
 #-------
