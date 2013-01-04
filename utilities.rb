@@ -216,6 +216,23 @@ def mongodump
 end
 
 
+def install_plist
+  plist_path="./plist/com.mxcl.pathtracker.plist"
+  new_ruby_exe=(`ls /Users/carlobifulco/.rbenv/versions/`).strip()
+  plist=File.read  plist_path
+  m=plist.match /<string>\/Users\/carlobifulco\/\.rbenv\/versions\/(.*)\/bin/
+  old_ruby_exe=m.captures[0]
+  plist.gsub! old_ruby_exe, new_ruby_exe
+  fh=File.new plist_path, "w"
+  fh.write plist
+  fh.close
+  `sudo cp ./plist/* /Library/LaunchDaemons/`
+  puts "new plist in /Library/LaunchDaemons using  #{new_ruby_exe}"
+  `sudo mkdir /var/log/path-tracker` unless Dir.exists? "/var/log/path-tracker"
+  `sudo touch /var/log/path-tracker/path-tracker.log` unless File.exists? "/var/log/path-tracker/path-tracker.log"
+  `sudo chown -R carlobifulco /var/log/path-tracker`
+
+end
 
 
 
