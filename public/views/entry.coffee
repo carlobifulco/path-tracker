@@ -98,10 +98,13 @@ window.has_a_distribution_preference=has_a_distribution_preference
 
 
 
+
 #wrapper around the rendering; uses the html target convention "id_html"
 render_template=(id,data)->
   $("##{id}_html").html(render(data,($("##{id}_template")[0]).innerHTML))
 window.render_template=render_template
+
+
 
 show_sparklines=(func=false)->
   $.get("/get_entry",(data)=>
@@ -192,9 +195,13 @@ window.log_activities=log_activities
 #serialize and call post /entry
 serialize=()->
   data=$("#entry").serializeArray()
+  all_values=$("input:text")
+  checked=[i.name for i in $("input:checked")]
+  console.log "checked before submission: #{checked}"
   console.log data
   window.data=data
-  $.post("/entry",$("#entry").serializeArray(), (e)->
+  log_activities $("#path_name").val(), {checked_before_submisstion: "#{checked}"}
+  $.post("/entry",data, (e)->
     if JSON.parse(e)["ok"]
       alert "Data updated"
       show_sparklines(()->$("##{$("#path_name").val()}").css("color", "red"))
