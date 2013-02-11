@@ -37,6 +37,11 @@ if ARGV[0] =="production" then switch_to_production; set :port, 5000 ; end
 MongoMapper.database = $data_basename
 DATA=YAML.load(File.read $data_file)
 
+#####Slide conversion factor
+#------------------------
+SLIDES_CONVERSION_FACTOR=DATA["slides_conversion_factor"]
+
+
 ### these need to have an existing database connection
 require "utilities"
 require "report_svg"

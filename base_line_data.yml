@@ -25,6 +25,7 @@ initials:
   - "JAO"
 
 
+slides_conversion_factor: 1
 
 regular_activities:
   Slides-large-cases: 1
@@ -44,6 +45,7 @@ regular_activities:
   Diagnostic-Liver: 8
   MSI: 4
   Transfusion-reaction-consults: 5
+  Neogenomics: 5
 
 
 

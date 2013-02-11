@@ -10,6 +10,7 @@ require "holidays"
 require "mongo_mapper"
 require "redis"
 require "redis-namespace"
+require "web_data"
 
 
 
@@ -82,9 +83,6 @@ end
 
 
 
-#####Slide conversion factor
-#------------------------
-SLIDES_CONVERSION_FACTOR=0.8
 
 
 
