@@ -10,7 +10,7 @@ require "holidays"
 require "mongo_mapper"
 require "redis"
 require "redis-namespace"
-require "web_data"
+#require "web_data"
 
 
 
@@ -54,7 +54,6 @@ def switch_to_testing
   $data_basename='test'
   $data_file=File.join($my_directory,"./base_line_data.yml")
   $redis_testing=true
-  set :port, 5000
   puts "SWITTCHED TO TEST DATABASE"
 
   puts "********************************************************"
@@ -76,10 +75,37 @@ def switch_to_production
   MongoMapper.database = $data_basename
 end
 
+####decides if testing or production based on working directory
+#Testing unless prduction
+puts "HELLO FROM YOU FRIENDLY PATH-TRACKER; my #{ARGV}"
+
+unless ARGV[0] =="production"
+  case File.basename($my_directory)
+    when "path-tracker-deploy"
+      puts "I am deploying production"
+      switch_to_production
+    when "path-tracker"
+      puts "I am deployng testing"
+      switch_to_testing
+  end
+end
+
+
+
 #### Remote login into mongohq  --too slow in real life
 #mongoHQ command line mongo alex.mongohq.com:10029/path-tracker -u carlobifulco  -p bifulcocarlo
 #MongoMapper.connection = Mongo::Connection.new('alex.mongohq.com',10029)
 #MongoMapper.database.authenticate('carlobifulco', 'bifulcocarlo')
+
+
+#### Local logins
+MongoMapper.database = $data_basename
+DATA=YAML.load(File.read $data_file)
+
+#####Slide conversion factor
+#------------------------
+SLIDES_CONVERSION_FACTOR=DATA["slides_conversion_factor"]
+
 
 
 

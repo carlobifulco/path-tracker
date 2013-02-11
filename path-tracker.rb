@@ -5,14 +5,16 @@ $LOAD_PATH << File.join(my_directory,'/lib')
 $LOAD_PATH << my_directory
 
 require "bundler/setup"
-require "sinatra"
-require "configuration"
+
 require "mongo_mapper"
+require "configuration"
+
 
 
 
 
 require "web_data"
+require "sinatra"
 #require "bundler/setup"
 require 'coffee-script'
 

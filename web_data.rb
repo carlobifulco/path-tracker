@@ -4,42 +4,15 @@ $LOAD_PATH << my_directory
 
 
 require "mongo_mapper"
-
+require "configuration"
 require "whenever"
 require 'business_time'
 require "holidays"
 require "interface"
-require "sinatra"
-require "configuration"
 
 
 
-####decides if testing or production based on working directory
-#Testing unless prduction
-puts "HELLO FROM YOU FRIENDLY PATH-TRACKER; my #{ARGV}"
 
-unless ARGV[0] =="production"
-  case File.basename(my_directory)
-    when "path-tracker-deploy"
-      puts "I am deploying production"
-      switch_to_production
-    when "path-tracker"
-      puts "I am deployng testing"
-      switch_to_testing
-  end
-end
-
-#overrides entry if needed
-if ARGV[0] =="production" then switch_to_production; set :port, 5000 ; end
-
-
-#### Local logins
-MongoMapper.database = $data_basename
-DATA=YAML.load(File.read $data_file)
-
-#####Slide conversion factor
-#------------------------
-SLIDES_CONVERSION_FACTOR=DATA["slides_conversion_factor"]
 
 
 ### these need to have an existing database connection
