@@ -287,10 +287,10 @@
 
   entry_click = function() {
     return $('[type=text]').click(function(e) {
-      if (e.srcElement) {
-        console.log(e);
-        console.log("e scrElement: " + e.srcElement.value);
-        return e.srcElement.value = Number(e.srcElement.value) + Number(prompt("Add:"));
+      console.log(e);
+      if (e.target) {
+        console.log("e scrElement: " + e.target.value);
+        return e.target.value = Number(e.target.value) + Number(prompt("Add:"));
       }
     });
   };

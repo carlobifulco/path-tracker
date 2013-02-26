@@ -215,10 +215,11 @@ window.serialize=serialize
 #activate prompt on entry
 entry_click=()->
   $('[type=text]').click((e)->
-    if e.srcElement
-      console.log e
-      console.log "e scrElement: #{e.srcElement.value}" 
-      e.srcElement.value=Number(e.srcElement.value)+Number(prompt("Add:"))
+    console.log e
+    if e.target
+      
+      console.log "e scrElement: #{e.target.value}" 
+      e.target.value=Number(e.target.value)+Number(prompt("Add:"))
 
       #console.log e
       #console.log input_base
