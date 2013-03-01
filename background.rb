@@ -20,7 +20,7 @@ $scheduler = Rufus::Scheduler.start_new
 
 
 # every hour
-$scheduler.cron '0 23 * * 1-7' do
+$scheduler.cron '0 * * * 1-7' do
 #$scheduler.every '24h' do
 #$scheduler.cron '0 23 * * 1-7' do
   # every day of the week at 11pm

@@ -467,9 +467,9 @@ class Activity
 
     return ((m.map {|x| x.n}.reduce(:+)) or 0)
     #.map{|x| x.n}.reduce(:+)
-
   end
 
+ 
   def update_tot_points
       self.tot_points=self.points*self.n
   end

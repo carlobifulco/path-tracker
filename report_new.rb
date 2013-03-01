@@ -9,6 +9,13 @@ require 'rufus/scheduler'
 require 'report_svg'
 
 
+class Date
+  def off?
+    self.sunday? or self.saturday? or self.holiday?
+  end
+end
+
+
 
 class DayReport
   include MongoMapper::Document
@@ -27,6 +34,7 @@ class DayReport
   key :general_day_points_mean, Float
   key :general_day_points_sd, Float
   key :general_day_points_variation, String
+  key :n_histology_slides_distributed, Integer
 
  ######Returns only one DayReport and always the same for a certain day
   #
@@ -98,7 +106,7 @@ class DistReport
 
   def initialize n=0
     @n=n
-    #@tdc=Tdc.today(n)
+ 
     #@pc=PointsCalculator.new(n)
     @r={}
     @all=(Activity.where :date=>get_business_utc(n),:specialty_only =>false).all.map {|x| {x.ini=> x}}
@@ -120,6 +128,10 @@ class DistReport
     else
       return x
     end
+  end
+
+  def n_histology_slides_distributed n=0
+    Today.new(n).n_histology_slides_distributed
   end
 
   def general_day_points_tot
@@ -204,7 +216,11 @@ def report_build n=0
   s=SetupReport.new n
   dr.slides_blocks_ratio=(s.get_general_slides_blocks_ratio or 0)
   dr.left_over_previous_day_slides=(s.get_left_over_previous_day_slides or 0)
-  dr.pathologist_working=(s.get_pathologist_working or 0)
+  if Date.today.off?
+    dr.pathologist_working=(s.get_pathologist_working or 0)
+  else
+    dr.pathologist_working=0
+  end
   #load distribution reports
   d=DistReport.new n
   #xxx
@@ -213,6 +229,7 @@ def report_build n=0
   dr.general_day_points_mean= (d.general_day_points_mean or 0)
   dr.general_day_points_sd= (d.general_day_points_sd or 0)
   dr.general_day_points_variation = (d.get_diff_for_each_path or 0).to_json
+  dr.n_histology_slides_distributed=(d.n_histology_slides_distributed or 0)
   dr.save
 end
 

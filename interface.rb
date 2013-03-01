@@ -183,6 +183,13 @@ class Today
     t.blocks_west+t.blocks_east+t.blocks_hr
   end
 
+  def n_histology_slides_distributed n=0
+    histology_slides=["Slides-large-cases", "Slides-small-cases"]
+    r=Activity.find_all_by_name_and_date(histology_slides, get_business_utc(n))
+    ((r.map {|x| x.n}.reduce(:+)) or 0)
+  end
+
+
 
   # all paths for the day
   # XXX
@@ -213,7 +220,8 @@ class Today
           date: t.date.to_s,
           slides_distributed: pc.general_slides_distributed,
           slides_remaining: slides_remaining,
-          generalist_count:Pathologist.get_number_generalist
+          generalist_count:Pathologist.get_number_generalist,
+          n_histology_slides_distributed: self.n_histology_slides_distributed
           }
     setup[:points_per_pathologist]= pc.predicted_points_per_non_specialist
     return setup
