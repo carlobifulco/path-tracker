@@ -216,7 +216,7 @@ def report_build n=0
   s=SetupReport.new n
   dr.slides_blocks_ratio=(s.get_general_slides_blocks_ratio or 0)
   dr.left_over_previous_day_slides=(s.get_left_over_previous_day_slides or 0)
-  if Date.today.off?
+  if not(Date.today.off?)
     dr.pathologist_working=(s.get_pathologist_working or 0)
   else
     dr.pathologist_working=0
