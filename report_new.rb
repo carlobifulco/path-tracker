@@ -218,6 +218,7 @@ def report_build n=0
   dr.left_over_previous_day_slides=(s.get_left_over_previous_day_slides or 0)
   if not(Date.today.off?)
     dr.pathologist_working=(s.get_pathologist_working or 0)
+    puts "hey reporting "
   else
     dr.pathologist_working=0
   end
