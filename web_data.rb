@@ -15,7 +15,7 @@ require "interface"
 
 
 
-### these need to have an existing database connection
+### these need to have an existing  connection
 require "utilities"
 require "report_svg"
 require "report_new"

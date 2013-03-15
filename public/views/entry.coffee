@@ -231,15 +231,14 @@ window.entry_click=entry_click
 checkbox_click=()->
    $('[type=checkbox]').click((e)->
       console.log e
-      console.log "#{window.id}; #{e.srcElement.id}: #{e.srcElement.checked}"
+      console.log "#{window.id}; #{e.currentTarget.id}: #{e.currentTarget.checked}"
       data=
         path_name: window.id
-        click: "#{e.srcElement.id}: #{e.srcElement.checked}"
+        click: "#{e.currentTarget.id}: #{e.currentTarget.checked}"
       $.post("/entry_click_log", data, (e)->
         console.log "Post of click returned:#{e}")
       )
 window.checkbox_click=checkbox_click
-
 
 
 window.show=show
