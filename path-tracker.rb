@@ -343,6 +343,17 @@ get "/log_of_day_events" do
   erb :log_of_day_events
 end
 
+get "/database_destroy/:n" do |n|
+  @results=Log.where({:request =>{"database destruction"=>1}.to_json, :date => (get_business_utc n.to_i)}).all
+  @results.map!{|x| x.to_json}
+  puts @results
+  erb " <% for @r in @results%>
+  <br> <%=@r  %> <br>
+  <% end %>
+  "
+  
+end
+
 
 #require 'sinatra-websocket'
 #require "report_svg"
