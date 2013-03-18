@@ -207,6 +207,7 @@
 
   show = function(id) {
     var _this = this;
+    window.working = true;
     $("#status_html").hide();
     window.id = id;
     render_template("id", {
@@ -215,17 +216,18 @@
     show_cardinal();
     show_regular();
     $.get("/path/activities/points", function(data) {
-      var activities, i, _i, _len, _ref, _results;
+      var activities, i, _i, _len, _ref;
+      console.log("statrting update, working: " + window.working);
       data = JSON.parse(data);
       activities = data["path"]["" + id];
       log_activities(id, activities);
       _ref = _.keys(activities);
-      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         i = _ref[_i];
-        _results.push(update(i, activities[i].n));
+        update(i, activities[i].n);
       }
-      return _results;
+      window.working = false;
+      return console.log("fonished update, working: " + window.working);
     });
     return show_sparklines(function() {
       return $("#" + id).css("color", "red");
@@ -252,6 +254,8 @@
 
   serialize = function() {
     var all_values, checked, data, i;
+    console.log(window.working);
+    if (window.working === true) return;
     data = $("#entry").serializeArray();
     all_values = $("input:text");
     checked = [
@@ -317,6 +321,7 @@
   window.show = show;
 
   $(document).ready(function() {
+    window.working = false;
     console.log("here I am, suffering");
     show_sparklines();
     return KeyboardJS.bind.key("enter", serialize);

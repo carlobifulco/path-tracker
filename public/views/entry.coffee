@@ -163,6 +163,7 @@ window.update=update
 
 # updates points for specific id initials
 show=(id)->
+  window.working=true
   $("#status_html").hide()
   window.id=id
 
@@ -173,10 +174,14 @@ show=(id)->
   show_regular()
   #update all data
   $.get("/path/activities/points",(data)=>
+    console.log "statrting update, working: #{window.working}"
     data=JSON.parse(data)
     activities=data["path"]["#{id}"]
     log_activities id, activities
-    update(i,activities[i].n) for i in _.keys(activities))
+    update(i,activities[i].n) for i in _.keys(activities)
+    window.working=false
+    console.log "fonished update, working: #{window.working}"
+    )
   #update all  sparklines
   show_sparklines(()->$("##{id}").css("color", "red"))
   #$(".show_entry").css("color", "")
@@ -193,7 +198,12 @@ window.log_activities=log_activities
 
 
 #serialize and call post /entry
+
 serialize=()->
+  console.log window.working
+  #blocks submission in screen update is not finished
+  if window.working==true
+    return 
   data=$("#entry").serializeArray()
   all_values=$("input:text")
   checked=[i.name for i in $("input:checked")]
@@ -244,7 +254,13 @@ window.checkbox_click=checkbox_click
 window.show=show
 
 
+
+
 $(document).ready =>
+  #this is a status flag
+  #is put true while updating screen.  
+  # prevents early submissions by blocking the serialize function
+  window.working=false
   console.log "here I am, suffering"
   #show_cardinal()
   #show_regular()
