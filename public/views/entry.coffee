@@ -31,7 +31,7 @@ icons=()->
 #### HB rendering
 render=(data,html)->
   if typeof(data)=="string"
-    data=JSON.parse(data); console.log data
+    data=JSON.parse(data); #console.log data
   hb=Handlebars.compile(html)
   results=hb(data)
   return results
@@ -114,7 +114,9 @@ show_sparklines=(func=false)->
     #show sparklines
     $('.inlinesparkline').sparkline("html", {type: "bullet",width: '30px' })
     #bind click
-    $(".show_entry").click((e)=>console.log  e.currentTarget.id; show( e.currentTarget.id))
+    $(".show_entry").click((e)=>
+      #console.log  e.currentTarget.id 
+      show( e.currentTarget.id))
     # reddens the selected id
     func() if func
     #show button
@@ -152,7 +154,7 @@ window.show_regular=show_regular
 #### updated input, both checkbox and numeric
 update=(id,n)->
   activity=$("##{id}")
-  console.log activity
+  #console.log activity
   if activity.attr("type")=="checkbox" then activity.attr("checked",true)
   if activity.attr("type")=="text" then activity.val(n)
 window.update=update
@@ -163,6 +165,7 @@ window.update=update
 
 # updates points for specific id initials
 show=(id)->
+  # prevents early submission
   window.working=true
   $("#status_html").hide()
   window.id=id
@@ -174,13 +177,14 @@ show=(id)->
   show_regular()
   #update all data
   $.get("/path/activities/points",(data)=>
-    console.log "statrting update, working: #{window.working}"
+    #console.log "statrting update, working: #{window.working}"
     data=JSON.parse(data)
     activities=data["path"]["#{id}"]
     log_activities id, activities
     update(i,activities[i].n) for i in _.keys(activities)
+    #now can submit 
     window.working=false
-    console.log "fonished update, working: #{window.working}"
+    #console.log "fonished update, working: #{window.working}"
     )
   #update all  sparklines
   show_sparklines(()->$("##{id}").css("color", "red"))
@@ -200,7 +204,7 @@ window.log_activities=log_activities
 #serialize and call post /entry
 
 serialize=()->
-  console.log window.working
+  #console.log window.working
   #blocks submission in screen update is not finished
   if window.working==true
     return 
@@ -208,7 +212,7 @@ serialize=()->
   all_values=$("input:text")
   checked=[i.name for i in $("input:checked")]
   console.log "checked before submission: #{checked}"
-  console.log data
+  #console.log data
   window.data=data
   log_activities $("#path_name").val(), {checked_before_submisstion: "#{checked}"}
   $.post("/entry",data, (e)->
@@ -216,7 +220,7 @@ serialize=()->
       alert "Data updated"
       show_sparklines(()->$("##{$("#path_name").val()}").css("color", "red"))
       #### Not sure this makes sense XXX duplication of the above line
-      show($("#path_name").val())
+      #show($("#path_name").val())
   )
 
 window.serialize=serialize
@@ -225,10 +229,10 @@ window.serialize=serialize
 #activate prompt on entry
 entry_click=()->
   $('[type=text]').click((e)->
-    console.log e
+    #console.log e
     if e.target
       
-      console.log "e scrElement: #{e.target.value}" 
+      #console.log "e scrElement: #{e.target.value}" 
       e.target.value=Number(e.target.value)+Number(prompt("Add:"))
 
       #console.log e
@@ -240,8 +244,8 @@ window.entry_click=entry_click
 
 checkbox_click=()->
    $('[type=checkbox]').click((e)->
-      console.log e
-      console.log "#{window.id}; #{e.currentTarget.id}: #{e.currentTarget.checked}"
+      #console.log e
+      #console.log "#{window.id}; #{e.currentTarget.id}: #{e.currentTarget.checked}"
       data=
         path_name: window.id
         click: "#{e.currentTarget.id}: #{e.currentTarget.checked}"
@@ -261,7 +265,7 @@ $(document).ready =>
   #is put true while updating screen.  
   # prevents early submissions by blocking the serialize function
   window.working=false
-  console.log "here I am, suffering"
+  #console.log "here I am, suffering"
   #show_cardinal()
   #show_regular()
 

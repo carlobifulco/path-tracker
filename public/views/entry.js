@@ -55,10 +55,7 @@
 
   render = function(data, html) {
     var hb, results;
-    if (typeof data === "string") {
-      data = JSON.parse(data);
-      console.log(data);
-    }
+    if (typeof data === "string") data = JSON.parse(data);
     hb = Handlebars.compile(html);
     results = hb(data);
     return results;
@@ -158,7 +155,6 @@
         width: '30px'
       });
       $(".show_entry").click(function(e) {
-        console.log(e.currentTarget.id);
         return show(e.currentTarget.id);
       });
       if (func) func();
@@ -198,7 +194,6 @@
   update = function(id, n) {
     var activity;
     activity = $("#" + id);
-    console.log(activity);
     if (activity.attr("type") === "checkbox") activity.attr("checked", true);
     if (activity.attr("type") === "text") return activity.val(n);
   };
@@ -217,7 +212,6 @@
     show_regular();
     $.get("/path/activities/points", function(data) {
       var activities, i, _i, _len, _ref;
-      console.log("statrting update, working: " + window.working);
       data = JSON.parse(data);
       activities = data["path"]["" + id];
       log_activities(id, activities);
@@ -226,8 +220,7 @@
         i = _ref[_i];
         update(i, activities[i].n);
       }
-      window.working = false;
-      return console.log("fonished update, working: " + window.working);
+      return window.working = false;
     });
     return show_sparklines(function() {
       return $("#" + id).css("color", "red");
@@ -254,7 +247,6 @@
 
   serialize = function() {
     var all_values, checked, data, i;
-    console.log(window.working);
     if (window.working === true) return;
     data = $("#entry").serializeArray();
     all_values = $("input:text");
@@ -271,7 +263,6 @@
       })()
     ];
     console.log("checked before submission: " + checked);
-    console.log(data);
     window.data = data;
     log_activities($("#path_name").val(), {
       checked_before_submisstion: "" + checked
@@ -279,10 +270,9 @@
     return $.post("/entry", data, function(e) {
       if (JSON.parse(e)["ok"]) {
         alert("Data updated");
-        show_sparklines(function() {
+        return show_sparklines(function() {
           return $("#" + ($("#path_name").val())).css("color", "red");
         });
-        return show($("#path_name").val());
       }
     });
   };
@@ -291,9 +281,7 @@
 
   entry_click = function() {
     return $('[type=text]').click(function(e) {
-      console.log(e);
       if (e.target) {
-        console.log("e scrElement: " + e.target.value);
         return e.target.value = Number(e.target.value) + Number(prompt("Add:"));
       }
     });
@@ -304,8 +292,6 @@
   checkbox_click = function() {
     return $('[type=checkbox]').click(function(e) {
       var data;
-      console.log(e);
-      console.log("" + window.id + "; " + e.currentTarget.id + ": " + e.currentTarget.checked);
       data = {
         path_name: window.id,
         click: "" + e.currentTarget.id + ": " + e.currentTarget.checked
@@ -322,7 +308,6 @@
 
   $(document).ready(function() {
     window.working = false;
-    console.log("here I am, suffering");
     show_sparklines();
     return KeyboardJS.bind.key("enter", serialize);
   });
