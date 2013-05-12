@@ -12,9 +12,6 @@ require "interface"
 
 
 
-
-
-
 ### these need to have an existing  connection
 require "utilities"
 require "report_svg"
@@ -27,6 +24,35 @@ class Date
   end
 end
 
+
+module DataUtilities
+
+  
+  def export file_path
+    CSV.open(file_path, "wb") do |csv|
+      headers=self.class.keys.keys.sort
+      puts headers
+      csv << headers
+      self.class.all.each do |c|
+        line=[]
+        headers.each do |h|
+          line<<(c[h]).to_s
+        end
+        csv << line
+      end
+      puts csv
+    end
+  end
+
+
+  def pp
+    self.keys.keys.sort.each do |k|
+      puts "#{k}: #{self[k]}"
+    end
+    nil
+  end
+
+end
 
 ####Business day conversion
 #
@@ -342,8 +368,9 @@ end
 #index Pathologist
 Pathologist.ensure_index([[:date, -1], [:working,-1]])
 
-class Activity
+class Activity 
   include MongoMapper::Document
+  include DataUtilities
   safe
   key :name, String
   key :n,Integer, :default=>0
