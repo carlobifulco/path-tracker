@@ -105,6 +105,7 @@ DATA=YAML.load(File.read $data_file)
 #####Slide conversion factor
 #------------------------
 SLIDES_CONVERSION_FACTOR=DATA["slides_conversion_factor"]
+puts "CONVERSION FACTOR=#{SLIDES_CONVERSION_FACTOR}"
 
 
 

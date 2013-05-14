@@ -277,7 +277,11 @@ class Today
       slides_remaining: pc.predicted_general_slides_pending,
       date: t.date.to_date,
        # avoid 0 division crashes
-      slides_remaining_per_pathologist: pc.predicted_slides_per_non_specialist
+      slides_remaining_per_pathologist: pc.predicted_slides_per_non_specialist,
+      blocks_tot: t.blocks_tot,
+      blocks_general: t.blocks_tot - (t.total_GI + t.total_SO + t.total_ESD),
+      total_cytology: t.total_cytology,
+      generalist_count:Pathologist.get_number_generalist
      }
   end
 
@@ -295,7 +299,11 @@ class Today
       slides_remaining: pc.predicted_general_slides_pending,
       date: t.date.to_date,
        # avoid 0 division crashes
-      slides_remaining_per_pathologist: pc.predicted_slides_per_non_specialist
+      slides_remaining_per_pathologist: pc.predicted_slides_per_non_specialist,
+      blocks_tot: t.blocks_tot,
+      blocks_general: t.blocks_tot - (t.total_GI + t.total_SO + t.total_ESD),
+      total_cytology: t.total_cytology,
+      generalist_count:Pathologist.get_number_generalist
      }
   end
 

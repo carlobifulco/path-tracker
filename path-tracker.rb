@@ -178,6 +178,10 @@ get "/live" do
   erb :live
 end
 
+get "/live_all" do 
+  erb :live_all
+end
+
 get "/get_live" do
   Today.new.get_live.to_json
 end

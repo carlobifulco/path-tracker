@@ -25,7 +25,7 @@ initials:
   - "JAO"
 
 
-slides_conversion_factor: 1
+slides_conversion_factor: 0.8
 
 regular_activities:
   Slides-large-cases: 1
