@@ -25,9 +25,10 @@ initials:
   - "JAO"
 
 
-slides_conversion_factor: 0.8
+slides_conversion_factor: 0.6
 
 regular_activities:
+  Specialty-only-case-number: 1
   Slides-large-cases: 1
   Slides-small-cases: 1
   Non-gyns: 1
