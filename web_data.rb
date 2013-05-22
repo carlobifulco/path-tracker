@@ -86,6 +86,7 @@ end
 # Only TDCs for business days are generated.
 class Tdc
   include MongoMapper::Document
+  include DataUtilities
   safe
   key :pathologists, Array
   many :pathologist, :in => :pathologists #objects are in pathologist; ids in pathologists
@@ -227,6 +228,7 @@ end
 #:Numebr of days is here absolute and not business days (n)
 class Pathologist
   include MongoMapper::Document
+  include DataUtilities
   safe
   belongs_to :tdc
   #initials
@@ -510,6 +512,7 @@ Activity.ensure_index([[:date, -1], [:pathologist_id, 1], [:name,1]])
 
 class Log
   include MongoMapper::Document
+  include DataUtilities
   safe
   key :path_ini, String
   key :request, String
