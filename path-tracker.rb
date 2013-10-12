@@ -35,6 +35,7 @@ set :password,'recall'
 
 ####SINATRA SETUPS
 set :root, File.dirname(__FILE__)
+set :bind, '0.0.0.0'
 
 
 
