@@ -196,6 +196,10 @@ get "/dashboard" do
   erb :dashboard
 end
 
+get "/show_points_system" do
+  File.read("./base_line_data.yml").gsub("\n","<br>")
+end
+
 
 
 post "/tomorrow" do

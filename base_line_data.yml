@@ -1,4 +1,4 @@
-# No keys with spaces inside --not recognized by jQuery
+# Do not use keys with spaces inside --not recognized by jQuery
 
 initials:
   - "MM"
@@ -95,8 +95,8 @@ distribution-preference:
   Lung: "l"
   Breast: "bg"
 
-#slides/points assigned to these will not be counted
-#also, paths doing these will not be counted In the total redistibution pool
+#slides/points assigned to these will not be counted in the total redistribution pool
+#also, paths doing these will not be counted in the total redistibution pool
 
 no-points:
   Dermpath-only: 0
