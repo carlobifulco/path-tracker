@@ -53,9 +53,14 @@ helpers do
   def protected! ; halt [ 401, '<h4>Not Authorized. <a href="/login"> Login </a> with proper credentials.</h4>' ] unless admin? ; end
   def log_event n
     log=Log.new
-    log.request=params.to_json
     log.time=Time.now.utc
     log.path_ini=request["path_name"]
+    if params.has_key? "tomorrow" 
+      params.merge(:tomorrow=>"tomorrow")
+      log.request=params.to_json
+    else
+      log.request=params.to_json
+    end
     log.date=get_business_utc n
     log.ip=request.ip
     puts "Created new log with a date of : #{log.date}"
@@ -295,7 +300,12 @@ post '/activity_update_log' do
   puts id, activities
 
   log=Log.new
-  log.request=activities.to_json
+ if params.has_key? "tomorrow" 
+    activities.merge!(:tomorrow=>"tomorrow")
+    log.request=activities.to_json
+  else
+    log.request=activities.to_json
+  end
   log.time=Time.now.utc
   log.path_ini=id
   log.date=get_business_utc 0

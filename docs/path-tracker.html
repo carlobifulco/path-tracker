@@ -4,35 +4,50 @@ add the current dir  and lib to the load path</p>             </td>             
 <span class="vg">$LOAD_PATH</span> <span class="o">&lt;&lt;</span> <span class="n">my_directory</span>
 
 <span class="nb">require</span> <span class="s2">&quot;bundler/setup&quot;</span>
-<span class="nb">require</span> <span class="s2">&quot;sinatra&quot;</span>
-<span class="nb">require</span> <span class="s2">&quot;configuration&quot;</span>
+
 <span class="nb">require</span> <span class="s2">&quot;mongo_mapper&quot;</span>
+<span class="nb">require</span> <span class="s2">&quot;configuration&quot;</span>
 
 
 
 
-<span class="nb">require</span> <span class="s2">&quot;web_data&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>require "bundler/setup"</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;coffee-script&#39;</span>
 
-<span class="nb">require</span> <span class="s1">&#39;sinatra-websocket&#39;</span>
-<span class="nb">require</span> <span class="s2">&quot;report_svg&quot;</span>
-<span class="nb">require</span> <span class="s2">&quot;new_report&quot;</span>
+<span class="nb">require</span> <span class="s2">&quot;web_data&quot;</span>
+<span class="nb">require</span> <span class="s2">&quot;sinatra&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>require "bundler/setup"</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;coffee-script&#39;</span>
+
 
 
 
 
 
 <span class="n">set</span> <span class="ss">:server</span><span class="p">,</span> <span class="s1">&#39;thin&#39;</span>
-<span class="n">set</span> <span class="ss">:sockets</span><span class="p">,</span> <span class="o">[]</span>
 
 
-<span class="n">set</span> <span class="ss">:username</span><span class="p">,</span><span class="s1">&#39;Bond&#39;</span>
+
+<span class="n">set</span> <span class="ss">:username</span><span class="p">,</span><span class="s1">&#39;total&#39;</span>
 <span class="n">set</span> <span class="ss">:token</span><span class="p">,</span><span class="s1">&#39;shakenN0tstirr3d&#39;</span>
-<span class="n">set</span> <span class="ss">:password</span><span class="p">,</span><span class="s1">&#39;007&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>SINATRA SETUPS</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">set</span> <span class="ss">:root</span><span class="p">,</span> <span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Keeping coffee, compiled JS and html5 in the same directory</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">set</span> <span class="ss">:views</span><span class="p">,</span> <span class="no">Proc</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s2">&quot;public/views&quot;</span><span class="p">)</span> <span class="p">}</span>
+<span class="n">set</span> <span class="ss">:password</span><span class="p">,</span><span class="s1">&#39;recall&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>SINATRA SETUPS</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">set</span> <span class="ss">:root</span><span class="p">,</span> <span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">)</span>
+<span class="n">set</span> <span class="ss">:bind</span><span class="p">,</span> <span class="s1">&#39;0.0.0.0&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Keeping coffee, compiled JS and html5 in the same directory</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">set</span> <span class="ss">:views</span><span class="p">,</span> <span class="no">Proc</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s2">&quot;public/views&quot;</span><span class="p">)</span> <span class="p">}</span>
 <span class="n">enable</span> <span class="ss">:sessions</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h3>helpers</h3>
 
 <p>These have access to the params in  sinatra get/post funtions</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">helpers</span> <span class="k">do</span>
   <span class="k">def</span> <span class="nf">admin?</span> <span class="p">;</span> <span class="n">request</span><span class="o">.</span><span class="n">cookies</span><span class="o">[</span><span class="n">settings</span><span class="o">.</span><span class="n">username</span><span class="o">]</span> <span class="o">==</span> <span class="n">settings</span><span class="o">.</span><span class="n">token</span> <span class="p">;</span> <span class="k">end</span>
   <span class="k">def</span> <span class="nf">protected!</span> <span class="p">;</span> <span class="n">halt</span> <span class="o">[</span> <span class="mi">401</span><span class="p">,</span> <span class="s1">&#39;&lt;h4&gt;Not Authorized. &lt;a href=&quot;/login&quot;&gt; Login &lt;/a&gt; with proper credentials.&lt;/h4&gt;&#39;</span> <span class="o">]</span> <span class="k">unless</span> <span class="n">admin?</span> <span class="p">;</span> <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">log_event</span> <span class="n">n</span>
+    <span class="n">log</span><span class="o">=</span><span class="no">Log</span><span class="o">.</span><span class="n">new</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">time</span><span class="o">=</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">utc</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">path_ini</span><span class="o">=</span><span class="n">request</span><span class="o">[</span><span class="s2">&quot;path_name&quot;</span><span class="o">]</span>
+    <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">has_key?</span> <span class="s2">&quot;tomorrow&quot;</span> 
+      <span class="n">params</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="ss">:tomorrow</span><span class="o">=&gt;</span><span class="s2">&quot;tomorrow&quot;</span><span class="p">)</span>
+      <span class="n">log</span><span class="o">.</span><span class="n">request</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">to_json</span>
+    <span class="k">else</span>
+      <span class="n">log</span><span class="o">.</span><span class="n">request</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">to_json</span>
+    <span class="k">end</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">date</span><span class="o">=</span><span class="n">get_business_utc</span> <span class="n">n</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">ip</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">ip</span>
+    <span class="nb">puts</span> <span class="s2">&quot;Created new log with a date of : </span><span class="si">#{</span><span class="n">log</span><span class="o">.</span><span class="n">date</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">save</span>
+  <span class="k">end</span>
 <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h3>CSS</h3>
 
 <p>css as sass</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">get</span> <span class="s1">&#39;/sass&#39;</span> <span class="k">do</span>
@@ -66,19 +81,15 @@ add the current dir  and lib to the load path</p>             </td>             
 <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>main interface</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">get</span> <span class="p">(</span><span class="s2">&quot;/entry&quot;</span><span class="p">)</span> <span class="k">do</span>
   <span class="kp">protected</span><span class="o">!</span>
   <span class="n">erb</span> <span class="ss">:entry</span>
-<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>main data entry for days slides/activities</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">post</span> <span class="s2">&quot;/entry&quot;</span> <span class="k">do</span>
+<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>main data entry for days slides/activities</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">post</span> <span class="s2">&quot;/entry&quot;</span> <span class="k">do</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>puts "the request is coming from #{request.ip} at #{Time.now}"</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="n">log_event</span> <span class="mi">0</span>
   <span class="nb">puts</span> <span class="n">params</span>
   <span class="n">on_array</span><span class="o">=[]</span><span class="p">;</span> <span class="n">t</span><span class="o">=</span><span class="no">Today</span><span class="o">.</span><span class="n">new</span><span class="p">;</span> <span class="n">path_name</span><span class="o">=</span><span class="n">params</span><span class="o">[</span><span class="s1">&#39;path_name&#39;</span><span class="o">]</span>
   <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">key</span><span class="o">|</span>
-    <span class="n">value</span><span class="o">=</span><span class="n">params</span><span class="o">[</span><span class="n">key</span><span class="o">]</span>
-    <span class="nb">puts</span> <span class="n">value</span><span class="o">.</span><span class="n">class</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>regular activities</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="n">t</span><span class="o">.</span><span class="n">set_regular</span><span class="p">(</span><span class="n">path_name</span><span class="p">,</span><span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">key!</span><span class="o">=</span><span class="s2">&quot;path_name&quot;</span> <span class="ow">and</span> <span class="n">value!</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="p">(</span><span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;regular_activities&quot;</span><span class="o">].</span><span class="n">has_key?</span> <span class="n">key</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>checkbox cardinal activity</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="n">value</span><span class="o">==</span><span class="s2">&quot;on&quot;</span> <span class="k">then</span> <span class="n">on_array</span><span class="o">&lt;&lt;</span><span class="n">key</span><span class="p">;</span><span class="nb">puts</span> <span class="s2">&quot;You have checkboxed </span><span class="si">#{</span><span class="n">key</span><span class="si">}</span><span class="s2"> and added it to </span><span class="si">#{</span><span class="n">on_array</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span> <span class="k">end</span>
-    <span class="nb">puts</span> <span class="s2">&quot;are all conditions met? for </span><span class="si">#{</span><span class="n">key</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="p">(</span><span class="n">key!</span><span class="o">=</span><span class="s2">&quot;path_name&quot;</span> <span class="ow">and</span> <span class="n">value!</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="p">(</span><span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;regular_activities&quot;</span><span class="o">].</span><span class="n">has_key?</span> <span class="n">key</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
-  <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>cardinals</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="n">t</span><span class="o">.</span><span class="n">set_cardinal</span> <span class="n">path_name</span><span class="p">,</span> <span class="n">on_array</span>
-  <span class="no">EM</span><span class="o">.</span><span class="n">next_tick</span> <span class="p">{</span> <span class="n">settings</span><span class="o">.</span><span class="n">sockets</span><span class="o">.</span><span class="n">each</span><span class="p">{</span><span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="n">s</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;Hello things changed for </span><span class="si">#{</span><span class="n">path_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="p">}</span> <span class="p">}</span>
-  <span class="k">return</span> <span class="p">{</span><span class="ss">:ok</span><span class="o">=&gt;</span><span class="kp">true</span><span class="p">}</span><span class="o">.</span><span class="n">to_json</span>
-<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>populates data entry for days slides/activities</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">get</span> <span class="s2">&quot;/get_entry&quot;</span> <span class="k">do</span>
+    <span class="n">value</span><span class="o">=</span><span class="n">params</span><span class="o">[</span><span class="n">key</span><span class="o">]</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>puts value.class
+regular activities</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="n">t</span><span class="o">.</span><span class="n">set_regular</span><span class="p">(</span><span class="n">path_name</span><span class="p">,</span><span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">key!</span><span class="o">=</span><span class="s2">&quot;path_name&quot;</span> <span class="ow">and</span> <span class="n">value!</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="p">(</span><span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;regular_activities&quot;</span><span class="o">].</span><span class="n">has_key?</span> <span class="n">key</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>checkbox cardinal activity</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="n">value</span><span class="o">==</span><span class="s2">&quot;on&quot;</span> <span class="k">then</span> <span class="n">on_array</span><span class="o">&lt;&lt;</span><span class="n">key</span><span class="p">;</span><span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>puts "are all conditions met? for #{key} #{(key!="path<em>name" and value!="" and (DATA["regular</em>activities"].has_key? key))}"</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>cardinals</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="n">t</span><span class="o">.</span><span class="n">set_cardinal</span> <span class="n">path_name</span><span class="p">,</span> <span class="n">on_array</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>EM.next<em>tick { settings.sockets.each{|s| s.send("Hello things changed for #{path</em>name}") } }</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">return</span> <span class="p">{</span><span class="ss">:ok</span><span class="o">=&gt;</span><span class="kp">true</span><span class="p">}</span><span class="o">.</span><span class="n">to_json</span>
+<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>populates data entry for days slides/activities</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">get</span> <span class="s2">&quot;/get_entry&quot;</span> <span class="k">do</span>
   <span class="no">Today</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">get_entry</span><span class="o">.</span><span class="n">to_json</span>
-<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>populates the tomorrow window</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">get</span> <span class="s2">&quot;/get_tomorrow&quot;</span> <span class="k">do</span>
+<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>populates the tomorrow window</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">get</span> <span class="s2">&quot;/get_tomorrow&quot;</span> <span class="k">do</span>
   <span class="no">Today</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">get_entry</span><span class="o">.</span><span class="n">to_json</span>
 <span class="k">end</span>
 
@@ -97,6 +108,10 @@ add the current dir  and lib to the load path</p>             </td>             
   <span class="n">erb</span> <span class="ss">:live</span>
 <span class="k">end</span>
 
+<span class="n">get</span> <span class="s2">&quot;/live_all&quot;</span> <span class="k">do</span> 
+  <span class="n">erb</span> <span class="ss">:live_all</span>
+<span class="k">end</span>
+
 <span class="n">get</span> <span class="s2">&quot;/get_live&quot;</span> <span class="k">do</span>
   <span class="no">Today</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">get_live</span><span class="o">.</span><span class="n">to_json</span>
 <span class="k">end</span>
@@ -110,20 +125,23 @@ add the current dir  and lib to the load path</p>             </td>             
   <span class="n">erb</span> <span class="ss">:dashboard</span>
 <span class="k">end</span>
 
+<span class="n">get</span> <span class="s2">&quot;/show_points_system&quot;</span> <span class="k">do</span>
+  <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;./base_line_data.yml&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot;&lt;br&gt;&quot;</span><span class="p">)</span>
+<span class="k">end</span>
+
 
 
 <span class="n">post</span> <span class="s2">&quot;/tomorrow&quot;</span> <span class="k">do</span>
   <span class="nb">puts</span> <span class="s2">&quot;***************Tomorrow baby***********&quot;</span>
   <span class="nb">puts</span> <span class="n">params</span>
+  <span class="n">log_event</span> <span class="mi">1</span>
   <span class="n">on_array</span><span class="o">=[]</span><span class="p">;</span> <span class="n">t</span><span class="o">=</span><span class="no">Today</span><span class="o">.</span><span class="n">new</span> <span class="mi">1</span><span class="p">;</span> <span class="n">path_name</span><span class="o">=</span><span class="n">params</span><span class="o">[</span><span class="s1">&#39;path_name&#39;</span><span class="o">]</span>
   <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">key</span><span class="o">|</span>
     <span class="n">value</span><span class="o">=</span><span class="n">params</span><span class="o">[</span><span class="n">key</span><span class="o">]</span>
-    <span class="nb">puts</span> <span class="n">value</span><span class="o">.</span><span class="n">class</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>regular activities</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="n">t</span><span class="o">.</span><span class="n">set_regular</span><span class="p">(</span><span class="n">path_name</span><span class="p">,</span><span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">key!</span><span class="o">=</span><span class="s2">&quot;path_name&quot;</span> <span class="ow">and</span> <span class="n">value!</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="p">(</span><span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;regular_activities&quot;</span><span class="o">].</span><span class="n">has_key?</span> <span class="n">key</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>checkbox cardinal activity</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="n">value</span><span class="o">==</span><span class="s2">&quot;on&quot;</span> <span class="k">then</span> <span class="n">on_array</span><span class="o">&lt;&lt;</span><span class="n">key</span><span class="p">;</span><span class="nb">puts</span> <span class="s2">&quot;You have checkboxed </span><span class="si">#{</span><span class="n">key</span><span class="si">}</span><span class="s2"> and added it to </span><span class="si">#{</span><span class="n">on_array</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span> <span class="k">end</span>
+    <span class="nb">puts</span> <span class="n">value</span><span class="o">.</span><span class="n">class</span></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>regular activities</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="n">t</span><span class="o">.</span><span class="n">set_regular</span><span class="p">(</span><span class="n">path_name</span><span class="p">,</span><span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">key!</span><span class="o">=</span><span class="s2">&quot;path_name&quot;</span> <span class="ow">and</span> <span class="n">value!</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="p">(</span><span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;regular_activities&quot;</span><span class="o">].</span><span class="n">has_key?</span> <span class="n">key</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <p>checkbox cardinal activity</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="n">value</span><span class="o">==</span><span class="s2">&quot;on&quot;</span> <span class="k">then</span> <span class="n">on_array</span><span class="o">&lt;&lt;</span><span class="n">key</span><span class="p">;</span><span class="nb">puts</span> <span class="s2">&quot;You have checkboxed </span><span class="si">#{</span><span class="n">key</span><span class="si">}</span><span class="s2"> and added it to </span><span class="si">#{</span><span class="n">on_array</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span> <span class="k">end</span>
     <span class="nb">puts</span> <span class="s2">&quot;are all conditions met? for </span><span class="si">#{</span><span class="n">key</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="p">(</span><span class="n">key!</span><span class="o">=</span><span class="s2">&quot;path_name&quot;</span> <span class="ow">and</span> <span class="n">value!</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="p">(</span><span class="no">DATA</span><span class="o">[</span><span class="s2">&quot;regular_activities&quot;</span><span class="o">].</span><span class="n">has_key?</span> <span class="n">key</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
-  <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>cardinals</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="n">t</span><span class="o">.</span><span class="n">set_cardinal</span> <span class="n">path_name</span><span class="p">,</span> <span class="n">on_array</span>
-  <span class="no">EM</span><span class="o">.</span><span class="n">next_tick</span> <span class="p">{</span> <span class="n">settings</span><span class="o">.</span><span class="n">sockets</span><span class="o">.</span><span class="n">each</span><span class="p">{</span><span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="n">s</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;Hello things changed for </span><span class="si">#{</span><span class="n">path_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="p">}</span> <span class="p">}</span>
-  <span class="k">return</span> <span class="p">{</span><span class="ss">:ok</span><span class="o">=&gt;</span><span class="kp">true</span><span class="p">}</span><span class="o">.</span><span class="n">to_json</span>
-<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <h4>updates view for selected pathologist</h4>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">get</span> <span class="s2">&quot;/path/activities/points&quot;</span> <span class="k">do</span>
+  <span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <p>cardinals</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="n">t</span><span class="o">.</span><span class="n">set_cardinal</span> <span class="n">path_name</span><span class="p">,</span> <span class="n">on_array</span></pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <p>EM.next<em>tick { settings.sockets.each{|s| s.send("Hello things changed for #{path</em>name}") } }</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">return</span> <span class="p">{</span><span class="ss">:ok</span><span class="o">=&gt;</span><span class="kp">true</span><span class="p">}</span><span class="o">.</span><span class="n">to_json</span>
+<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <h4>updates view for selected pathologist</h4>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">get</span> <span class="s2">&quot;/path/activities/points&quot;</span> <span class="k">do</span>
   <span class="n">t</span><span class="o">=</span><span class="no">Today</span><span class="o">.</span><span class="n">new</span>
   <span class="p">{</span><span class="n">path</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">get_path_activities_points</span><span class="p">}</span><span class="o">.</span><span class="n">to_json</span>
 <span class="k">end</span>
@@ -167,7 +185,7 @@ add the current dir  and lib to the load path</p>             </td>             
 
 <span class="n">get</span> <span class="s1">&#39;/long_term&#39;</span> <span class="k">do</span>
   <span class="s1">&#39;&lt;h3&gt;Work in Progress. &lt;a href=&quot;/&quot;&gt; Back to the base. &lt;/a&gt; &lt;/h3&gt;&#39;</span>
-<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <h2>### reporting activities</h2>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">get</span> <span class="s1">&#39;/report_activity_points/:name&#39;</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
+<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <h2>### reporting activities</h2>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">get</span> <span class="s1">&#39;/report_activity_points/:name&#39;</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
   <span class="p">(</span><span class="no">ReportActivity</span><span class="o">.</span><span class="n">report_activity_points</span> <span class="nb">name</span><span class="p">)</span><span class="o">.</span><span class="n">to_json</span>
 <span class="k">end</span>
 
@@ -175,22 +193,43 @@ add the current dir  and lib to the load path</p>             </td>             
   <span class="p">(</span><span class="no">ReportActivity</span><span class="o">.</span><span class="n">report_activity_points_for_subspecialty</span> <span class="nb">name</span><span class="p">,</span> <span class="n">subspecialty</span><span class="p">)</span><span class="o">.</span><span class="n">to_json</span>
 <span class="k">end</span>
 
-<span class="n">get</span> <span class="s2">&quot;/delta_day/:n&quot;</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
+
+
+<span class="n">post</span> <span class="s1">&#39;/entry_click_log&#39;</span> <span class="k">do</span>
+  <span class="n">log_event</span> <span class="mi">0</span>
+  <span class="nb">puts</span> <span class="n">params</span>
+  <span class="k">return</span> <span class="p">{</span><span class="ss">:ok</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">}</span><span class="o">.</span><span class="n">to_json</span>
+<span class="k">end</span>
+
+<span class="n">post</span> <span class="s1">&#39;/activity_update_log&#39;</span> <span class="k">do</span>
+  <span class="nb">puts</span> <span class="n">params</span>
+  <span class="nb">id</span><span class="o">=</span><span class="n">params</span><span class="o">[</span><span class="s2">&quot;id&quot;</span><span class="o">]</span>
+  <span class="n">activities</span><span class="o">=</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="s2">&quot;activities&quot;</span><span class="o">]</span> <span class="ow">or</span> <span class="p">{</span><span class="ss">:activities</span> <span class="o">=&gt;</span> <span class="s2">&quot;none&quot;</span><span class="p">})</span>
+  <span class="nb">puts</span> <span class="nb">id</span><span class="p">,</span> <span class="n">activities</span>
+
+  <span class="n">log</span><span class="o">=</span><span class="no">Log</span><span class="o">.</span><span class="n">new</span>
+ <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">has_key?</span> <span class="s2">&quot;tomorrow&quot;</span> 
+    <span class="n">activities</span><span class="o">.</span><span class="n">merge!</span><span class="p">(</span><span class="ss">:tomorrow</span><span class="o">=&gt;</span><span class="s2">&quot;tomorrow&quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">request</span><span class="o">=</span><span class="n">activities</span><span class="o">.</span><span class="n">to_json</span>
+  <span class="k">else</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">request</span><span class="o">=</span><span class="n">activities</span><span class="o">.</span><span class="n">to_json</span>
+  <span class="k">end</span>
+  <span class="n">log</span><span class="o">.</span><span class="n">time</span><span class="o">=</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">utc</span>
+  <span class="n">log</span><span class="o">.</span><span class="n">path_ini</span><span class="o">=</span><span class="nb">id</span>
+  <span class="n">log</span><span class="o">.</span><span class="n">date</span><span class="o">=</span><span class="n">get_business_utc</span> <span class="mi">0</span>
+  <span class="n">log</span><span class="o">.</span><span class="n">ip</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">ip</span></pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <p>puts "Created new log with a date of : #{log.date}"</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="n">log</span><span class="o">.</span><span class="n">save</span>
+  <span class="k">return</span> <span class="p">{</span><span class="ss">:ok</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">}</span><span class="o">.</span><span class="n">to_json</span>
+<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <h2>###APIs</h2>
+
+<p>xxx</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">get</span> <span class="s2">&quot;/delta_day/:n&quot;</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
   <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">to_i</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="k">then</span> <span class="k">return</span> <span class="s2">&quot;&lt;h1&gt; Cannot do this in the future and the day is not yet over &lt;/h1&gt;&quot;</span> <span class="k">end</span>
   <span class="nb">p</span><span class="o">=</span><span class="no">PlotterDeltaDay</span><span class="o">.</span><span class="n">new</span>
   <span class="s2">&quot;&lt;h1&gt;</span><span class="si">#{</span><span class="n">get_business_utc</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">to_i</span><span class="p">)</span><span class="o">.</span><span class="n">to_date</span><span class="o">.</span><span class="n">to_s</span> <span class="si">}</span><span class="s2">&lt;/h1&gt; &lt;br&gt; </span><span class="si">#{</span><span class="nb">p</span><span class="o">.</span><span class="n">get</span> <span class="nb">p</span><span class="o">.</span><span class="n">plot</span> <span class="n">n</span><span class="o">.</span><span class="n">to_i</span><span class="si">}</span><span class="s2"> &lt;BR&gt;&quot;</span>
-<span class="k">end</span>
-
-<span class="n">get</span> <span class="s2">&quot;/delta_summary&quot;</span> <span class="k">do</span>
+<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <p>xxx</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">get</span> <span class="s2">&quot;/delta_summary&quot;</span> <span class="k">do</span>
   <span class="nb">p</span><span class="o">=</span><span class="no">PlotterDeltaSummary</span><span class="o">.</span><span class="n">new</span>
    <span class="s2">&quot;&lt;h1&gt;</span><span class="si">#{</span><span class="n">get_business_utc</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">to_date</span><span class="o">.</span><span class="n">to_s</span> <span class="si">}</span><span class="s2">&lt;/h1&gt; &lt;br&gt; </span><span class="si">#{</span><span class="nb">p</span><span class="o">.</span><span class="n">get</span> <span class="nb">p</span><span class="o">.</span><span class="n">plot</span><span class="si">}</span><span class="s2"> &lt;BR&gt;&quot;</span>
 <span class="k">end</span>
 
-
-<span class="n">get</span> <span class="s2">&quot;/past_ini_date&quot;</span> <span class="k">do</span>
-  <span class="s2">&quot;/past_ini_date/:ini/:n&lt;BR&gt;</span>
-<span class="s2">  Example: /past_ini_date/YW/-5 will yield DR. YW 5 Days ago&quot;</span>
-<span class="k">end</span>
 
 <span class="n">get</span> <span class="s2">&quot;/past_ini_date/:ini/:n&quot;</span> <span class="k">do</span> <span class="o">|</span><span class="n">ini</span><span class="p">,</span><span class="n">n</span><span class="o">|</span>
   <span class="n">results</span><span class="o">=</span><span class="s2">&quot;&lt;h1&gt;</span><span class="si">#{</span><span class="n">ini</span><span class="si">}</span><span class="s2">: Summary for </span><span class="si">#{</span><span class="n">get_business_utc</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">to_i</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/h1&gt;&quot;</span>
@@ -199,84 +238,103 @@ add the current dir  and lib to the load path</p>             </td>             
   <span class="nb">puts</span>  <span class="p">(</span><span class="no">Activity</span><span class="o">.</span><span class="n">where</span> <span class="ss">:date</span><span class="o">=&gt;</span><span class="n">get_business_utc</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">to_i</span><span class="p">),</span> <span class="ss">:ini</span><span class="o">=&gt;</span><span class="n">ini</span><span class="p">)</span><span class="o">.</span><span class="n">all</span>
   <span class="p">(</span><span class="no">Activity</span><span class="o">.</span><span class="n">where</span> <span class="ss">:date</span><span class="o">=&gt;</span><span class="n">get_business_utc</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">to_i</span><span class="p">),</span> <span class="ss">:ini</span><span class="o">=&gt;</span><span class="n">ini</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">results</span> <span class="o">+=</span> <span class="s2">&quot;&lt;h3&gt;</span><span class="si">#{</span><span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">#{</span><span class="n">x</span><span class="o">.</span><span class="n">tot_points</span><span class="si">}</span><span class="s2">&lt;/h3&gt;&quot;</span><span class="p">}</span>
   <span class="n">results</span>
-<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <h2>### Experiments</h2>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">get</span> <span class="s1">&#39;/websocket&#39;</span> <span class="k">do</span>
-  <span class="k">if</span> <span class="o">!</span><span class="n">request</span><span class="o">.</span><span class="n">websocket?</span>
-    <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">request</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">request</span><span class="o">.</span><span class="n">params</span><span class="p">()</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="o">!</span><span class="n">request</span><span class="o">.</span><span class="n">websocket?</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="n">erb</span> <span class="ss">:websocket</span>
-  <span class="k">else</span>
-    <span class="n">request</span><span class="o">.</span><span class="n">websocket</span> <span class="k">do</span> <span class="o">|</span><span class="n">ws</span><span class="o">|</span>
-      <span class="n">ws</span><span class="o">.</span><span class="n">onopen</span> <span class="k">do</span>
-        <span class="n">ws</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;Hello World!&quot;</span><span class="p">)</span>
-        <span class="n">settings</span><span class="o">.</span><span class="n">sockets</span> <span class="o">&lt;&lt;</span> <span class="n">ws</span>
-      <span class="k">end</span>
-      <span class="n">ws</span><span class="o">.</span><span class="n">onmessage</span> <span class="k">do</span> <span class="o">|</span><span class="n">msg</span><span class="o">|</span>
-        <span class="no">EM</span><span class="o">.</span><span class="n">next_tick</span> <span class="p">{</span> <span class="n">settings</span><span class="o">.</span><span class="n">sockets</span><span class="o">.</span><span class="n">each</span><span class="p">{</span><span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="n">s</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="p">}</span> <span class="p">}</span>
-      <span class="k">end</span>
-      <span class="n">ws</span><span class="o">.</span><span class="n">onclose</span> <span class="k">do</span>
-        <span class="nb">warn</span><span class="p">(</span><span class="s2">&quot;wetbsocket closed&quot;</span><span class="p">)</span>
-        <span class="n">settings</span><span class="o">.</span><span class="n">sockets</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">ws</span><span class="p">)</span>
-      <span class="k">end</span>
-    <span class="k">end</span>
-  <span class="k">end</span>
-<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <p>scockets games</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">get</span> <span class="s2">&quot;/test&quot;</span> <span class="k">do</span>
-  <span class="nb">puts</span> <span class="n">request</span>
-  <span class="k">if</span> <span class="o">!</span><span class="n">request</span><span class="o">.</span><span class="n">websocket?</span>
-    <span class="n">erb</span> <span class="ss">:test</span>
-  <span class="k">else</span>
-    <span class="n">request</span><span class="o">.</span><span class="n">websocket</span> <span class="k">do</span> <span class="o">|</span><span class="n">ws</span><span class="o">|</span>
-      <span class="n">ws</span><span class="o">.</span><span class="n">onopen</span> <span class="k">do</span>
-        <span class="n">ws</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;Hello World!&quot;</span><span class="p">)</span>
-        <span class="n">settings</span><span class="o">.</span><span class="n">sockets</span> <span class="o">&lt;&lt;</span> <span class="n">ws</span>
-      <span class="k">end</span>
-      <span class="n">ws</span><span class="o">.</span><span class="n">onmessage</span> <span class="k">do</span> <span class="o">|</span><span class="n">msg</span><span class="o">|</span>
-        <span class="nb">puts</span> <span class="s2">&quot;this is the msg: </span><span class="si">#{</span><span class="n">msg</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="no">EM</span><span class="o">.</span><span class="n">next_tick</span> <span class="p">{</span> <span class="n">settings</span><span class="o">.</span><span class="n">sockets</span><span class="o">.</span><span class="n">each</span><span class="p">{</span><span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="n">s</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="p">}</span> <span class="p">}</span>
-      <span class="k">end</span>
-      <span class="n">ws</span><span class="o">.</span><span class="n">onclose</span> <span class="k">do</span>
-        <span class="nb">warn</span><span class="p">(</span><span class="s2">&quot;wetbsocket closed&quot;</span><span class="p">)</span>
-        <span class="n">settings</span><span class="o">.</span><span class="n">sockets</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">ws</span><span class="p">)</span>
-      <span class="k">end</span>
-    <span class="k">end</span>
-  <span class="k">end</span>
+<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-37">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-37">&#182;</a>               </div>               <p>logging info for pathologist; day n=0</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">get</span> <span class="s2">&quot;/log/:ini&quot;</span> <span class="k">do</span> <span class="o">|</span><span class="n">ini</span><span class="o">|</span>
+  <span class="no">Log</span><span class="o">.</span><span class="n">get_ini</span> <span class="n">ini</span>
 <span class="k">end</span>
 
+<span class="n">get</span> <span class="s2">&quot;/log/:ini/:n&quot;</span> <span class="k">do</span> <span class="o">|</span><span class="n">ini</span><span class="p">,</span><span class="n">n</span><span class="o">|</span>
+   <span class="no">Log</span><span class="o">.</span><span class="n">get_ini</span> <span class="n">n</span><span class="o">.</span><span class="n">to_i</span><span class="p">,</span><span class="n">ini</span>
+<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-38">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-38">&#182;</a>               </div>               <h2>API's summary</h2>             </td>             <td class="code">               <div class="highlight"><pre><span class="n">get</span> <span class="s2">&quot;/api&quot;</span> <span class="k">do</span>
+  <span class="kp">protected</span><span class="o">!</span>
+  <span class="n">erb</span> <span class="ss">:api</span>
+<span class="k">end</span>
 
+<span class="n">get</span> <span class="s2">&quot;/log_of_day_events&quot;</span> <span class="k">do</span>
+  <span class="kp">protected</span><span class="o">!</span>
+  <span class="n">erb</span> <span class="ss">:log_of_day_events</span>
+<span class="k">end</span>
 
-<span class="cp">__END__</span>
-<span class="cp">@@ websocket</span>
-<span class="cp">&lt;html&gt;</span>
-<span class="cp">  &lt;body&gt;</span>
-<span class="cp">     &lt;h1&gt;Simple Echo &amp; Chat Server&lt;/h1&gt;</span>
-<span class="cp">     &lt;form id=&quot;form&quot;&gt;</span>
-<span class="cp">       &lt;input type=&quot;text&quot; id=&quot;input&quot; value=&quot;send a message&quot;&gt;&lt;/input&gt;</span>
-<span class="cp">     &lt;/form&gt;</span>
-<span class="cp">     &lt;div id=&quot;msgs&quot;&gt;&lt;/div&gt;</span>
-<span class="cp">  &lt;/body&gt;</span>
+<span class="n">get</span> <span class="s2">&quot;/database_destroy/:n&quot;</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
+  <span class="vi">@results</span><span class="o">=</span><span class="no">Log</span><span class="o">.</span><span class="n">where</span><span class="p">({</span><span class="ss">:request</span> <span class="o">=&gt;</span><span class="p">{</span><span class="s2">&quot;database destruction&quot;</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">}</span><span class="o">.</span><span class="n">to_json</span><span class="p">,</span> <span class="ss">:date</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="n">get_business_utc</span> <span class="n">n</span><span class="o">.</span><span class="n">to_i</span><span class="p">)})</span><span class="o">.</span><span class="n">all</span>
+  <span class="vi">@results</span><span class="o">.</span><span class="n">map!</span><span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">to_json</span><span class="p">}</span>
+  <span class="nb">puts</span> <span class="vi">@results</span>
+  <span class="n">erb</span> <span class="s2">&quot; &lt;% for @r in @results%&gt;</span>
+<span class="s2">  &lt;br&gt; &lt;%=@r  %&gt; &lt;br&gt;</span>
+<span class="s2">  &lt;% end %&gt;</span>
+<span class="s2">  &quot;</span>
+  
+<span class="k">end</span></pre></div>             </td>           </tr>                               <tr id="section-39">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-39">&#182;</a>               </div>               <p>require 'sinatra-websocket'
+require "report<em>svg"
+require "report</em>new"
+set :sockets, []</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-40">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-40">&#182;</a>               </div>               <h2>### Experiments</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-41">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-41">&#182;</a>               </div>               <p>get '/websocket' do
+  if !request.websocket?
+    puts "#{request} #{request.params()} #{!request.websocket?}"
+    erb :websocket
+  else
+    request.websocket do |ws|
+      ws.onopen do
+        ws.send("Hello World!")
+        settings.sockets &lt;&lt; ws
+      end
+      ws.onmessage do |msg|
+        EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
+      end
+      ws.onclose do
+        warn("wetbsocket closed")
+        settings.sockets.delete(ws)
+      end
+    end
+  end
+end</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-42">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-42">&#182;</a>               </div>               <p>scockets games</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-43">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-43">&#182;</a>               </div>               <p>get "/test" do
+  puts request
+  if !request.websocket?
+    erb :test
+  else
+    request.websocket do |ws|
+      ws.onopen do
+        ws.send("Hello World!")
+        settings.sockets &lt;&lt; ws
+      end
+      ws.onmessage do |msg|
+        puts "this is the msg: #{msg}"
+        EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
+      end
+      ws.onclose do
+        warn("wetbsocket closed")
+        settings.sockets.delete(ws)
+      end
+    end
+  end
+end</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-44">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-44">&#182;</a>               </div>               <p><strong>END</strong>
+@@ websocket
+<html>
+  <body>
+     <h1>Simple Echo &amp; Chat Server</h1>
+     <form id="form">
+       <input type="text" id="input" value="send a message"></input>
+     </form>
+     <div id="msgs"></div>
+  </body></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-45">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-45">&#182;</a>               </div>               <p><script type="text/javascript">
+    window.onload = function(){
+      (function(){
+        var show = function(el){
+          return function(msg){ el.innerHTML = msg + '<br />' + el.innerHTML; }
+        }(document.getElementById('msgs'));</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-46">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-46">&#182;</a>               </div>               <pre><code>    var ws       = new WebSocket('ws://' + window.location.host + window.location.pathname);
+    ws.onopen    = function()  { show('websocket opened'); };
+    ws.onclose   = function()  { show('websocket closed'); }
+    ws.onmessage = function(m) { show('websocket message: ' +  m.data); };
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-47">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-47">&#182;</a>               </div>               <pre><code>    var sender = function(f){
+      var input     = document.getElementById('input');
+      input.onclick = function(){ input.value = "" };
+      f.onsubmit    = function(){
+        ws.send(input.value);
+        input.value = "send a message";
+        return false;
+      }
+    }(document.getElementById('form'));
+  })();
+}
+</code></pre>
 
-<span class="cp">  &lt;script type=&quot;text/javascript&quot;&gt;</span>
-<span class="cp">    window.onload = function(){</span>
-<span class="cp">      (function(){</span>
-<span class="cp">        var show = function(el){</span>
-<span class="cp">          return function(msg){ el.innerHTML = msg + &#39;&lt;br /&gt;&#39; + el.innerHTML; }</span>
-<span class="cp">        }(document.getElementById(&#39;msgs&#39;));</span>
-
-<span class="cp">        var ws       = new WebSocket(&#39;ws://&#39; + window.location.host + window.location.pathname);</span>
-<span class="cp">        ws.onopen    = function()  { show(&#39;websocket opened&#39;); };</span>
-<span class="cp">        ws.onclose   = function()  { show(&#39;websocket closed&#39;); }</span>
-<span class="cp">        ws.onmessage = function(m) { show(&#39;websocket message: &#39; +  m.data); };</span>
-
-<span class="cp">        var sender = function(f){</span>
-<span class="cp">          var input     = document.getElementById(&#39;input&#39;);</span>
-<span class="cp">          input.onclick = function(){ input.value = &quot;&quot; };</span>
-<span class="cp">          f.onsubmit    = function(){</span>
-<span class="cp">            ws.send(input.value);</span>
-<span class="cp">            input.value = &quot;send a message&quot;;</span>
-<span class="cp">            return false;</span>
-<span class="cp">          }</span>
-<span class="cp">        }(document.getElementById(&#39;form&#39;));</span>
-<span class="cp">      })();</span>
-<span class="cp">    }</span>
-<span class="cp">  &lt;/script&gt;</span>
-<span class="cp">&lt;/html&gt;</span>
-
-</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
+<p></script>
+</html></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

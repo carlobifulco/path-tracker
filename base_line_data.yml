@@ -27,6 +27,7 @@ initials:
 
 slides_conversion_factor: 0.6
 
+# For the most part per slide. Tissue macrodiss is per case.
 regular_activities:
   Specialty-only-case-number: 1
   Slides-large-cases: 1
@@ -50,6 +51,7 @@ regular_activities:
   Neogenomics-heme-fish: 8
   FNA: 15
   DIA-DISH: 5
+  Tissue-macrodissection-marking: 2
 
 
 
@@ -74,11 +76,15 @@ cardinal_activities:
   Conf-or-prep-15: 15
   Conf-or-prep-20: 20
   Conf-or-prep-30: 30
-  Lab-devel: 0
-  Digital-devel: 0
+  Molecular-DigitalPath: 120
   Medical-director: 0
+  Immunohistochemistry-Histology: 120
 
-# yellow color
+
+
+
+### Activities decorations; values are meaningless
+# yellow color; values a
 distribution-location:
   Travel-east-side: 20
   Travel-west-side: 20
@@ -95,16 +101,17 @@ distribution-preference:
   Lung: "l"
   Breast: "bg"
 
+
 #slides/points assigned to these will not be counted in the total redistribution pool
 #also, paths doing these will not be counted in the total redistibution pool
 
 no-points:
   Dermpath-only: 0
   Gi-only: 0
-  Medical-director: 0
-  Lab-devel: 0
-  Digital-devel: 0
   Hemepath-only: 0
+  Molecular-DigitalPath: 0
+  Medical-director: 0
+  Immunohistochemistry-Histology: 0
 
 slide_activities:
   - Slides-large-cases

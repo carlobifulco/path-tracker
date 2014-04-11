@@ -52,7 +52,8 @@ get_path_status=()->
 #### HB rendering
 render=(data,html)->
   if typeof(data)=="string"
-    data=JSON.parse(data); console.log data
+    data=JSON.parse(data)
+    #console.log data
   hb=Handlebars.compile(html)
   results=hb(data)
   return results
@@ -129,7 +130,7 @@ window.has_a_distribution_preference=has_a_distribution_preference
 #wrapper around the rendering; uses the html target convention "id_html" and "id_template"
 render_template=(id,data)->
   rendered_template=render(data,($("##{id}_template")[0]).innerHTML)
-  console.log rendered_template
+  #console.log rendered_template
   hook= $("##{id}_html")
   if hook.length==0 then console.log "NO HOOCK"
   $("##{id}_html").html(rendered_template)
@@ -162,6 +163,7 @@ show_cardinal=()->
   $.get("/activities_cardinal", (data)->
     window.cardinal_data=JSON.parse data
     render_template("cardinal", data)
+    checkbox_click()
     )
 window.show_cardinal=show_cardinal
 
@@ -208,19 +210,29 @@ show=(id)->
 
 
 
+
 #serialize and call post /entry
 serialize=()->
+  #console.log window.working
+  #blocks submission in screen update is not finished
+  if window.working==true
+    return 
   data=$("#entry").serializeArray()
-  console.log data
+  all_values=$("input:text")
+  checked=[i.name for i in $("input:checked")]
+  console.log "checked before submission: #{checked}"
+  #console.log data
   window.data=data
-  $.post("/tomorrow",$("#entry").serializeArray(), (e)->
+  console.log data
+  log_activities $("#path_name").val(), {checked_before_submisstion: "#{checked}"}
+  window.data=data
+  $.post("/tomorrow",data, (e)->
     if JSON.parse(e)["ok"]
       alert "Data updated"
       show_sparklines(()->$("##{$("#path_name").val()}").css("color", "red"))
   )
 
 window.serialize=serialize
-
 
 #activate prompt on entry
 entry_click=()->
@@ -238,15 +250,41 @@ entry_click=()->
 window.entry_click=entry_click
 
 
+checkbox_click=()->
+   $('[type=checkbox]').click((e)->
+      #console.log e
+      #console.log "#{window.id}; #{e.currentTarget.id}: #{e.currentTarget.checked}"
+      data=
+        path_name: window.id
+        tomorrow :"tomorrow"
+        click: "#{e.currentTarget.id}: #{e.currentTarget.checked}"
+      $.post("/entry_click_log", data, (e)->
+        console.log "Post of click returned:#{e}")
+      )
+window.checkbox_click=checkbox_click
+
+####logging of activities updates
+log_activities=(id,activities={test:"OK"})->
+  payload=
+    id: id
+    activities: activities or "None"
+    tomorrow: "tomorrow"
+  $.post('/activity_update_log',payload, (e)->
+    console.log e)
+window.log_activities=log_activities
+
+
+
 
 window.show=show
 
 
 $(document).ready =>
-  console.log "here I am"
+  console.log "here I am, again"
   #show_cardinal()
   #show_regular()
   show_sparklines()
   KeyboardJS.bind.key("enter",serialize)
+
 
 

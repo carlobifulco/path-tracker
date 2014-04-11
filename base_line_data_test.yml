@@ -64,20 +64,22 @@ cardinal_activities:
   Conf-or-prep-15: 15
   Conf-or-prep-20: 20
   Conf-or-prep-30: 30
-  Lab-development: 0
+  Molecular-DigitalPath-dev: 0
   Medical-director: 0
+  Immunohistochemistry-Histology: 0
 
 # yellow color
 distribution-location:
   Travel-east-side: 20
   Travel-west-side: 20
 
-# red color
+# red color; values are meaningless
 distribution-specialty:
   Dermpath-only: "Dp"
   Gi-only: "Gi-only"
   Hemepath-only: "Hp"
-  Lab-development: "Ld"
+  Molecular-Digitalpath: "Ld"
+  Immunohistochemistry-Histology: "IH"
   Medical-director: "Md"
 
 # green color
@@ -87,12 +89,14 @@ distribution-preference:
   Breast-Gyn: "bg"
 
 #slides assigned to these will not be counted
-#also, paths doing these will not be counted as actually present
+#also, paths doing these will not be counted as actually present in the total day's pool
 no-points:
   Dermpath-only: 0
   Gi-only: 0
   Medical-director: 0
   Lab-development: 0
+  Immunohistochemistry-Histology: 0
+  Hemepath-only: 0
 
 slide_activities:
   - Slides-large-cases

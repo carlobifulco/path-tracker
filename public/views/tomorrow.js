@@ -1,5 +1,5 @@
 (function() {
-  var decorate, entry_click, get_activities, get_all, get_checked, get_path_status, get_unchecked, has_a_distribution_preference, has_a_location, has_a_specialty, icons, make_hb, render, render_template, serialize, show, show_cardinal, show_regular, show_sparklines, update, update_yaml,
+  var checkbox_click, decorate, entry_click, get_activities, get_all, get_checked, get_path_status, get_unchecked, has_a_distribution_preference, has_a_location, has_a_specialty, icons, log_activities, make_hb, render, render_template, serialize, show, show_cardinal, show_regular, show_sparklines, update, update_yaml,
     __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     _this = this;
 
@@ -103,10 +103,7 @@
 
   render = function(data, html) {
     var hb, results;
-    if (typeof data === "string") {
-      data = JSON.parse(data);
-      console.log(data);
-    }
+    if (typeof data === "string") data = JSON.parse(data);
     hb = Handlebars.compile(html);
     results = hb(data);
     return results;
@@ -198,7 +195,6 @@
   render_template = function(id, data) {
     var hook, rendered_template;
     rendered_template = render(data, ($("#" + id + "_template")[0]).innerHTML);
-    console.log(rendered_template);
     hook = $("#" + id + "_html");
     if (hook.length === 0) console.log("NO HOOCK");
     return $("#" + id + "_html").html(rendered_template);
@@ -238,7 +234,8 @@
   show_cardinal = function() {
     return $.get("/activities_cardinal", function(data) {
       window.cardinal_data = JSON.parse(data);
-      return render_template("cardinal", data);
+      render_template("cardinal", data);
+      return checkbox_click();
     });
   };
 
@@ -290,11 +287,30 @@
   };
 
   serialize = function() {
-    var data;
+    var all_values, checked, data, i;
+    if (window.working === true) return;
     data = $("#entry").serializeArray();
-    console.log(data);
+    all_values = $("input:text");
+    checked = [
+      (function() {
+        var _i, _len, _ref, _results;
+        _ref = $("input:checked");
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          i = _ref[_i];
+          _results.push(i.name);
+        }
+        return _results;
+      })()
+    ];
+    console.log("checked before submission: " + checked);
     window.data = data;
-    return $.post("/tomorrow", $("#entry").serializeArray(), function(e) {
+    console.log(data);
+    log_activities($("#path_name").val(), {
+      checked_before_submisstion: "" + checked
+    });
+    window.data = data;
+    return $.post("/tomorrow", data, function(e) {
       if (JSON.parse(e)["ok"]) {
         alert("Data updated");
         return show_sparklines(function() {
@@ -318,10 +334,45 @@
 
   window.entry_click = entry_click;
 
+  checkbox_click = function() {
+    return $('[type=checkbox]').click(function(e) {
+      var data;
+      data = {
+        path_name: window.id,
+        tomorrow: "tomorrow",
+        click: "" + e.currentTarget.id + ": " + e.currentTarget.checked
+      };
+      return $.post("/entry_click_log", data, function(e) {
+        return console.log("Post of click returned:" + e);
+      });
+    });
+  };
+
+  window.checkbox_click = checkbox_click;
+
+  log_activities = function(id, activities) {
+    var payload;
+    if (activities == null) {
+      activities = {
+        test: "OK"
+      };
+    }
+    payload = {
+      id: id,
+      activities: activities || "None",
+      tomorrow: "tomorrow"
+    };
+    return $.post('/activity_update_log', payload, function(e) {
+      return console.log(e);
+    });
+  };
+
+  window.log_activities = log_activities;
+
   window.show = show;
 
   $(document).ready(function() {
-    console.log("here I am");
+    console.log("here I am, again");
     show_sparklines();
     return KeyboardJS.bind.key("enter", serialize);
   });
