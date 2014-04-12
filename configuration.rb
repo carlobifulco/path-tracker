@@ -10,6 +10,7 @@ require "holidays"
 require "mongo_mapper"
 require "redis"
 require "redis-namespace"
+require "yaml"
 #require "web_data"
 
 

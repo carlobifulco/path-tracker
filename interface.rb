@@ -168,14 +168,16 @@ class Today
   attr_accessor :tdc, :n, :all_activities_points, :time, :date
 
   def initialize n=0
+    puts "n= #{n} initialized "
     @all_activities_points= DATA["regular_activities"].merge DATA["cardinal_activities"]
     # @ n is the number of days after today; needs to tak into accound weekends/holidays
 
     #actuallu used only for debugging
     @tdc=Tdc.today n
     @n=@tdc.n
+    puts "n= #{@n} ?changed "
     @time=@tdc.date
-    @date=@time.to_date
+    @date=@time.localtime.to_date
   end
 
   def get_tot_blocks
@@ -195,6 +197,7 @@ class Today
   # XXX
   def get_setup
     #Tdcs need to be genrated fresh for each call
+    puts " this is n #{@n}"
     t=Tdc.today @n
     pc=PointsCalculator.new @n
     slides_distributed=pc.general_slides_distributed;
@@ -217,7 +220,7 @@ class Today
           pathologist_working: (pathologist_working).sort,
           pathologist_absent: (self.get_path_absent).sort,
           path_count: path_count,
-          date: t.date.to_s,
+          date: t.date.localtime.to_s,
           slides_distributed: pc.general_slides_distributed,
           slides_remaining: slides_remaining,
           generalist_count:Pathologist.get_number_generalist,
@@ -268,14 +271,14 @@ class Today
   def get_entry
     t=Tdc.today @n
     pc=PointsCalculator.new
-    puts "#{t.date } with an #{t.n}; Today n is #{@n}"
+    puts "#{t.date.localtime } with an #{t.n}; Today n is #{@n}"
     entry={
       pathologist_working: Pathologist.get_path_working(t.n).map{ |x| x.ini}.sort(),
       paths_acts_points: Pathologist.all_activities_points(t.n),
       paths_tot_points: Pathologist.path_all_points(t.n),
       slides_distributed: Activity.get_general_slides_distributed(t.n),
       slides_remaining: pc.predicted_general_slides_pending,
-      date: t.date.to_date,
+      date: t.date.localtime.to_date,
        # avoid 0 division crashes
       slides_remaining_per_pathologist: pc.predicted_slides_per_non_specialist,
       blocks_tot: t.blocks_tot,
@@ -289,7 +292,7 @@ class Today
   def get_live
     t=Tdc.today @n
     pc=PointsCalculator.new
-    puts "#{t.date } with an #{t.n}; Today n is #{@n}"
+    puts "#{t.date.localtime} with an #{t.n}; Today n is #{@n}"
     entry={
       #this is different  --no specialists...
       pathologist_working: Pathologist.get_generalist(t.n).map{ |x| x.ini}.sort(),
@@ -297,7 +300,7 @@ class Today
       paths_tot_points: Pathologist.path_all_points(t.n, pathologist=Pathologist.get_generalist()),
       slides_distributed: Activity.get_general_slides_distributed(t.n),
       slides_remaining: pc.predicted_general_slides_pending,
-      date: t.date.to_date,
+      date: t.date.localtime.to_date,
        # avoid 0 division crashes
       slides_remaining_per_pathologist: pc.predicted_slides_per_non_specialist,
       blocks_tot: t.blocks_tot,

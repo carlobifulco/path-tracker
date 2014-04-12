@@ -58,16 +58,14 @@ end
 #
 # n is the number of days ahead of today to be converted
 #
-# Returns a date/time in UTC format of the nth day after today
+# Returns a date in UTC format of the nth day after today
 def get_business_utc n=0
   #if future
   if n >= 0
-    business_days=(((1*n).business_day.after Date.today).to_date - Date.today).to_int
-    return (Date.today+business_days).to_time.utc
+    return (n).business_day.from_now.to_date.utc
   else
   # if past
-    business_days=(Date.today - ((- n).business_day.before Date.today).to_date).to_int
-    return (Date.today-business_days).to_time.utc
+    return (-n).business_day.ago.to_date.utc
   end
 end
 
@@ -123,14 +121,14 @@ class Tdc
   #
   #Returns an instance of Tdc
   def self.today n=0
-    business_utc=get_business_utc(n)
-    d=where(:date=>business_utc)
+    d=where(:date=>get_business_utc(n))
     # existing instance n working days ahead of today
     if d.to_a.count>0
       t=d.to_a[0]
       # update the t.n (t.n was setup on the day of creation but now it could have to be changed)
-      t.n=(Date.today.business_days_until t.date.to_date) if (Date.today <= t.date.to_date)
-      t.n= - (t.date.to_date.business_days_until Date.today) if (Date.today > t.date.to_date)
+      #related to the entry of info for "tomorrow"
+      t.n=(Date.today.business_days_until t.date.to_date) if (Date.today <= t.date.localtime.to_date)
+      t.n= - (t.date.to_date.business_days_until Date.today) if (Date.today > t.date.localtime.to_date)
       if t.pathologist.count==0
         t.populate
       end
@@ -140,7 +138,7 @@ class Tdc
     else
       t=Tdc.new
       t.n=n
-      t.date=business_utc
+      t.date=get_business_utc(n)
       if t.pathologist.count==0 then t.populate; t.save  end
       return t
     end
