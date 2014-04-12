@@ -223,7 +223,7 @@ def tot_points path_list
 end
 
 
-#:Numebr of days is here absolute and not business days (n)
+#:Numeber of days is here absolute and not business days (n)
 class Pathologist
   include MongoMapper::Document
   include DataUtilities
