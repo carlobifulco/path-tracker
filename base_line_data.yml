@@ -39,7 +39,6 @@ regular_activities:
   Pb-without-report: 2
   Flow: 5
   Fish: 5
-  Spep: 0
   Consults: 1
   Meeting: 15
   Carry-over-points-from-previous-day: 1
@@ -71,7 +70,8 @@ cardinal_activities:
   Hemepath-only: 0
   Lung: 0
   Breast: 0
-  Dermpath-only: 0
+  Dermpath-day-one: 0
+  Dermpath-day-two: 120
   Gi-only: 0
   Conf-or-prep-15: 15
   Conf-or-prep-20: 20
@@ -106,7 +106,8 @@ distribution-preference:
 #also, paths doing these will not be counted in the total redistibution pool
 
 no-points:
-  Dermpath-only: 0
+  Dermpath-day-one: 0
+  Dermpath-day-two: 120
   Gi-only: 0
   Hemepath-only: 0
   Molecular-DigitalPath: 0
