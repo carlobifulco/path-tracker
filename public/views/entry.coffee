@@ -37,6 +37,15 @@ render=(data,html)->
   return results
 window.render=render
 
+
+
+#wrapper around the rendering; uses the html target convention "id_html"
+render_template=(id,data)->
+  $("##{id}_html").html(render(data,($("##{id}_template")[0]).innerHTML))
+window.render_template=render_template
+
+
+
 decorate=()->
   for ini in _.keys(data["paths_acts_points"])
     do (ini)->
@@ -96,13 +105,6 @@ has_a_distribution_preference=(arr)->
 window.has_a_distribution_preference=has_a_distribution_preference
 
 
-
-
-
-#wrapper around the rendering; uses the html target convention "id_html"
-render_template=(id,data)->
-  $("##{id}_html").html(render(data,($("##{id}_template")[0]).innerHTML))
-window.render_template=render_template
 
 
 

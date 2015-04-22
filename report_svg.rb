@@ -13,12 +13,19 @@ require "csv"
 require 'rserve/simpler'
 require "report_data"
 require "report_new"
+require "colored"
 #require 'statsample'
 
 
+
+
 #connect to R
-$r=Rserve::Simpler.new
-$r >> ("library('ggplot2')")
+begin
+  $r=Rserve::Simpler.new
+  $r >> ("library('ggplot2')")
+rescue
+  "Rserve not found".red
+end
 
 
 # def connect
@@ -237,4 +244,3 @@ class BoxPlotDistDelta <PlotterRedis
 
   end
 end
-

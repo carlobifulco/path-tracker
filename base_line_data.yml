@@ -32,7 +32,7 @@ regular_activities:
   Specialty-only-case-number: 1
   Slides-large-cases: 1
   Slides-small-cases: 1
-  Non-gyns: 1
+  Non-gyns: 2
   Paps: 1
   Bone-marrow: 15
   Pb-with-report: 4
@@ -51,6 +51,7 @@ regular_activities:
   FNA: 15
   DIA-DISH: 5
   Tissue-macrodissection-marking: 2
+  BRAF-CF-EGFR-KRAS: 2
 
 
 
@@ -70,8 +71,7 @@ cardinal_activities:
   Hemepath-only: 0
   Lung: 0
   Breast: 0
-  Dermpath-day-one: 0
-  Dermpath-day-two: 120
+  Dermpath-only: 0
   Gi-only: 0
   Conf-or-prep-15: 15
   Conf-or-prep-20: 20

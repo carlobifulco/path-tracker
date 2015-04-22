@@ -12,7 +12,6 @@ gem "whenever"
 gem 'business_time'
 gem "holidays"
 gem 'rufus-scheduler', "=2.0.23"
-gem "redis"
 gem "rserve-client",  "~>0.3"
 gem "redis-namespace"
 gem 'rserve-simpler'
@@ -20,6 +19,4 @@ gem "sinatra-websocket"
 gem "bson_ext"
 gem 'chronic'
 gem "statsample"
-
-
-
+gem "colored"

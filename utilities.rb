@@ -33,7 +33,12 @@ def sim_2 n
   switch_to_testing
   #clean
   t=Tdc.today n
-  #only 3 working
+  #only 3 working  # def clean_db
+  #   ReporterResult.delete_all
+  #   NextGenRun.delete_all
+  #   TorrentResult.delete_all
+  #   #ReporterRow.delete_all
+  # end
   all_p=Pathologist.get_all_path(n)
   (all_p.count-3).times do |x|
     p=all_p[x]
