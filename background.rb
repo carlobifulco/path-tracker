@@ -10,13 +10,13 @@ require 'report_new'
 #####MongoDumping
 DUMP_DIRECTORY= "/Users/carlobifulco/Dropbox/mongo_path_tracker"
 Dir.mkdir DUMP_DIRECTORY unless Dir.exists? DUMP_DIRECTORY
-Dir.mkdir (DUMP_DIRECTORY+"/dump") unless Dir.exists? (DUMP_DIRECTORY+"/dump") 
+Dir.mkdir (DUMP_DIRECTORY+"/dump") unless Dir.exists? (DUMP_DIRECTORY+"/dump")
 
 
 #Scheduling
 #-----------
 
-$scheduler = Rufus::Scheduler.start_new
+$scheduler = Rufus::Scheduler.new
 
 
 # every hour
@@ -62,5 +62,5 @@ end
 #If not in event machine enviroment
 #$scheduler.join
 puts "\n---------------------------------------"
-puts "**************#{$scheduler.all_jobs.keys}**************"
+puts "**************#{$scheduler.jobs}**************"
 puts "\n----------------------------------------"

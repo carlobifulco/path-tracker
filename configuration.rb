@@ -88,6 +88,8 @@ unless ARGV[0] =="production"
     when "path-tracker"
       puts "I am deployng testing"
       switch_to_testing
+    else
+      switch_to_testing
   end
 end
 
@@ -107,10 +109,3 @@ DATA=YAML.load(File.read $data_file)
 #------------------------
 SLIDES_CONVERSION_FACTOR=DATA["slides_conversion_factor"]
 puts "CONVERSION FACTOR=#{SLIDES_CONVERSION_FACTOR}"
-
-
-
-
-
-
-
