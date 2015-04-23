@@ -12,9 +12,9 @@ gem "whenever"
 gem 'business_time'
 gem "holidays"
 gem 'rufus-scheduler'
-gem "rserve-client"
-gem "redis-namespace"
-gem 'rserve-simpler'
+# gem "rserve-client"
+# gem "redis-namespace"
+# gem 'rserve-simpler'
 gem "sinatra-websocket"
 gem "bson_ext"
 gem 'chronic'
