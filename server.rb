@@ -10,6 +10,7 @@ require "mongo_mapper"
 require "configuration"
 
 require "sinatra"
+require_relative "libs"
 #require "bundler/setup"
 
 require_relative "web_data"
