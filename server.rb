@@ -9,10 +9,6 @@ require "bundler/setup"
 require "mongo_mapper"
 require "configuration"
 
-
-
-
-
 require "sinatra"
 #require "bundler/setup"
 

@@ -269,6 +269,3 @@ def test_graph
     report_build i
   end
 end
-
-#### Will build processes in teh background
-require "background"
