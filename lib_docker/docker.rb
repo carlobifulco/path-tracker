@@ -60,11 +60,11 @@ module DockerManager
                         --link #{APP_NAME}-#{DATABASE_CONTAINER_NAME}:db\
                         #{APP_NAME}-image \
                         /usr/local/bin/ruby /root/#{APP_NAME}/server.rb \
-                            -p SINATRA_PORT -e #{environment}"
+                            -p #{SINATRA_PORT} -e #{environment}"
     Thread.new do
       sleep 3
       execute_command "docker top #{APP_NAME}-container"
-      execute_command "open http://`boot2docker ip`:SINATRA_PORT" if Util.testing?
+      execute_command "open http://`boot2docker ip`:#{SINATRA_PORT}" if Util.testing?
     end
     puts "DONE WITH APP".yellow_on_green
   end
@@ -77,15 +77,15 @@ module DockerManager
   def app_container_restart_light
     execute_command "docker stop #{APP_NAME}-container"
     execute_command "docker rm -v #{APP_NAME}-container"
-    execute_command "docker run -d  -p SINATRA_PORT:SINATRA_PORT  --volumes-from  #{APP_NAME}-#{VOLUME_CONTAINER_NAME}\
+    execute_command "docker run -d  -p #{SINATRA_PORT}:#{SINATRA_PORT}  --volumes-from  #{APP_NAME}-#{VOLUME_CONTAINER_NAME}\
                                     --name #{APP_NAME}-container\
                                     --link #{APP_NAME}-#{DATABASE_CONTAINER_NAME}:db\
                                     #{APP_NAME}-image \
-                                    /usr/local/bin/ruby /root/#{APP_NAME}/server.rb -p SINATRA_PORT"
+                                    /usr/local/bin/ruby /root/#{APP_NAME}/server.rb -p #{SINATRA_PORT}"
     Thread.new do
       sleep 3
       execute_command "docker top #{APP_NAME}-container"
-      execute_command "open http://`boot2docker ip`:SINATRA_PORT" if Util.testing?
+      execute_command "open http://`boot2docker ip`:#{SINATRA_PORT}" if Util.testing?
     end
 
   end
@@ -93,7 +93,7 @@ module DockerManager
   def app_container_restart_bash
     execute_command "docker stop #{APP_NAME}-container"
     execute_command "docker rm -v #{APP_NAME}-container"
-    system "docker run   -it -p SINATRA_PORT:SINATRA_PORT  --volumes-from  #{APP_NAME}-#{VOLUME_CONTAINER_NAME}\
+    system "docker run   -it -p #{SINATRA_PORT}:#{SINATRA_PORT}  --volumes-from  #{APP_NAME}-#{VOLUME_CONTAINER_NAME}\
                                     --name #{APP_NAME}-container\
                                     --link #{APP_NAME}-#{DATABASE_CONTAINER_NAME}:db\
                                     #{APP_NAME}-image \
@@ -105,7 +105,7 @@ module DockerManager
     Thread.new do
       sleep 3
       execute_command "docker top #{APP_NAME}-container"
-      execute_command "open http://`boot2docker ip`:SINATRA_PORT"  if Util.testing?
+      execute_command "open http://`boot2docker ip`:#{SINATRA_PORT}"  if Util.testing?
     end
     system "docker exec -it #{APP_NAME}-container pry"
 
