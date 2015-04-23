@@ -233,6 +233,7 @@ module DockerManager
 
 
   def git_tar
+    puts "GIT & TAR".yellow_on_green
     puts "committing current branch".yellow
     current_branch=`git rev-parse --abbrev-ref HEAD`
     `git commit -am "#{Time.now}: automated deployment - #{`whoami`}"`
@@ -244,6 +245,7 @@ module DockerManager
     rescue
       "puts failed to reach github..."
     end
+    puts "DONE WITH GIT & TAR".yellow_on_green
   end
 
   def mongo_conf
