@@ -1,0 +1,60 @@
+ORDERS:
+  mds_fish: "http://www.neogenomics.com/modules/Neogenomics01/DisplayDetails.aspx?TestID=762"
+  mds_cmml_ngs: "http://www.neogenomics.com/neotype-mdscmml-profile.htm"
+  large_cell_lymphoma: "http://www.neogenomics.com/modules/Neogenomics01/DisplayDetails.aspx?TestID=795"
+  cll: "http://www.neogenomics.com/modules/Neogenomics01/DisplayDetails.aspx?TestID=763"
+  aml_fish: "http://www.neogenomics.com/modules/Neogenomics01/DisplayDetails.aspx?TestID=812"
+  aml_reflex_mol: "http://www.neogenomics.com/collateral/documents/english-us/neotype-aml.pdf"
+  aml_ngs: "http://www.neogenomics.com/modules/Neogenomics01/DisplayDetails.aspx?TestID=892"
+  mpn_fish: "http://www.neogenomics.com/modules/Neogenomics01/DisplayDetails.aspx?TestID=761"
+  mpn_mol: "http://www.neogenomics.com/modules/Neogenomics01/DisplayDetails.aspx?TestID=832"
+  mpn_ngs: "http://www.neogenomics.com/modules/Neogenomics01/DisplayDetails.aspx?TestID=907"
+  eosinophilia_fish: "http://www.neogenomics.com/modules/Neogenomics01/DisplayDetails.aspx?TestID=760"
+  mm_fish: "http://www.neogenomics.com/modules/Neogenomics01/DisplayDetails.aspx?TestID=505"
+  cytogenetics: ""
+  bcr_tcr: "http://www.neogenomics.com/modules/Neogenomics01/DisplayDetails.aspx?TestID=610"
+  tcr: "http://www.neogenomics.com/modules/Neogenomics01/DisplayDetails.aspx?TestID=630"
+  bcr: "http://www.neogenomics.com/modules/Neogenomics01/DisplayDetails.aspx?TestID=611"
+  mol_on_hold: ""
+  cancer_type_id: "http://metastaticcancersolution.com/order-bioT3-CancerTYPEID"
+  foundation_medicine: "http://foundationone.com/docs/FoundationOne_requisition-form.pdf?__hstc=197910000.ca54bd200688390fb3cfffed497960ad.1401198872498.1427424002173.1427555656390.24&__hssc=197910000.3.1427555656390&__hsfp=2403402416"
+
+
+AUTH:
+  "carlo": "bifulco"
+  "molpath": "molpath"
+
+
+ENTRIES:
+  - case_number
+  - request
+
+FROM_EMAIL:
+  "carlo": "carlo.bifulco@providence.org"
+
+
+TO_EMAILS:
+  - ORREGLABPathologySupportGroup@providence.org
+
+TO_TESTER: "carlobif@gmail.com"
+
+PRODUCTION_SERVER_IP: ""
+
+MANDRILL: "cAArKNs-5CG5tGI_S-JlPQ"
+
+
+
+
+
+TO_CC: "carlo.bifulco@providence.org"
+
+PRODUCTION_SERVER_IP: "u90157.providence.org"
+
+TESTING_MACS: ["mac-book-pro-latest.local", "mac-book-pro-latest.or.providence.org"]
+
+#Mongo back up settings
+MONGO_DATA_ROOT: "/data/db/mongodbs"
+MONGO_DATA_EXPORTS: "/data/db/mongo_data_exports"
+MONGO_DUMP_PATH: "./mongo_dump"
+
+SINATRA_PORT: "9991"
