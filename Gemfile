@@ -9,3 +9,4 @@ gem 'rufus-scheduler'
 gem "bson_ext"
 gem 'chronic'
 gem "colored"
+gem "thin"

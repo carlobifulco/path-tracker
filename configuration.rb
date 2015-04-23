@@ -8,8 +8,7 @@ require "whenever"
 require 'business_time'
 require "holidays"
 require "mongo_mapper"
-require "redis"
-require "redis-namespace"
+
 require "yaml"
 #require "web_data"
 
@@ -19,18 +18,6 @@ require "yaml"
 
 #####Configuration
 #-------------
-
-
-
-
-#####Redis configutation
-# :password=>"redisreallysucks",
-$redis=Redis.new(:thread_safe=>true,:port=>6379,:host=>$HOST)
-# Redis table
-UseDb=1
-ConfigurationDb=2
-$redis.select UseDb
-
 
 
 

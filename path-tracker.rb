@@ -13,10 +13,9 @@ require "configuration"
 
 
 
-require "web_data"
 require "sinatra"
 #require "bundler/setup"
-require 'coffee-script'
+
 
 
 
@@ -55,7 +54,7 @@ helpers do
     log=Log.new
     log.time=Time.now.utc
     log.path_ini=request["path_name"]
-    if params.has_key? "tomorrow" 
+    if params.has_key? "tomorrow"
       params.merge(:tomorrow=>"tomorrow")
       log.request=params.to_json
     else
@@ -184,7 +183,7 @@ get "/live" do
   erb :live
 end
 
-get "/live_all" do 
+get "/live_all" do
   erb :live_all
 end
 
@@ -300,7 +299,7 @@ post '/activity_update_log' do
   puts id, activities
 
   log=Log.new
- if params.has_key? "tomorrow" 
+ if params.has_key? "tomorrow"
     activities.merge!(:tomorrow=>"tomorrow")
     log.request=activities.to_json
   else
@@ -370,7 +369,7 @@ get "/database_destroy/:n" do |n|
   <br> <%=@r  %> <br>
   <% end %>
   "
-  
+
 end
 
 
@@ -468,6 +467,3 @@ end
 #     }
 #   </script>
 # </html>
-
-
-

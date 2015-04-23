@@ -6,8 +6,7 @@ $LOAD_PATH << my_directory
 #require "statsample"
 require "web_data"
 #require 'rserve'
-require "redis"
-require "redis-namespace"
+
 require 'pony'
 require "csv"
 require 'rserve/simpler'

@@ -6,57 +6,11 @@ $LOAD_PATH << my_directory
 #require "statsample"
 require "web_data"
 #require 'rserve'
-require "redis"
-require "redis-namespace"
+
 require "csv"
 
 
 
-#configuration parameters live in the configuration table
-module Setup
-
-  def check_redis()
-    $redis.select ConfigurationDb
-    begin
-      if ($redis.get "liame") == nil then raise "EMAIL MISSING" end
-    rescue
-      puts "email missing"
-      raise "EMAIL MISSING"
-    end
-    $redis.select UseDb
-  end
-
-  def configuration &block
-    $redis.select ConfigurationDb
-    r=block.call
-    $redis.select UseDb
-    r
-  end
-
- def configuration_set(key,text)
-    configuration do
-       $redis.set key,text
-    end
- end
-
- def configuration_get(key)
-   configuration do
-    result=$redis.get key
-   result
-  end
- end
-
- # reset all UseTable
- def clean_redis (a=[])
-  $redis.select UseDb
-   r=[]
-   $redis.keys.each do |k|
-     r << ($redis.del k)
-   end
-   configuration_set "on", "off"
-   r
- end
-end
 
 class ReportActivity
   def self.reduce_points_by_day activity_search_results_array
@@ -273,6 +227,3 @@ class Deviation < DistributionReport
     return sum_points_deviation
   end
 end
-
-
-

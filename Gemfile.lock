@@ -1,14 +1,3 @@
-GIT
-  remote: git://github.com/mongomapper/mongomapper.git
-  revision: 9b87dee507802a8cb96f2d316802c9fd241448c8
-  tag: v0.13.0.beta2
-  specs:
-    mongo_mapper (0.13.0.beta2)
-      activemodel (>= 3.0.0)
-      activesupport (>= 3.0)
-      mongo (~> 1.8)
-      plucky (~> 0.6.5)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -21,7 +10,6 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
-    addressable (2.3.6)
     bson (1.10.1)
     bson_ext (1.10.1)
       bson (~> 1.10.1)
@@ -30,91 +18,35 @@ GEM
       activesupport (>= 3.1.0)
       tzinfo
     chronic (0.10.2)
-    clbustos-rtf (0.4.2)
-    coffee-script (2.2.0)
-      coffee-script-source
-      execjs
-    coffee-script-source (1.7.0)
     colored (1.2)
-    daemons (1.1.9)
-    dirty-memoize (0.0.4)
-    em-websocket (0.3.8)
-      addressable (>= 2.1.1)
-      eventmachine (>= 0.12.9)
-    eventmachine (1.0.3)
-    execjs (2.1.0)
-    extendmatrix (0.3.1)
-    fastercsv (1.5.5)
+    daemons (1.2.2)
+    eventmachine (1.0.7)
     holidays (1.0.6)
     i18n (0.6.9)
     json (1.8.1)
-    mail (2.6.0)
-      mime-types (>= 1.16, < 3)
-    mime-types (2.3)
-    minimization (0.2.1)
-      text-table (~> 1.2)
     minitest (5.3.4)
     mongo (1.10.1)
       bson (~> 1.10.1)
+    mongo_mapper (0.13.1)
+      activemodel (>= 3.0.0)
+      activesupport (>= 3.0)
+      mongo (~> 1.8)
+      plucky (~> 0.6.5)
     plucky (0.6.6)
       mongo (~> 1.5)
-    pony (1.8)
-      mail (>= 2.0)
-    prawn (0.8.4)
-      prawn-core (>= 0.8.4, < 0.9)
-      prawn-core (>= 0.8.4, < 0.9)
-      prawn-layout (>= 0.8.4, < 0.9)
-      prawn-layout (>= 0.8.4, < 0.9)
-      prawn-security (>= 0.8.4, < 0.9)
-      prawn-security (>= 0.8.4, < 0.9)
-    prawn-core (0.8.4)
-    prawn-layout (0.8.4)
-    prawn-security (0.8.4)
-    prawn-svg (0.9.1.11)
-      prawn (>= 0.8.4)
     rack (1.5.2)
     rack-protection (1.5.3)
       rack
-    redis (3.0.7)
-    redis-namespace (1.4.1)
-      redis (~> 3.0.4)
-    reportbuilder (1.4.2)
-      clbustos-rtf (~> 0.4.0)
-      prawn (~> 0.8.4)
-      prawn-svg (~> 0.9.1)
-      text-table (~> 1.2)
-    rserve-client (0.3.1)
-    rserve-simpler (0.0.6)
-      rserve-client (~> 0.3.0)
-    ruby-ole (1.2.11.7)
     rufus-scheduler (2.0.23)
       tzinfo (>= 0.3.23)
     sinatra (1.4.5)
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (~> 1.3, >= 1.3.4)
-    sinatra-websocket (0.3.0)
-      em-websocket (~> 0.3.6)
-      eventmachine
-      thin (>= 1.3.1)
-    spreadsheet (0.6.9)
-      ruby-ole (>= 1.0)
-    statsample (0.15.1)
-      dirty-memoize (~> 0.0)
-      extendmatrix (~> 0.3.1)
-      fastercsv
-      minimization (~> 0.2.0)
-      reportbuilder (~> 1.0)
-      spreadsheet (~> 0.6.0)
-      statsample-bivariate-extension (~> 0.13.0)
-      svg-graph (~> 1.0)
-    statsample-bivariate-extension (0.13.4)
-    svg-graph (1.0.5)
-    text-table (1.2.3)
-    thin (1.6.2)
-      daemons (>= 1.0.9)
-      eventmachine (>= 1.0.0)
-      rack (>= 1.0.0)
+    thin (1.6.3)
+      daemons (~> 1.0, >= 1.0.9)
+      eventmachine (~> 1.0)
+      rack (~> 1.0)
     thread_safe (0.3.4)
     tilt (1.4.1)
     tzinfo (1.2.1)
@@ -130,17 +62,10 @@ DEPENDENCIES
   bson_ext
   business_time
   chronic
-  coffee-script
   colored
   holidays
-  mongo_mapper!
-  pony
-  redis
-  redis-namespace
-  rserve-client (~> 0.3)
-  rserve-simpler
-  rufus-scheduler (= 2.0.23)
+  mongo_mapper
+  rufus-scheduler
   sinatra
-  sinatra-websocket
-  statsample
+  thin
   whenever

@@ -6,7 +6,7 @@ $LOAD_PATH << my_directory
 
 require "web_data"
 require 'rufus/scheduler'
-require 'report_svg'
+
 
 
 class Date
@@ -106,7 +106,7 @@ class DistReport
 
   def initialize n=0
     @n=n
- 
+
     #@pc=PointsCalculator.new(n)
     @r={}
     @all=(Activity.where :date=>get_business_utc(n),:specialty_only =>false).all.map {|x| {x.ini=> x}}
@@ -156,11 +156,11 @@ class DistReport
         r[k]=v-general_day_points_mean
       end
     end
-    if r=={} 
+    if r=={}
       return 0
-    else 
+    else
       return r
-    end 
+    end
   end
 
 end
@@ -272,4 +272,3 @@ end
 
 #### Will build processes in teh background
 require "background"
-
