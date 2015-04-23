@@ -14,7 +14,6 @@ require "interface"
 
 ### these need to have an existing  connection
 require "utilities"
-require "report_svg"
 require "report_new"
 
 
@@ -27,7 +26,7 @@ end
 
 module DataUtilities
 
-  
+
   def export file_path
     CSV.open(file_path, "wb") do |csv|
       headers=self.class.keys.keys.sort
@@ -368,7 +367,7 @@ end
 #index Pathologist
 Pathologist.ensure_index([[:date, -1], [:working,-1]])
 
-class Activity 
+class Activity
   include MongoMapper::Document
   include DataUtilities
   safe
@@ -496,7 +495,7 @@ class Activity
     #.map{|x| x.n}.reduce(:+)
   end
 
- 
+
   def update_tot_points
       self.tot_points=self.points*self.n
   end
@@ -523,21 +522,16 @@ class Log
     d=where(:date=>get_business_utc(n), :path_ini=>path_ini).sort(:time)
     d=d.to_a if d
     text=[]<<"<h1>Log</h1><ul>"
-    if d.count >0 
-      d.each  do  |log| 
-        text << "<li>#{log.ip}: #{log.time.to_time} <br> #{JSON.parse(log.request)}</li>" 
+    if d.count >0
+      d.each  do  |log|
+        text << "<li>#{log.ip}: #{log.time.to_time} <br> #{JSON.parse(log.request)}</li>"
       end
       text <<"</ul>"
       text.join
-    else 
+    else
       return "<h6>No Matches;  Please Use initials in CAPS</h6>"
     end
   end
 end
 
 Log.ensure_index([[:date, -1], [:path_ini_id, 1]])
-
-
-
-
-
