@@ -93,8 +93,8 @@ RUN apt-get install -y mongodb-clients
 #RUN mkdir /root/sendout-monitor
 # install web-app
 #WORKDIR /root/sendout-monitor
-ADD ./latest.tar /root/sendout-monitor
-WORKDIR /root/sendout-monitor
+ADD ./latest.tar /root/path_tracker_docker
+WORKDIR /root/path_tracker_docker
 RUN ln -s /data/db  /root/sendout-monitor/mongo_dump
 RUN bundle update
 
